@@ -19,6 +19,6 @@ public class File
     public void Assign(string fileString)
     {
         name = fileString;
-        stream = System.IO.File.Open(fileString, FileMode.OpenOrCreate);
+        stream = System.IO.File.Open(name, FileMode.OpenOrCreate);
     }
 }

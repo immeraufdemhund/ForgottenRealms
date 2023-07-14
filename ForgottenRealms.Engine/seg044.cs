@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using ForgottenRealms.Engine.Classes;
 
@@ -69,19 +70,17 @@ public class seg044
 
     private static Stream?[] sounds;
 
-    internal static void SoundInit()
+    internal static void SoundInit(Func<string, Stream?> resources)
     {
-        var resources = new System.Resources.ResourceManager("Main.Resource", System.Reflection.Assembly.GetEntryAssembly());
-
         sounds = new Stream?[13];
-        sounds[1] = resources.GetStream("missle");
-        sounds[2] = resources.GetStream("magic_hit");
-        sounds[4] = resources.GetStream("death");
-        sounds[5] = resources.GetStream("sound_5");
-        sounds[6] = resources.GetStream("hit");
-        sounds[8] = resources.GetStream("miss");
-        sounds[9] = resources.GetStream("step");
-        sounds[10] = resources.GetStream("sound_10");
-        sounds[12] = resources.GetStream("start_sound");
+        sounds[1] = resources.Invoke("missle");
+        sounds[2] = resources.Invoke("magic_hit");
+        sounds[4] = resources.Invoke("death");
+        sounds[5] = resources.Invoke("sound_5");
+        sounds[6] = resources.Invoke("hit");
+        sounds[8] = resources.Invoke("miss");
+        sounds[9] = resources.Invoke("step");
+        sounds[10] = resources.Invoke("sound_10");
+        sounds[12] = resources.Invoke("start_sound");
     }
 }

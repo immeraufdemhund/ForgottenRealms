@@ -9,9 +9,9 @@ public static class Config
     static string logPath;
     static string savePath;
 
-    static public void Setup()
+    public static void Setup()
     {
-        basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Curse of the Azure Bonds");
+        basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "ForgottenRealms");
 
         if (Directory.Exists(basePath) == false)
         {

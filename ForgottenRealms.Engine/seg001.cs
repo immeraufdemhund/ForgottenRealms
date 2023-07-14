@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Threading;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.Combat;
 using ForgottenRealms.Engine.Classes.DaxFiles;
@@ -6,31 +9,24 @@ namespace ForgottenRealms.Engine;
 
 public class seg001
 {
-    internal static System.Threading.Thread EngineThread;
-
-    public delegate void VoidDelegate();
-
-    private static VoidDelegate EngineStoppedCallback;
+    private static CancellationTokenSource EngineStoppedCallback;
 
     internal static void EngineStop()
     {
-        EngineStoppedCallback();
-        EngineThread.Abort();
+        EngineStoppedCallback.Cancel();
     }
 
-    public static void __SystemInit(VoidDelegate stoppedCallback)
+    public static void __SystemInit(CancellationTokenSource stoppedCallback, Func<string,Stream?> resourceLoader)
     {
-        EngineThread = System.Threading.Thread.CurrentThread;
         EngineStoppedCallback = stoppedCallback;
-
-        ConfigGame();
+        ConfigGame(resourceLoader);
     }
 
-    internal static void ConfigGame()
+    internal static void ConfigGame(Func<string,Stream?> resourceLoader)
     {
         gbl.exe_path = System.IO.Directory.GetCurrentDirectory();
 
-        seg044.SoundInit();
+        seg044.SoundInit(resourceLoader);
     }
 
     public static void PROGRAM()

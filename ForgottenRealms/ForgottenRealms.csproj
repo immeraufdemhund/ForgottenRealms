@@ -11,4 +11,68 @@
       <ProjectReference Include="..\ForgottenRealms.Engine\ForgottenRealms.Engine.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="sounds\death.wav" />
+      <Resource Include="sounds\death.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\hit.wav" />
+      <Resource Include="sounds\hit.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\magic.wav" />
+      <Resource Include="sounds\magic.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\magic_hit.wav" />
+      <Resource Include="sounds\magic_hit.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\miss.wav" />
+      <Resource Include="sounds\miss.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\missle.wav" />
+      <Resource Include="sounds\missle.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\sound_5.wav" />
+      <Resource Include="sounds\sound_5.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\sound_10.wav" />
+      <Resource Include="sounds\sound_10.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\start_sound.wav" />
+      <Resource Include="sounds\start_sound.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="sounds\step.wav" />
+      <Resource Include="sounds\step.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resource.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resource.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\Data\**">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

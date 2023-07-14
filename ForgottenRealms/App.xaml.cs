@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -15,20 +16,30 @@ namespace ForgottenRealms
     {
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
+            Config.Setup();
             Logger.SetExitFunc(seg043.print_and_exit);
             StartEngine();
             var mainWindow = new MainWindow();
             mainWindow.Show();
         }
+        private CancellationTokenSource cancellationTokenSource;
 
         private async void StartEngine()
         {
-            await Task.Run(EngineThread);
+            cancellationTokenSource = new CancellationTokenSource();
+            try
+            {
+                await Task.Run(EngineThread);
+            }
+            catch (TaskCanceledException)
+            {
+                EngineStopped();
+            }
         }
 
         private void EngineThread()
         {
-            seg001.__SystemInit(EngineStopped);
+            seg001.__SystemInit(cancellationTokenSource, Resource.ResourceManager.GetStream);
             seg001.PROGRAM();
             EngineStopped();
         }
@@ -52,9 +63,15 @@ namespace ForgottenRealms
                 tw.Write("Unhandled exception: ");
                 tw.WriteLine(e.Exception);
             }
+            cancellationTokenSource.Cancel();
 
             MessageBox.Show($"Unexpected Error, please send '{logFile}' to immeraufdemhund@gmail.com", "Unexpected Error");
             Environment.Exit(1);
+        }
+
+        private void App_OnExit(object sender, ExitEventArgs e)
+        {
+            cancellationTokenSource.Cancel();
         }
     }
 }

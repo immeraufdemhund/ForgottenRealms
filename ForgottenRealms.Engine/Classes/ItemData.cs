@@ -41,8 +41,7 @@ public class ItemDataTable
 
     public ItemDataTable(string fileName)
     {
-        var filePath = Path.Combine(gbl.exe_path, fileName);
-
+        var filePath = GameFileLoader.GetFileInfo(fileName).FullName;
         var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read);
 
         stream.Seek(2, SeekOrigin.Begin);

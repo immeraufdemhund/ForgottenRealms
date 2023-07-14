@@ -17,9 +17,10 @@ public class DaxFileCache
 
     private void LoadFile(string filename)
     {
+        var fileInfo = GameFileLoader.GetFileInfo(filename);
         var dataOffset = 0;
 
-        if (System.IO.File.Exists(filename) == false)
+        if (fileInfo.Exists == false)
         {
             return;
         }
@@ -28,7 +29,7 @@ public class DaxFileCache
 
         try
         {
-            var fsA = new FileStream(filename, FileMode.Open,
+            var fsA = new FileStream(fileInfo.FullName, FileMode.Open,
                 FileAccess.Read, FileShare.Read);
 
             fileA = new BinaryReader(fsA);
