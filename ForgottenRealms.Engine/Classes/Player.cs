@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace ForgottenRealms.Engine.Classes;
 
 public struct StatValue : IDataIO

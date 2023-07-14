@@ -1,4 +1,6 @@
-﻿namespace ForgottenRealms.Engine.Classes;
+﻿using System.Collections.Generic;
+
+namespace ForgottenRealms.Engine.Classes;
 
 public class SpellItem
 {

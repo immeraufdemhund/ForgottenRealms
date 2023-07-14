@@ -1,4 +1,5 @@
-﻿using ForgottenRealms.Engine.Classes.DaxFiles;
+﻿using System;
+using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine.Classes.Combat;
 

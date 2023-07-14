@@ -1,4 +1,6 @@
-﻿namespace ForgottenRealms.Engine.Classes.DaxFiles;
+﻿using System.Collections.Generic;
+
+namespace ForgottenRealms.Engine.Classes.DaxFiles;
 
 public class DaxCache
 {

@@ -1,4 +1,6 @@
+using System;
 using System.Reflection;
+using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine.Classes;
 

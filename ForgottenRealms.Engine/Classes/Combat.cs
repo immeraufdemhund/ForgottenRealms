@@ -1,4 +1,6 @@
-﻿namespace ForgottenRealms.Engine.Classes;
+﻿using System;
+
+namespace ForgottenRealms.Engine.Classes;
 
 public class SortedCombatant : IComparable<SortedCombatant> /*Struct_1D1C1*/
 {
