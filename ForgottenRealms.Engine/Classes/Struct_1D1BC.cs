@@ -1,0 +1,56 @@
+namespace ForgottenRealms.Engine.Classes;
+
+/// <summary>
+/// Summary description for Struct_1D1BC.
+/// </summary>
+public class Struct_1D1BC
+{
+    private const int dataSize = 1250; // 0x4E2
+
+    public Struct_1D1BC()
+    {
+        field_7 = new int[dataSize];
+    }
+
+    public void SetField_7(int value)
+    {
+        for (var i = 0; i < dataSize; i++)
+        {
+            field_7[i] = value;
+        }
+    }
+
+    public Point mapScreenTopLeft;
+    public bool drawTargetCursor; // field_4, was byte
+    public int size; // field_5
+    public bool ignoreWalls; // field_6, was byte
+    private int[] field_7;
+
+    public int this[Point pos]
+    {
+        get
+        {
+            var index = pos.y * 50 + pos.x;
+            return field_7[index];
+        }
+        set
+        {
+            var index = pos.y * 50 + pos.x;
+            field_7[index] = value;
+        }
+    }
+
+    public int this[int x, int y]
+    {
+        get
+        {
+            var index = x + y * 50;
+            return field_7[index];
+        }
+        set
+        {
+            var index = x + y * 0x32;
+            field_7[index] = value;
+        }
+    }
+}
