@@ -1,20 +1,8 @@
 using System;
 using System.Drawing;
+using System.IO;
 
 namespace ForgottenRealms.Engine.Classes;
-
-public interface IOSDisplay
-{
-    void Init(int height, int width);
-    void RawCopy(byte[] videoRam, int videoRamSize);
-}
-
-public enum TextRegion
-{
-    NormalBottom,
-    Normal2,
-    CombatSummary,
-}
 
 public class Display
 {
@@ -40,7 +28,8 @@ public class Display
     private static int outputWidth;
     private static int outputHeight;
 
-    public static Bitmap bm;
+    // public static Bitmap bm;
+    private static MemoryStream VideoStream;
     private static Rectangle rect = new(0, 0, 320, 200);
 
     public delegate void VoidDeledate();
@@ -57,12 +46,14 @@ public class Display
         outputHeight = 200;
         outputWidth = 320;
 
+        // ms = new Bitmap(outputWidth, outputHeight, PixelFormat.Format24bppRgb);
+        //PixelFormat24bppRGB specifies 24bits per pixel, 8 for each color (RGB)
+        // I have 200x320 pixels = 64,000 pixels. 64,000 x 3 bytes per pixel = 192,000 bytes
         ram = new int[outputHeight, outputWidth];
         scanLineWidth = outputWidth * 3;
         videoRamSize = scanLineWidth * outputHeight;
         videoRam = new byte[videoRamSize];
-
-        bm = new Bitmap(outputWidth, outputHeight, PixelFormat.Format24bppRgb);
+        VideoStream = new MemoryStream(videoRamSize);
     }
 
     private static int[] MonoBitMask = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
@@ -168,14 +159,18 @@ public class Display
 
     public static void RawCopy(byte[] videoRam, int videoRamSize)
     {
-        System.Drawing.Imaging.BitmapData bmpData =
-            bm.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly,
-                System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+        lock (Display.videoRam)
+        {
+            VideoStream.Write(videoRam, 0, videoRamSize);
+        }
+        // System.Drawing.Imaging.BitmapData bmpData =
+        //     bm.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly,
+        //         System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+        //
+        // IntPtr ptr = bmpData.Scan0;
+        // ms.Write(videoRam, 0, videoRamSize);
+        // System.Runtime.InteropServices.Marshal.Copy(videoRam, 0, ptr, videoRamSize);
 
-        IntPtr ptr = bmpData.Scan0;
-
-        System.Runtime.InteropServices.Marshal.Copy(videoRam, 0, ptr, videoRamSize);
-
-        bm.UnlockBits(bmpData);
+        // bm.UnlockBits(bmpData);
     }
 }

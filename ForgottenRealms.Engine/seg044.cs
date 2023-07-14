@@ -30,7 +30,8 @@ public class seg044
                 {
                     if (sp != null)
                     {
-                        sp.Stop();
+                        // TODO: find a way to make this work.
+                        //sp.Stop();
                     }
                 }
             }
@@ -43,7 +44,8 @@ public class seg044
                 {
                     if (sp != null)
                     {
-                        sp.Stop();
+                        // TODO: find a way to make this work.
+                        //sp.Stop();
                     }
                 }
             }
@@ -52,7 +54,8 @@ public class seg044
                 int sampleId = (int)arg_0 - 1;
                 if (sounds[sampleId] != null)
                 {
-                    sounds[sampleId].Play();
+                    // TODO: find a way to make this work.
+                    //sounds[sampleId].Play();
                 }
                 else
                 {
