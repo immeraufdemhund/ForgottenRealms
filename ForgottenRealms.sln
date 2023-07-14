@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForgottenRealms", "ForgottenRealms\ForgottenRealms.csproj", "{A027B4E2-AB3C-4638-89CF-D6CE148A2CA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A027B4E2-AB3C-4638-89CF-D6CE148A2CA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A027B4E2-AB3C-4638-89CF-D6CE148A2CA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A027B4E2-AB3C-4638-89CF-D6CE148A2CA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A027B4E2-AB3C-4638-89CF-D6CE148A2CA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
