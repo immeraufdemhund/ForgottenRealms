@@ -14,23 +14,24 @@ public struct MainGameEngineConfig
 }
 public class MainGameEngine
 {
+    private static MainGameEngineConfig _config;
 
     internal static void EngineStop()
     {
-        EngineStoppedCallback.Cancel();
+        _config.EngineThreadStoppedCallback.Cancel();
     }
 
-    public static void __SystemInit(CancellationTokenSource stoppedCallback, Func<string,Stream?> resourceLoader)
+    public static void __SystemInit(MainGameEngineConfig config)
     {
-        EngineStoppedCallback = stoppedCallback;
-        ConfigGame(resourceLoader);
+        _config = config;
+        ConfigGame();
     }
 
-    internal static void ConfigGame(Func<string,Stream?> resourceLoader)
+    internal static void ConfigGame()
     {
         gbl.exe_path = System.IO.Directory.GetCurrentDirectory();
 
-        seg044.SoundInit(resourceLoader);
+        seg044.SoundInit(_config.ResourceLoader);
     }
 
     public static void PROGRAM()

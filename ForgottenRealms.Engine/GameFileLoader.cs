@@ -7,7 +7,7 @@ public class GameFileLoader
 {
     public static FileInfo GetFileInfo(string filename)
     {
-        var fileInfo = new FileInfo(Path.Combine("Curse", filename));
+        var fileInfo = new FileInfo(Path.Combine("CURSE", filename));
 
         if (fileInfo.Exists == false)
         {

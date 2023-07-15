@@ -39,16 +39,21 @@ namespace ForgottenRealms
 
         private void EngineThread()
         {
-            MainGameEngine.__SystemInit(cancellationTokenSource, Resource.ResourceManager.GetStream);
+            var engineConfig = new MainGameEngineConfig
+            {
+                EngineThreadStoppedCallback = cancellationTokenSource,
+                ResourceLoader = Resource.ResourceManager.GetStream,
+            };
+            MainGameEngine.__SystemInit(engineConfig);
             MainGameEngine.PROGRAM();
             EngineStopped();
         }
 
         private void EngineStopped()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            Current.Dispatcher.Invoke(() =>
             {
-                Application.Current.Shutdown();
+                Current.Shutdown();
             });
         }
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -58,7 +63,6 @@ namespace ForgottenRealms
             using (TextWriter tw = new StreamWriter(logFile, true))
             {
                 tw.WriteLine("");
-                // tw.WriteLine("{0} {1}", Application.ProductName, Application.ProductVersion);
                 tw.WriteLine(DateTime.Now.ToString("O"));
                 tw.Write("Unhandled exception: ");
                 tw.WriteLine(e.Exception);
