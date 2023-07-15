@@ -7,9 +7,13 @@ using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine;
 
-public class seg001
+public struct MainGameEngineConfig
 {
-    private static CancellationTokenSource EngineStoppedCallback;
+    public CancellationTokenSource EngineThreadStoppedCallback;
+    public Func<string,Stream?> ResourceLoader;
+}
+public class MainGameEngine
+{
 
     internal static void EngineStop()
     {

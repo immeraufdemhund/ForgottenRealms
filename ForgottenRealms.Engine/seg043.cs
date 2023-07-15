@@ -18,7 +18,7 @@ public class seg043
 
             ItemLibrary.Write();
 
-            seg001.EngineStop();
+            MainGameEngine.EngineStop();
         }
     }
 

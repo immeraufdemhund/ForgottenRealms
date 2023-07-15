@@ -39,8 +39,8 @@ namespace ForgottenRealms
 
         private void EngineThread()
         {
-            seg001.__SystemInit(cancellationTokenSource, Resource.ResourceManager.GetStream);
-            seg001.PROGRAM();
+            MainGameEngine.__SystemInit(cancellationTokenSource, Resource.ResourceManager.GetStream);
+            MainGameEngine.PROGRAM();
             EngineStopped();
         }
 
