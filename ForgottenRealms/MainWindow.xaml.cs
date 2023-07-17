@@ -1,6 +1,9 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ForgottenRealms.Engine;
 using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms
@@ -42,6 +45,21 @@ namespace ForgottenRealms
             {
                 _displayAreaSource.Unlock();
             }
+        }
+
+        private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F5)
+            {
+                Display.ForceUpdate();
+            }
+
+            seg049.AddKey(IbmKeyboard.KeyToIBMKey(e.Key));
+        }
+
+        private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
+        {
+            seg043.print_and_exit();
         }
     }
 }
