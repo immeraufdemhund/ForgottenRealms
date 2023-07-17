@@ -9,7 +9,7 @@ namespace ForgottenRealms.Engine.Classes;
 public class ItemLibrary
 {
     private static string libraryPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CotAB");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ForgottenRealms");
 
     private static string libraryFile = Path.Combine(libraryPath, "ItemLibrary.dat");
 
