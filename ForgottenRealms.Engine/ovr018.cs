@@ -162,148 +162,142 @@ internal class ovr018
                 switch (inputkey)
                 {
                     case 'C':
-                        if (menuFlags[allow_create] == true)
-                        {
-                            _createPlayerService.createPlayer();
-                        }
+                        if (menuFlags[allow_create] == true) _createPlayerService.createPlayer();
                         break;
-
                     case 'D':
-                        if (menuFlags[allow_drop] == true)
-                        {
-                            _dropCharacterService.dropPlayer();
-                        }
+                        if (menuFlags[allow_drop] == true) _dropCharacterService.dropPlayer();
                         break;
                     case 'M':
-                        if (menuFlags[allow_modify] == true)
-                        {
-                            modifyPlayer();
-                        }
+                        if (menuFlags[allow_modify] == true) modifyPlayer();
                         break;
                     case 'T':
-                        if (menuFlags[allow_training] == true)
-                        {
-                            train_player();
-                        }
+                        if (menuFlags[allow_training] == true) train_player();
                         break;
                     case 'H':
-                        if (menuFlags[allow_duelclass] == true)
-                        {
-                            ovr026.DuelClass(gbl.SelectedPlayer);
-                        }
+                        if (menuFlags[allow_duelclass] == true) ovr026.DuelClass(gbl.SelectedPlayer);
                         break;
-
                     case 'V':
-                        if (menuFlags[allow_view] == true)
-                        {
-                            ovr020.viewPlayer();
-                        }
+                        if (menuFlags[allow_view] == true) ovr020.viewPlayer();
                         break;
 
                     case 'A':
-                        if (menuFlags[allow_add] == true)
-                        {
-                            AddPlayer();
-                        }
+                        if (menuFlags[allow_add] == true) AddPlayer();
                         break;
 
                     case 'R':
-                        if (menuFlags[allow_remove] == true &&
-                            gbl.SelectedPlayer != null)
-                        {
-                            if (gbl.SelectedPlayer.control_morale < Control.NPC_Base)
-                            {
-                                ovr017.SavePlayer(string.Empty, gbl.SelectedPlayer);
-                                gbl.SelectedPlayer = FreeCurrentPlayer(gbl.SelectedPlayer, true, false);
-                            }
-                            else
-                            {
-                                _dropCharacterService.dropPlayer();
-                            }
-                        }
+                        if(menuFlags[allow_remove] == true) RemoveSelectedPlayer();
                         break;
 
                     case 'L':
-                        if (menuFlags[allow_load] == true)
-                        {
-                            ovr017.loadGameMenu();
-                        }
+                        if (menuFlags[allow_load] == true) ovr017.loadGameMenu();
                         break;
 
                     case 'S':
-                        if (menuFlags[allow_save] == true &&
-                            gbl.TeamList.Count > 0)
-                        {
-                            ovr017.SaveGame();
-                        }
-
+                        if (menuFlags[allow_save] == true) OpenSaveGameMenu();
                         break;
 
                     case 'B':
                         if (menuFlags[allow_begin] == true)
                         {
-                            if ((gbl.TeamList.Count > 0 && gbl.inDemo == true) ||
-                                gbl.area_ptr.field_3FA == 0 || gbl.inDemo == true)
+                            if (BeginAdventuring(gameStateBackup))
                             {
-                                gbl.game_state = gameStateBackup;
-
-                                if (gbl.reload_ecl_and_pictures == false &&
-                                    gbl.lastDaxBlockId != 0x50)
-                                {
-                                    if (gbl.game_state == GameState.WildernessMap)
-                                    {
-                                        seg037.DrawFrame_WildernessMap();
-                                    }
-                                    else
-                                    {
-                                        seg037.draw8x8_03();
-                                    }
-                                    ovr025.PartySummary(gbl.SelectedPlayer);
-                                }
-                                else
-                                {
-                                    if (gbl.area_ptr.LastEclBlockId == 0)
-                                    {
-                                        seg037.draw8x8_03();
-                                    }
-                                }
-
-                                ovr027.ClearPromptArea();
-                                gbl.area2_ptr.training_class_mask = 0;
-
                                 return;
                             }
                         }
                         break;
 
                     case 'E':
-                        if (menuFlags[allow_exit] == true)
-                        {
-                            inputkey = ovr027.yes_no(gbl.alertMenuColors, "Quit to DOS ");
-
-                            if (inputkey == 'Y')
-                            {
-                                if (gbl.TeamList.Count > 0 &&
-                                    gbl.gameSaved == false)
-                                {
-
-                                    inputkey = ovr027.yes_no(gbl.alertMenuColors, "Game not saved.  Quit anyway? ");
-                                    if (inputkey == 'N')
-                                    {
-                                        ovr017.SaveGame();
-                                    }
-                                }
-
-                                if (inputkey == 'Y')
-                                {
-                                    seg043.print_and_exit();
-                                }
-                            }
-                        }
+                        ExitGame();
                         break;
                 }
 
                 reclac_menus = true;
+            }
+        }
+    }
+
+    private static void ExitGame()
+    {
+        char inputkey;
+        if (menuFlags[allow_exit] == true)
+        {
+            inputkey = ovr027.yes_no(gbl.alertMenuColors, "Quit to DOS ");
+
+            if (inputkey == 'Y')
+            {
+                if (gbl.TeamList.Count > 0 &&
+                    gbl.gameSaved == false)
+                {
+
+                    inputkey = ovr027.yes_no(gbl.alertMenuColors, "Game not saved.  Quit anyway? ");
+                    if (inputkey == 'N')
+                    {
+                        ovr017.SaveGame();
+                    }
+                }
+
+                if (inputkey == 'Y')
+                {
+                    seg043.print_and_exit();
+                }
+            }
+        }
+    }
+
+    private static bool BeginAdventuring(GameState gameStateBackup)
+    {
+        if ((gbl.TeamList.Count > 0 && gbl.inDemo == true) ||
+                gbl.area_ptr.field_3FA == 0 || gbl.inDemo == true)
+            {
+                gbl.game_state = gameStateBackup;
+
+                if (gbl.reload_ecl_and_pictures == false &&
+                    gbl.lastDaxBlockId != 0x50)
+                {
+                    if (gbl.game_state == GameState.WildernessMap)
+                    {
+                        seg037.DrawFrame_WildernessMap();
+                    }
+                    else
+                    {
+                        seg037.draw8x8_03();
+                    }
+                    ovr025.PartySummary(gbl.SelectedPlayer);
+                }
+                else
+                {
+                    if (gbl.area_ptr.LastEclBlockId == 0)
+                    {
+                        seg037.draw8x8_03();
+                    }
+                }
+
+                ovr027.ClearPromptArea();
+                gbl.area2_ptr.training_class_mask = 0;
+
+                return true;
+            }
+
+        return false;
+    }
+
+    private static void OpenSaveGameMenu()
+    {
+        if (gbl.TeamList.Count > 0) ovr017.SaveGame();
+    }
+
+    private static void RemoveSelectedPlayer()
+    {
+        if (gbl.SelectedPlayer != null)
+        {
+            if (gbl.SelectedPlayer.control_morale < Control.NPC_Base)
+            {
+                ovr017.SavePlayer(string.Empty, gbl.SelectedPlayer);
+                gbl.SelectedPlayer = FreeCurrentPlayer(gbl.SelectedPlayer, true, false);
+            }
+            else
+            {
+                _dropCharacterService.dropPlayer();
             }
         }
     }
