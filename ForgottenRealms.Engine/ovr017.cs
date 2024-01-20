@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Logging;
 
@@ -465,7 +466,7 @@ internal class ovr017
 
         do
         {
-            ovr018.train_player();
+            TrainCharacterService.train_player();
         } while (gbl.can_train_no_more == false);
 
         gbl.silent_training = false;
@@ -1103,6 +1104,7 @@ internal class ovr017
 
     private static Set unk_4AEA0 = new Set(0, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74);
     private static Set unk_4AEEF = new Set(0, 2, 18);
+    private static readonly TrainCharacterService TrainCharacterService = new ();
 
 
     internal static void SaveGame()

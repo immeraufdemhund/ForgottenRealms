@@ -6,6 +6,8 @@ namespace ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
 
 public class CreatePlayerService
 {
+    private readonly IconBuilder _iconBuilder = new ();
+
     internal void createPlayer()
     {
         bool menuRedraw;
@@ -555,7 +557,7 @@ public class CreatePlayerService
             player.name = seg041.getUserInputString(15, 0, 13, "Character name: ");
         } while (player.name.Length == 0);
 
-        ovr018.icon_builder();
+        _iconBuilder.Show();
 
         //for (var_1B = 0; var_1B <= 5; var_1B++)
         //{

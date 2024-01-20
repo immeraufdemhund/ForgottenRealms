@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
 using ForgottenRealms.Engine.CharacterFeature.DropCharacterFeature;
 using ForgottenRealms.Engine.Classes;
 
@@ -792,7 +793,9 @@ internal class ovr016
     }
 
     private static Set AlterSet = new Set(0, 69);
-    private static readonly DropCharacterService _dropCharacterService = new DropCharacterService();
+    private static readonly DropCharacterService _dropCharacterService = new ();
+    private static readonly IconBuilder _iconBuilder = new ();
+
     internal static void alter_menu()
     {
         char inputKey = ' ';
@@ -824,7 +827,7 @@ internal class ovr016
                         break;
 
                     case 'I':
-                        ovr018.icon_builder();
+                        _iconBuilder.Show();
                         ovr025.LoadPic();
                         break;
                 }
