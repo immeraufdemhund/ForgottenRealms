@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
+using ForgottenRealms.Engine.CharacterFeature.DropCharacterFeature;
+using ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.Combat;
-using ForgottenRealms.Engine.CreatePlayerFeature;
-using ForgottenRealms.Engine.DropCharacterFeature;
-using ForgottenRealms.Engine.TrainCharacterFeature;
 
 namespace ForgottenRealms.Engine;
 

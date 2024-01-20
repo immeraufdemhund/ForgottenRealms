@@ -1,6 +1,6 @@
 ﻿using ForgottenRealms.Engine.Classes;
 
-namespace ForgottenRealms.Engine.TrainCharacterFeature;
+namespace ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 
 public class TrainCharacterService
 {

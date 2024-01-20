@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ForgottenRealms.Engine.Classes;
 
-namespace ForgottenRealms.Engine.CreatePlayerFeature;
+namespace ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
 
 public class CreatePlayerService
 {

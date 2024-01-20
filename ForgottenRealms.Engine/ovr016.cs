@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using ForgottenRealms.Engine.CharacterFeature.DropCharacterFeature;
 using ForgottenRealms.Engine.Classes;
-using ForgottenRealms.Engine.DropCharacterFeature;
 
 namespace ForgottenRealms.Engine;
 

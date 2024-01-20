@@ -1,6 +1,6 @@
 ﻿using ForgottenRealms.Engine.Classes;
 
-namespace ForgottenRealms.Engine.DropCharacterFeature;
+namespace ForgottenRealms.Engine.CharacterFeature.DropCharacterFeature;
 
 public class DropCharacterService
 {
