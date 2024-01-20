@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ForgottenRealms.Engine.Classes;
+using ForgottenRealms.Engine.DropCharacterFeature;
 
 namespace ForgottenRealms.Engine;
 
@@ -731,45 +732,6 @@ internal class ovr016
         }
     }
 
-
-    private static void DropPlayer() // drop_player
-    {
-        if (gbl.TeamList.Count == 1)
-        {
-            if (ovr027.yes_no(gbl.alertMenuColors, "quit TO DOS: ") == 'Y')
-            {
-                ovr018.FreeCurrentPlayer(gbl.TeamList[0], true, false);
-                seg043.print_and_exit();
-            }
-        }
-        else
-        {
-            ovr025.DisplayPlayerStatusString(false, 10, "will be gone", gbl.SelectedPlayer);
-
-            if (ovr027.yes_no(gbl.alertMenuColors, "Drop from party? ") == 'Y')
-            {
-                if (gbl.SelectedPlayer.in_combat == true)
-                {
-                    ovr025.DisplayPlayerStatusString(true, 10, "bids you farewell", gbl.SelectedPlayer);
-                }
-                else
-                {
-                    ovr025.DisplayPlayerStatusString(true, 10, "is dumped in a ditch", gbl.SelectedPlayer);
-                }
-
-                gbl.SelectedPlayer = ovr018.FreeCurrentPlayer(gbl.SelectedPlayer, true, false);
-                seg037.draw8x8_clear_area(0x0b, 0x26, 1, 0x11);
-
-                ovr025.PartySummary(gbl.SelectedPlayer);
-            }
-            else
-            {
-                ovr025.DisplayPlayerStatusString(true, 10, "Breathes A sigh of relief", gbl.SelectedPlayer);
-            }
-        }
-    }
-
-
     internal static void game_speed()
     {
         char inputKey;
@@ -830,7 +792,7 @@ internal class ovr016
     }
 
     private static Set AlterSet = new Set(0, 69);
-
+    private static readonly DropCharacterService _dropCharacterService = new DropCharacterService();
     internal static void alter_menu()
     {
         char inputKey = ' ';
@@ -854,7 +816,7 @@ internal class ovr016
                         break;
 
                     case 'D':
-                        DropPlayer();
+                        _dropCharacterService.DropPlayer();
                         break;
 
                     case 'S':

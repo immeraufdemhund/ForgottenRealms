@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.Combat;
 using ForgottenRealms.Engine.CreatePlayerFeature;
+using ForgottenRealms.Engine.DropCharacterFeature;
 
 namespace ForgottenRealms.Engine;
 
 internal class ovr018
 {
-    private static readonly CreatePlayerService _createPlayerService = new CreatePlayerService();
+    private static readonly CreatePlayerService _createPlayerService = new ();
+    private static readonly DropCharacterService _dropCharacterService = new();
     private static Set unk_4C13D = new Set(71, 79);
     private static Set unk_4C15D = new Set(69, 83);
 
@@ -169,7 +171,7 @@ internal class ovr018
                     case 'D':
                         if (menuFlags[allow_drop] == true)
                         {
-                            dropPlayer();
+                            _dropCharacterService.dropPlayer();
                         }
                         break;
                     case 'M':
@@ -216,7 +218,7 @@ internal class ovr018
                             }
                             else
                             {
-                                dropPlayer();
+                                _dropCharacterService.dropPlayer();
                             }
                         }
                         break;
@@ -358,37 +360,6 @@ internal class ovr018
         }
 
         return bonus;
-    }
-
-
-    internal static void dropPlayer()
-    {
-        if (gbl.SelectedPlayer != null)
-        {
-            Player player = gbl.SelectedPlayer;
-
-            if (ovr027.yes_no(gbl.alertMenuColors, "Drop " + player.name + " forever? ") == 'Y' &&
-                ovr027.yes_no(gbl.alertMenuColors, "Are you sure? ") == 'Y')
-            {
-                if (player.in_combat == false)
-                {
-                    ovr025.string_print01("You dump " + player.name + " out back.");
-                }
-                else
-                {
-                    ovr025.string_print01(player.name + " bids you farewell.");
-                }
-
-                ovr017.remove_player_file(player);
-                gbl.SelectedPlayer = FreeCurrentPlayer(gbl.SelectedPlayer, true, false);
-            }
-            else
-            {
-                ovr025.string_print01(player.name + " breathes a sigh of relief.");
-            }
-        }
-
-        ovr025.PartySummary(gbl.SelectedPlayer);
     }
 
     /// <summary>
