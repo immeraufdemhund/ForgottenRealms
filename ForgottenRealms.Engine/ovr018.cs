@@ -621,9 +621,9 @@ internal class ovr018
 
         if (player._class <= ClassId.monk)
         {
-            SubStruct_1A35E v5 = gbl.race_ages[(int)player.race][player._class];
+            AgeTable v5 = gbl.race_ages[(int)player.race][player._class];
 
-            player.age = (short)(ovr024.roll_dice(v5.dice_size, v5.dice_count) + v5.base_age);
+            player.age = (short)(ovr024.roll_dice(v5.DiceSize, v5.DiceCount) + v5.BaseAge);
         }
         else
         {
@@ -635,17 +635,17 @@ internal class ovr018
                 case ClassId.mc_c_f_m:
                 case ClassId.mc_c_t:
                 case ClassId.mc_c_r:
-                    player.age = (short)(gbl.race_ages[race][0].base_age + (gbl.race_ages[race][0].dice_count * gbl.race_ages[race][0].dice_size));
+                    player.age = (short)(gbl.race_ages[race][0].BaseAge + (gbl.race_ages[race][0].DiceCount * gbl.race_ages[race][0].DiceSize));
                     break;
 
                 case ClassId.mc_f_mu:
                 case ClassId.mc_f_mu_t:
                 case ClassId.mc_mu_t:
-                    player.age = (short)(gbl.race_ages[race][6].base_age + (gbl.race_ages[race][6].dice_count * gbl.race_ages[race][6].dice_size));
+                    player.age = (short)(gbl.race_ages[race][6].BaseAge + (gbl.race_ages[race][6].DiceCount * gbl.race_ages[race][6].DiceSize));
                     break;
 
                 case ClassId.mc_f_t:
-                    player.age = (short)(gbl.race_ages[race][2].base_age + (gbl.race_ages[race][2].dice_count * gbl.race_ages[race][2].dice_size));
+                    player.age = (short)(gbl.race_ages[race][2].BaseAge + (gbl.race_ages[race][2].DiceCount * gbl.race_ages[race][2].DiceSize));
                     break;
             }
         }

@@ -692,7 +692,7 @@ public class gbl
     public static string data_path; // unk_1B26A
 
 
-    private static Struct_1A35E monster_ages = new(new SubStruct_1A35E[]
+    private static AgeTablesByClass monster_ages = new(new AgeTable[]
     {
         new(6, 2, 6),
         new(0x0c08, 0xe, 0),
@@ -703,7 +703,7 @@ public class gbl
         new(0, 0, 0),
     });
 
-    private static Struct_1A35E dwarf_ages = new(new SubStruct_1A35E[]
+    private static AgeTablesByClass dwarf_ages = new(new AgeTable[]
     {
         new(0xfa, 2, 0x14),
         new(0, 0, 0),
@@ -714,7 +714,7 @@ public class gbl
         new(0x4B, 3, 6),
     });
 
-    private static Struct_1A35E elf_ages = new(new SubStruct_1A35E[]
+    private static AgeTablesByClass elf_ages = new(new AgeTable[]
     {
         new(0x28a, 10, 10),
         new(0, 0, 0),
@@ -725,7 +725,7 @@ public class gbl
         new(100, 5, 6),
     });
 
-    private static Struct_1A35E gnome_ages = new(new SubStruct_1A35E[]
+    private static AgeTablesByClass gnome_ages = new(new AgeTable[]
     {
         new(0x12C, 3, 0xC),
         new(0, 0, 0),
@@ -736,7 +736,7 @@ public class gbl
         new(0x50, 5, 4),
     });
 
-    private static Struct_1A35E halfelf_ages = new(new SubStruct_1A35E[]
+    private static AgeTablesByClass halfelf_ages = new(new AgeTable[]
     {
         new(0x28, 2, 4),
         new(0, 0, 0),
@@ -747,7 +747,7 @@ public class gbl
         new(0x16, 3, 8),
     });
 
-    private static Struct_1A35E halfling_ages = new(new SubStruct_1A35E[]
+    private static AgeTablesByClass halfling_ages = new(new AgeTable[]
     {
         new(0, 0, 0),
         new(0, 0, 0),
@@ -758,7 +758,7 @@ public class gbl
         new(0x28, 2, 4),
     });
 
-    private static Struct_1A35E halforc_ages = new(new SubStruct_1A35E[]
+    private static AgeTablesByClass halforc_ages = new(new AgeTable[]
     {
         new(20, 1, 4),
         new(0, 0, 0),
@@ -769,7 +769,7 @@ public class gbl
         new(20, 2, 4),
     });
 
-    private static Struct_1A35E human_ages = new(new SubStruct_1A35E[]
+    private static AgeTablesByClass human_ages = new(new AgeTable[]
     {
         new(18, 1, 4),
         new(18, 1, 4),
@@ -780,7 +780,7 @@ public class gbl
         new(18, 1, 4),
     });
 
-    public static Struct_1A35E[] race_ages = new Struct_1A35E[]
+    public static AgeTablesByClass[] race_ages = new AgeTablesByClass[]
     {
         monster_ages, dwarf_ages, elf_ages, gnome_ages, halfelf_ages, halfling_ages, halforc_ages, human_ages,
     }; // unk_1A35E
