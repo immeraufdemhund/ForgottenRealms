@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using ForgottenRealms.Engine.CharacterFeature;
 using ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Logging;
@@ -454,7 +455,7 @@ internal class ovr017
         gbl.SelectedPlayer = previousSelectPlayer;
 
         player.hit_point_max = hf_player.field_21;
-        player.hit_point_rolled = (byte)(player.hit_point_max - ovr018.get_con_hp_adj(player));
+        player.hit_point_rolled = (byte)(player.hit_point_max - ConstitutionHitPointsAdjustmentTable.get_con_hp_adj(player));
         player.hit_point_current = hf_player.field_20;
     }
 
@@ -807,7 +808,7 @@ internal class ovr017
                 ovr022.addPlayerGold(300);
                 gbl.SelectedPlayer = PreviousSelectedPlayer;
                 player.hit_point_max = hf_player.field_21;
-                player.hit_point_rolled = (byte)(player.hit_point_max - ovr018.get_con_hp_adj(player));
+                player.hit_point_rolled = (byte)(player.hit_point_max - ConstitutionHitPointsAdjustmentTable.get_con_hp_adj(player));
                 player.hit_point_current = hf_player.field_20;
             }
         }
@@ -1105,6 +1106,7 @@ internal class ovr017
     private static Set unk_4AEA0 = new Set(0, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74);
     private static Set unk_4AEEF = new Set(0, 2, 18);
     private static readonly TrainCharacterService TrainCharacterService = new ();
+    private static readonly ConstitutionHitPointsAdjustmentTable ConstitutionHitPointsAdjustmentTable = new ();
 
 
     internal static void SaveGame()

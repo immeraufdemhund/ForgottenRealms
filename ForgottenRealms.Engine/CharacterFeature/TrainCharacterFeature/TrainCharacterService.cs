@@ -5,6 +5,7 @@ namespace ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 public class TrainCharacterService
 {
     private static readonly ExperienceTable ExperienceTable = new();
+    private readonly ConstitutionHitPointsAdjustmentTable _constitutionHitPointsAdjustmentTable = new ();
     private static byte[] classMasks = { 2, 2, 8, 0x10, 0x20, 1, 4, 4 };
 
     public bool IsAllowedToTrainClass(byte arg_0, ClassId classId)
@@ -293,7 +294,7 @@ public class TrainCharacterService
 
             player.hit_point_rolled += (byte)max_hp_increase;
 
-            int var_15 = ovr018.get_con_hp_adj(gbl.SelectedPlayer);
+            int var_15 = _constitutionHitPointsAdjustmentTable.get_con_hp_adj(gbl.SelectedPlayer);
 
             max_hp_increase = (var_F + var_15) / class_count;
 

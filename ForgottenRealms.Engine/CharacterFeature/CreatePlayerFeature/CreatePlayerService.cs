@@ -8,6 +8,7 @@ public class CreatePlayerService
 {
     private readonly IconBuilder _iconBuilder = new ();
     private readonly Thac0Table _thac0Table = new ();
+    private readonly ConstitutionHitPointsAdjustmentTable _constitutionHitPointsAdjustmentTable = new ();
 
     internal void createPlayer()
     {
@@ -497,7 +498,7 @@ public class CreatePlayerService
             player.hit_point_rolled = ovr018.sub_509E0(0xff, player);
             player.hit_point_max = player.hit_point_rolled;
 
-            var_1E = ovr018.get_con_hp_adj(player);
+            var_1E = _constitutionHitPointsAdjustmentTable.get_con_hp_adj(player);
 
             if (var_1E < 0)
             {
