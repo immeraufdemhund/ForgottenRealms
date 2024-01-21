@@ -147,7 +147,7 @@ public class MainGameEngine
 
             if (gbl.inDemo == false)
             {
-                ovr018.startGameMenu();
+                ovr018.StartGameMenu();
             }
 
             ovr003.sub_29758();

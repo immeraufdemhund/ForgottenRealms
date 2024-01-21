@@ -1940,7 +1940,7 @@ internal class ovr003
 
         if (var_1 == 0)
         {
-            ovr018.startGameMenu();
+            ovr018.StartGameMenu();
             if (gbl.lastDaxBlockId != 0x50 &&
                 gbl.area_ptr.inDungeon == 0)
             {
@@ -1962,7 +1962,7 @@ internal class ovr003
                 play_ptr.in_combat = true;
             }
 
-            ovr018.startGameMenu();
+            ovr018.StartGameMenu();
             char saveYes = ovr027.yes_no(gbl.defaultMenuColors, "You've won. Save before quitting? ");
 
             if (saveYes == 'Y')

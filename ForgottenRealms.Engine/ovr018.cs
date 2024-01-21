@@ -64,151 +64,172 @@ internal class ovr018
         true
     };
 
-    internal static void startGameMenu()
+    internal static void StartGameMenu()
     {
         var gameStateBackup = gbl.game_state;
         gbl.game_state = GameState.StartGameMenu;
-        bool reclac_menus = true;
+        var reclac_menus = true;
 
         while (true)
         {
             if (reclac_menus == true)
             {
-                seg037.DrawFrame_Outer();
-                if (gbl.SelectedPlayer != null)
-                {
-                    ovr025.PartySummary(gbl.SelectedPlayer);
-                    menuFlags[allow_drop] = true;
-                    menuFlags[allow_modify] = true;
-
-                    if (gbl.area2_ptr.training_class_mask > 0 || Cheats.free_training == true)
-                    {
-                        menuFlags[allow_training] = true;
-                        menuFlags[allow_duelclass] = gbl.SelectedPlayer.CanDuelClass();
-                    }
-                    else
-                    {
-                        menuFlags[allow_training] = false;
-                        menuFlags[allow_duelclass] = false;
-                    }
-
-                    menuFlags[allow_view] = true;
-                    menuFlags[allow_remove] = true;
-                    menuFlags[allow_load] = false;
-                    menuFlags[allow_save] = true;
-                    menuFlags[allow_begin] = true;
-                }
-                else
-                {
-                    menuFlags[allow_drop] = false;
-                    menuFlags[allow_modify] = false;
-                    menuFlags[allow_training] = false;
-                    menuFlags[allow_duelclass] = false;
-                    menuFlags[allow_view] = false;
-                    menuFlags[allow_remove] = false;
-                    menuFlags[allow_load] = true;
-                    menuFlags[allow_save] = false;
-                    menuFlags[allow_begin] = false;
-                }
-
-                int yCol = 0;
-                for (int i = 0; i <= 11; i++)
-                {
-                    if (menuFlags[i] == true)
-                    {
-                        seg041.displayString(menuStrings[i][0].ToString(), 0, 15, yCol + 12, 2);
-
-                        string var_111 = seg051.Copy(menuStrings[i].Length, 1, menuStrings[i]);
-                        seg041.displayString(var_111, 0, 10, yCol + 12, 3);
-                        yCol++;
-                    }
-                }
-
+                ReplaceMenus();
                 reclac_menus = false;
             }
 
-            bool controlKey;
-
-            char inputkey = ovr027.displayInput(out controlKey, false, 1, new MenuColorSet(0, 0, 13), "C D M T H V A R L S B E J", "Choose a function ");
+            var inputKey = ovr027.displayInput(out var controlKey, false, 1, new MenuColorSet(0, 0, 13), "C D M T H V A R L S B E J", "Choose a function ");
 
             ovr027.ClearPromptArea();
 
             if (controlKey == true)
             {
-                if (gbl.SelectedPlayer != null && unk_4C13D.MemberOf(inputkey) == true)
-                {
-                    bool previousDuelClassState = gbl.SelectedPlayer.CanDuelClass();
-
-                    ovr020.scroll_team_list(inputkey);
-                    ovr025.PartySummary(gbl.SelectedPlayer);
-
-                    previousDuelClassState ^= gbl.SelectedPlayer.CanDuelClass();
-
-                    reclac_menus = previousDuelClassState && gbl.area2_ptr.training_class_mask > 0;
-                }
+                reclac_menus = ChangeSelectedPlayer(inputKey, reclac_menus);
             }
             else
             {
-                if (unk_4C15D.MemberOf(inputkey) == false)
+                if (unk_4C15D.MemberOf(inputKey) == false)
                 {
                     gbl.gameSaved = false;
                 }
 
-                switch (inputkey)
+                if (ExecuteMenuOption(inputKey, gameStateBackup))
                 {
-                    case 'C':
-                        if (menuFlags[allow_create] == true) CreatePlayerService.createPlayer();
-                        break;
-                    case 'D':
-                        if (menuFlags[allow_drop] == true) DropCharacterService.dropPlayer();
-                        break;
-                    case 'M':
-                        if (menuFlags[allow_modify] == true) ModifyCharacterService.modifyPlayer();
-                        break;
-                    case 'T':
-                        if (menuFlags[allow_training] == true) TrainCharacterService.train_player();
-                        break;
-                    case 'H':
-                        if (menuFlags[allow_duelclass] == true) ovr026.DuelClass(gbl.SelectedPlayer);
-                        break;
-                    case 'V':
-                        if (menuFlags[allow_view] == true) ovr020.viewPlayer();
-                        break;
-
-                    case 'A':
-                        if (menuFlags[allow_add] == true) AddPlayerAction.AddPlayer();
-                        break;
-
-                    case 'R':
-                        if(menuFlags[allow_remove] == true) RemoveSelectedPlayer();
-                        break;
-
-                    case 'L':
-                        if (menuFlags[allow_load] == true) ovr017.loadGameMenu();
-                        break;
-
-                    case 'S':
-                        if (menuFlags[allow_save] == true) OpenSaveGameMenu();
-                        break;
-
-                    case 'B':
-                        if (menuFlags[allow_begin] == true)
-                        {
-                            if (BeginAdventuring(gameStateBackup))
-                            {
-                                return;
-                            }
-                        }
-                        break;
-
-                    case 'E':
-                        ExitGame();
-                        break;
+                    return;
                 }
 
                 reclac_menus = true;
             }
         }
+    }
+
+    private static void ReplaceMenus()
+    {
+        seg037.DrawFrame_Outer();
+        if (gbl.SelectedPlayer != null)
+        {
+            ovr025.PartySummary(gbl.SelectedPlayer);
+            menuFlags[allow_drop] = true;
+            menuFlags[allow_modify] = true;
+
+            if (gbl.area2_ptr.training_class_mask > 0 || Cheats.free_training == true)
+            {
+                menuFlags[allow_training] = true;
+                menuFlags[allow_duelclass] = gbl.SelectedPlayer.CanDuelClass();
+            }
+            else
+            {
+                menuFlags[allow_training] = false;
+                menuFlags[allow_duelclass] = false;
+            }
+
+            menuFlags[allow_view] = true;
+            menuFlags[allow_remove] = true;
+            menuFlags[allow_load] = false;
+            menuFlags[allow_save] = true;
+            menuFlags[allow_begin] = true;
+        }
+        else
+        {
+            menuFlags[allow_drop] = false;
+            menuFlags[allow_modify] = false;
+            menuFlags[allow_training] = false;
+            menuFlags[allow_duelclass] = false;
+            menuFlags[allow_view] = false;
+            menuFlags[allow_remove] = false;
+            menuFlags[allow_load] = true;
+            menuFlags[allow_save] = false;
+            menuFlags[allow_begin] = false;
+        }
+
+        var yCol = 0;
+        for (var i = 0; i <= 11; i++)
+        {
+            if (menuFlags[i] == true)
+            {
+                seg041.displayString(menuStrings[i][0].ToString(), 0, 15, yCol + 12, 2);
+
+                var var_111 = seg051.Copy(menuStrings[i].Length, 1, menuStrings[i]);
+                seg041.displayString(var_111, 0, 10, yCol + 12, 3);
+                yCol++;
+            }
+        }
+    }
+
+    private static bool ChangeSelectedPlayer(char inputKey, bool reclac_menus)
+    {
+        if (gbl.SelectedPlayer == null || unk_4C13D.MemberOf(inputKey) != true)
+        {
+            return reclac_menus;
+        }
+
+        var previousDuelClassState = gbl.SelectedPlayer.CanDuelClass();
+
+        ovr020.scroll_team_list(inputKey);
+        ovr025.PartySummary(gbl.SelectedPlayer);
+
+        previousDuelClassState ^= gbl.SelectedPlayer.CanDuelClass();
+
+        reclac_menus = previousDuelClassState && gbl.area2_ptr.training_class_mask > 0;
+
+        return reclac_menus;
+    }
+
+    private static bool ExecuteMenuOption(char inputKey, GameState gameStateBackup)
+    {
+        switch (inputKey)
+        {
+            case 'C':
+                if (menuFlags[allow_create] == true) CreatePlayerService.createPlayer();
+                break;
+            case 'D':
+                if (menuFlags[allow_drop] == true) DropCharacterService.dropPlayer();
+                break;
+            case 'M':
+                if (menuFlags[allow_modify] == true) ModifyCharacterService.modifyPlayer();
+                break;
+            case 'T':
+                if (menuFlags[allow_training] == true) TrainCharacterService.train_player();
+                break;
+            case 'H':
+                if (menuFlags[allow_duelclass] == true) ovr026.DuelClass(gbl.SelectedPlayer);
+                break;
+            case 'V':
+                if (menuFlags[allow_view] == true) ovr020.viewPlayer();
+                break;
+
+            case 'A':
+                if (menuFlags[allow_add] == true) AddPlayerAction.AddPlayer();
+                break;
+
+            case 'R':
+                if(menuFlags[allow_remove] == true) RemoveSelectedPlayer();
+                break;
+
+            case 'L':
+                if (menuFlags[allow_load] == true) ovr017.loadGameMenu();
+                break;
+
+            case 'S':
+                if (menuFlags[allow_save] == true) OpenSaveGameMenu();
+                break;
+
+            case 'B':
+                if (menuFlags[allow_begin] == true)
+                {
+                    if (BeginAdventuring(gameStateBackup))
+                    {
+                        return true;
+                    }
+                }
+                break;
+
+            case 'E':
+                ExitGame();
+                break;
+        }
+
+        return false;
     }
 
     private static void ExitGame()
@@ -302,7 +323,7 @@ internal class ovr018
     internal static int con_bonus(ClassId classId)
     {
         int bonus;
-        int stat = gbl.SelectedPlayer.stats2.Con.full;
+        var stat = gbl.SelectedPlayer.stats2.Con.full;
 
         if (stat == 3)
         {
@@ -374,7 +395,7 @@ internal class ovr018
 
     internal static Player FreeCurrentPlayer(Player player, bool free_icon, bool leave_party_size) // free_players
     {
-        int index = gbl.TeamList.IndexOf(player);
+        var index = gbl.TeamList.IndexOf(player);
 
         if (index >= 0)
         {
@@ -415,7 +436,7 @@ internal class ovr018
     {
         sbyte hp_adj = 0;
 
-        for (int class_index = 0; class_index <= (byte)ClassId.monk; class_index++)
+        for (var class_index = 0; class_index <= (byte)ClassId.monk; class_index++)
         {
             if (player.ClassLevel[class_index] > 0 &&
                 player.ClassLevel[class_index] < gbl.max_class_hit_dice[class_index])
@@ -426,7 +447,7 @@ internal class ovr018
                     player._class == ClassId.paladin ||
                     player._class == ClassId.ranger)
                 {
-                    int con = player.stats2.Con.full;
+                    var con = player.stats2.Con.full;
 
                     if (con == 17)
                     {
@@ -464,10 +485,10 @@ internal class ovr018
 
     internal static int sub_506BA(Player player)
     {
-        int class_count = 0;
-        int levels_total = 0;
+        var class_count = 0;
+        var levels_total = 0;
 
-        for (int class_index = 0; class_index <= (int)ClassId.monk; class_index++)
+        for (var class_index = 0; class_index <= (int)ClassId.monk; class_index++)
         {
             if (player.ClassLevel[class_index] > 0)
             {
@@ -504,7 +525,7 @@ internal class ovr018
     {
         byte var_4 = 0;
 
-        for (int _class = 0; _class <= 7; _class++)
+        for (var _class = 0; _class <= 7; _class++)
         {
             if (player.ClassLevel[_class] > 0 &&
                 TrainCharacterService.IsAllowedToTrainClass(arg_0, (ClassId)_class) == true)
@@ -518,8 +539,8 @@ internal class ovr018
                         var_5 = 1;
                     }
 
-                    byte var_2 = ovr024.roll_dice(unk_16B32[_class], var_5);
-                    byte var_3 = ovr024.roll_dice(unk_16B32[_class], var_5);
+                    var var_2 = ovr024.roll_dice(unk_16B32[_class], var_5);
+                    var var_3 = ovr024.roll_dice(unk_16B32[_class], var_5);
 
                     if (var_3 > var_2)
                     {
