@@ -56,46 +56,46 @@ public class TitleScreenAction
         seg043.clear_keyboard();
     }
 
-    private static void ShowCredits()
+    private void ShowCredits()
     {
         Display.UpdateStop();
 
         seg037.draw8x8_02();
 
-        DisplayDriver.displayString("based on the tsr novel 'azure bonds'", 0, 10, 1, 2);
-        DisplayDriver.displayString("by:", 0, 10, 2, 6);
-        DisplayDriver.displayString("kate novak", 0, 11, 2, 9);
-        DisplayDriver.displayString("and", 0, 10, 2, 0x14);
-        DisplayDriver.displayString("jeff grubb", 0, 11, 2, 0x18);
-        DisplayDriver.displayString("scenario created by:", 0, 10, 4, 0x0a);
-        DisplayDriver.displayString("tsr, inc.", 0, 0x0e, 5, 0x0b);
-        DisplayDriver.displayString("and", 0, 0x0a, 5, 0x15);
-        DisplayDriver.displayString("ssi", 0, 0x0e, 5, 0x19);
-        DisplayDriver.displayString("jeff grubb", 0, 0x0b, 6, 0x0e);
-        DisplayDriver.displayString("george mac donald", 0x0, 0x0B, 0x7, 0x0B);
-        DisplayDriver.displayString("game created by:", 0x0, 0x0A, 0x9, 0x1);
-        DisplayDriver.displayString("ssi special projects", 0x0, 0x0E, 0x9, 0x12);
-        DisplayDriver.displayString("project leader:", 0x0, 0x0E, 0x0B, 0x2);
-        DisplayDriver.displayString("george mac donald", 0x0, 0x0B, 0x0C, 0x2);
-        DisplayDriver.displayString("programming:", 0x0, 0x0E, 0x0E, 0x2);
-        DisplayDriver.displayString("scot bayless", 0x0, 0x0B, 0x0F, 0x2);
-        DisplayDriver.displayString("russ brown", 0x0, 0x0B, 0x10, 0x2);
-        DisplayDriver.displayString("michael mancuso", 0x0, 0x0B, 0x11, 0x2);
-        DisplayDriver.displayString("development:", 0x0, 0x0E, 0x13, 0x2);
-        DisplayDriver.displayString("david shelley", 0x0, 0x0B, 0x14, 0x2);
-        DisplayDriver.displayString("michael mancuso", 0x0, 0x0B, 0x15, 0x2);
-        DisplayDriver.displayString("oran kangas", 0x0, 0x0B, 0x16, 0x2);
-        DisplayDriver.displayString("graphic arts:", 0x0, 0x0E, 0x0B, 0x16);
-        DisplayDriver.displayString("tom wahl", 0x0, 0x0B, 0x0C, 0x16);
-        DisplayDriver.displayString("fred butts", 0x0, 0x0B, 0x0D, 0x16);
-        DisplayDriver.displayString("susan manley", 0x0, 0x0B, 0x0E, 0x16);
-        DisplayDriver.displayString("mark johnson", 0x0, 0x0B, 0x0F, 0x16);
-        DisplayDriver.displayString("cyrus lum", 0x0, 0x0B, 0x10, 0x16);
-        DisplayDriver.displayString("playtesting:", 0x0, 0x0E, 0x12, 0x16);
-        DisplayDriver.displayString("jim jennings", 0x0, 0x0B, 0x13, 0x16);
-        DisplayDriver.displayString("james kucera", 0x0, 0x0B, 0x14, 0x16);
-        DisplayDriver.displayString("rick white", 0x0, 0x0B, 0x15, 0x16);
-        DisplayDriver.displayString("robert daly", 0x0, 0x0B, 0x16, 0x16);
+        _displayDriver.DisplayString("based on the tsr novel 'azure bonds'", 0, 10, 1, 2);
+        _displayDriver.DisplayString("by:", 0, 10, 2, 6);
+        _displayDriver.DisplayString("kate novak", 0, 11, 2, 9);
+        _displayDriver.DisplayString("and", 0, 10, 2, 0x14);
+        _displayDriver.DisplayString("jeff grubb", 0, 11, 2, 0x18);
+        _displayDriver.DisplayString("scenario created by:", 0, 10, 4, 0x0a);
+        _displayDriver.DisplayString("tsr, inc.", 0, 0x0e, 5, 0x0b);
+        _displayDriver.DisplayString("and", 0, 0x0a, 5, 0x15);
+        _displayDriver.DisplayString("ssi", 0, 0x0e, 5, 0x19);
+        _displayDriver.DisplayString("jeff grubb", 0, 0x0b, 6, 0x0e);
+        _displayDriver.DisplayString("george mac donald", 0x0, 0x0B, 0x7, 0x0B);
+        _displayDriver.DisplayString("game created by:", 0x0, 0x0A, 0x9, 0x1);
+        _displayDriver.DisplayString("ssi special projects", 0x0, 0x0E, 0x9, 0x12);
+        _displayDriver.DisplayString("project leader:", 0x0, 0x0E, 0x0B, 0x2);
+        _displayDriver.DisplayString("george mac donald", 0x0, 0x0B, 0x0C, 0x2);
+        _displayDriver.DisplayString("programming:", 0x0, 0x0E, 0x0E, 0x2);
+        _displayDriver.DisplayString("scot bayless", 0x0, 0x0B, 0x0F, 0x2);
+        _displayDriver.DisplayString("russ brown", 0x0, 0x0B, 0x10, 0x2);
+        _displayDriver.DisplayString("michael mancuso", 0x0, 0x0B, 0x11, 0x2);
+        _displayDriver.DisplayString("development:", 0x0, 0x0E, 0x13, 0x2);
+        _displayDriver.DisplayString("david shelley", 0x0, 0x0B, 0x14, 0x2);
+        _displayDriver.DisplayString("michael mancuso", 0x0, 0x0B, 0x15, 0x2);
+        _displayDriver.DisplayString("oran kangas", 0x0, 0x0B, 0x16, 0x2);
+        _displayDriver.DisplayString("graphic arts:", 0x0, 0x0E, 0x0B, 0x16);
+        _displayDriver.DisplayString("tom wahl", 0x0, 0x0B, 0x0C, 0x16);
+        _displayDriver.DisplayString("fred butts", 0x0, 0x0B, 0x0D, 0x16);
+        _displayDriver.DisplayString("susan manley", 0x0, 0x0B, 0x0E, 0x16);
+        _displayDriver.DisplayString("mark johnson", 0x0, 0x0B, 0x0F, 0x16);
+        _displayDriver.DisplayString("cyrus lum", 0x0, 0x0B, 0x10, 0x16);
+        _displayDriver.DisplayString("playtesting:", 0x0, 0x0E, 0x12, 0x16);
+        _displayDriver.DisplayString("jim jennings", 0x0, 0x0B, 0x13, 0x16);
+        _displayDriver.DisplayString("james kucera", 0x0, 0x0B, 0x14, 0x16);
+        _displayDriver.DisplayString("rick white", 0x0, 0x0B, 0x15, 0x16);
+        _displayDriver.DisplayString("robert daly", 0x0, 0x0B, 0x16, 0x16);
 
         Display.UpdateStart();
     }

@@ -1,3 +1,4 @@
+using System;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.DaxFiles;
 
@@ -42,10 +43,10 @@ internal class DisplayDriver
     }
 
 
-    internal static void display_char01(char ch, int repeatCount, int bgColor, int fgColor, int YCol, int XCol) // display_char01
+    internal static void display_char01(char ch, int repeatCount, int bgColor, int fgColor, int y, int x)
     {
-        if (XCol < 40 &&
-            YCol < 25)
+        if (x < 40 &&
+            y < 25)
         {
             char index = (char)(char.ToUpper(ch) % 0x40);
 
@@ -56,7 +57,7 @@ internal class DisplayDriver
 
             for (int i = 0; i < repeatCount; i++)
             {
-                Display.DisplayMono8x8(XCol + i, YCol, gbl.monoCharData, bgColor, fgColor);
+                Display.DisplayMono8x8(x + i, y, gbl.monoCharData, bgColor, fgColor);
             }
         }
     }
@@ -73,7 +74,13 @@ internal class DisplayDriver
     }
 
 
+    [Obsolete]
     internal static void displayString(string str, int bgColor, int fgColor, int yCol, int xCol)
+    {
+        new DisplayDriver().DisplayString(str, bgColor, fgColor, yCol, xCol);
+    }
+
+    public void DisplayString(string str, int bgColor, int fgColor, int yCol, int xCol)
     {
         if (xCol <= 0x27 && yCol <= 0x27)
         {
@@ -85,7 +92,6 @@ internal class DisplayDriver
             Display.Update();
         }
     }
-
 
 
     internal static int displayStringSlow(string text
