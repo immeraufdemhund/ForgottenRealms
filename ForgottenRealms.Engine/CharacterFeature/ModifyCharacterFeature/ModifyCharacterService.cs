@@ -18,7 +18,7 @@ public class ModifyCharacterService
              gbl.SelectedPlayer.exp != 25000) ||
             gbl.SelectedPlayer.multiclassLevel != 0)
         {
-            seg041.DisplayStatusText(0, 14, gbl.SelectedPlayer.name + " can't be modified.");
+            DisplayDriver.DisplayStatusText(0, 14, gbl.SelectedPlayer.name + " can't be modified.");
             return;
         }
 

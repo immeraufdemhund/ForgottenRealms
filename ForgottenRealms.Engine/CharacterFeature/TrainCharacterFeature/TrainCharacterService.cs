@@ -18,7 +18,7 @@ public class TrainCharacterService
         if (gbl.SelectedPlayer.health_status != Status.okey &&
             Cheats.free_training == false)
         {
-            seg041.DisplayStatusText(0, 14, "we only train conscious people");
+            DisplayDriver.DisplayStatusText(0, 14, "we only train conscious people");
             return;
         }
 
@@ -27,7 +27,7 @@ public class TrainCharacterService
             gbl.silent_training == false &&
             gbl.gameWon == false)
         {
-            seg041.DisplayStatusText(0, 14, "Training costs 1000 gp.");
+            DisplayDriver.DisplayStatusText(0, 14, "Training costs 1000 gp.");
             return;
         }
 
@@ -125,7 +125,7 @@ public class TrainCharacterService
             gbl.silent_training == false &&
             Cheats.free_training == false)
         {
-            seg041.DisplayStatusText(0, 14, "We don't train that class here");
+            DisplayDriver.DisplayStatusText(0, 14, "We don't train that class here");
             return;
         }
 
@@ -139,7 +139,7 @@ public class TrainCharacterService
             if (gbl.silent_training == false &&
                 Cheats.free_training == false)
             {
-                seg041.DisplayStatusText(0, 14, "Not Enough Experience");
+                DisplayDriver.DisplayStatusText(0, 14, "Not Enough Experience");
                 return;
             }
         }
@@ -169,7 +169,7 @@ public class TrainCharacterService
 
             ovr025.displayPlayerName(false, y_offset, 4, gbl.SelectedPlayer);
 
-            seg041.displayString(" will become:", 0, 10, y_offset, player.name.Length + 4);
+            DisplayDriver.displayString(" will become:", 0, 10, y_offset, player.name.Length + 4);
 
             for (int _class = 0; _class <= 7; _class++)
             {
@@ -183,14 +183,14 @@ public class TrainCharacterService
                         string text = System.String.Format("    a level {0} {1}",
                             player.ClassLevel[_class] + 1, ovr020.classString[_class]);
 
-                        seg041.displayString(text, 0, 10, y_offset, 6);
+                        DisplayDriver.displayString(text, 0, 10, y_offset, 6);
                     }
                     else
                     {
                         string text = System.String.Format("and a level {0} {1}",
                             player.ClassLevel[_class] + 1, ovr020.classString[_class]);
 
-                        seg041.displayString(text, 0, 10, y_offset, 6);
+                        DisplayDriver.displayString(text, 0, 10, y_offset, 6);
                     }
                 }
             }

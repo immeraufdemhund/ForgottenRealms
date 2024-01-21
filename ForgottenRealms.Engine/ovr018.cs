@@ -148,10 +148,10 @@ internal class ovr018
         {
             if (menuFlags[i] == true)
             {
-                seg041.displayString(menuStrings[i][0].ToString(), 0, 15, yCol + 12, 2);
+                DisplayDriver.displayString(menuStrings[i][0].ToString(), 0, 15, yCol + 12, 2);
 
                 var var_111 = seg051.Copy(menuStrings[i].Length, 1, menuStrings[i]);
-                seg041.displayString(var_111, 0, 10, yCol + 12, 3);
+                DisplayDriver.displayString(var_111, 0, 10, yCol + 12, 3);
                 yCol++;
             }
         }
@@ -375,21 +375,21 @@ internal class ovr018
         {
             if (highlighted == true)
             {
-                seg041.displaySpaceChar(1, gbl.SelectedPlayer.name.Length + 1);
-                seg041.displayString(gbl.SelectedPlayer.name, 0, 13, 1, 1);
+                DisplayDriver.displaySpaceChar(1, gbl.SelectedPlayer.name.Length + 1);
+                DisplayDriver.displayString(gbl.SelectedPlayer.name, 0, 13, 1, 1);
 
                 if (name_cursor_pos > gbl.SelectedPlayer.name.Length || gbl.SelectedPlayer.name[name_cursor_pos - 1] == ' ')
                 {
-                    seg041.displayString("%", 0, 15, 1, name_cursor_pos);
+                    DisplayDriver.displayString("%", 0, 15, 1, name_cursor_pos);
                 }
                 else
                 {
-                    seg041.displayString(gbl.SelectedPlayer.name[name_cursor_pos - 1].ToString(), 0, 15, 1, name_cursor_pos);
+                    DisplayDriver.displayString(gbl.SelectedPlayer.name[name_cursor_pos - 1].ToString(), 0, 15, 1, name_cursor_pos);
                 }
             }
             else
             {
-                seg041.displayString(gbl.SelectedPlayer.name, 0, 10, 1, 1);
+                DisplayDriver.displayString(gbl.SelectedPlayer.name, 0, 10, 1, 1);
             }
         }
     }

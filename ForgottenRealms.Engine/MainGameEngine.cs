@@ -33,7 +33,7 @@ public class MainGameEngine
     {
         gbl.exe_path = System.IO.Directory.GetCurrentDirectory();
 
-        seg044.SoundInit(_config.ResourceLoader);
+        SoundDriver.SoundInit(_config.ResourceLoader);
     }
 
     public static void PROGRAM()
@@ -52,7 +52,7 @@ public class MainGameEngine
 
         ItemLibrary.Read();
 
-        seg044.PlaySound(Sound.sound_0);
+        new SoundDriver().PlaySound(Sound.sound_0);
 
         //Logging.Logger.Debug("Field_6 & 0x0F == 0");
         //foreach (var s in gbl.spellCastingTable )
@@ -177,7 +177,7 @@ public class MainGameEngine
                     ovr004.copy_protection();
                 }
 
-                seg044.PlaySound(Sound.sound_0);
+                new SoundDriver().PlaySound(Sound.sound_0);
             }
         }
     }
@@ -307,9 +307,9 @@ public class MainGameEngine
         gbl.sky_dax_251 = null;
         gbl.sky_dax_252 = null;
         gbl.gameWon = false;
-        seg041.Load8x8Tiles();
+        DisplayDriver.Load8x8Tiles();
         ovr027.ClearPromptArea();
-        seg041.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+        DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
 
         ovr038.Load8x8D(4, 0xca);
         ovr038.Load8x8D(0, 0xcb);

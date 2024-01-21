@@ -703,8 +703,8 @@ internal class ovr023
         {
             if (gbl.spell_from_item == false)
             {
-                seg041.displayString(SpellNames[spell_id], 0, 10, 0x13, 1);
-                seg041.displayString("can't be cast here...", 0, 10, 0x14, 1);
+                DisplayDriver.displayString(SpellNames[spell_id], 0, 10, 0x13, 1);
+                DisplayDriver.displayString("can't be cast here...", 0, 10, 0x14, 1);
 
                 if (ovr027.yes_no(gbl.defaultMenuColors, "Lose it? ") == 'Y')
                 {
@@ -713,8 +713,8 @@ internal class ovr023
             }
             else
             {
-                seg041.displayString("That Item", 0, 10, 0x13, 1);
-                seg041.displayString("is a combat-only item...", 0, 10, 0x14, 1);
+                DisplayDriver.displayString("That Item", 0, 10, 0x13, 1);
+                DisplayDriver.displayString("is a combat-only item...", 0, 10, 0x14, 1);
 
                 if (ovr027.yes_no(gbl.defaultMenuColors, "Use it? ") == 'Y')
                 {
@@ -763,15 +763,15 @@ internal class ovr023
 
                     if (spell_id == 0x2F)
                     {
-                        seg044.PlaySound(Sound.sound_b);
+                        new SoundDriver().PlaySound(Sound.sound_b);
                     }
                     else if (spell_id == 0x33)
                     {
-                        seg044.PlaySound(Sound.sound_8);
+                        new SoundDriver().PlaySound(Sound.sound_8);
                     }
                     else
                     {
-                        seg044.PlaySound(Sound.sound_2);
+                        new SoundDriver().PlaySound(Sound.sound_2);
                     }
 
                     ovr025.draw_missile_attack(0x1E, 4, gbl.targetPos, casterPos);
@@ -972,7 +972,7 @@ internal class ovr023
         {
             if (firstTimeRound == false)
             {
-                seg044.PlaySound(Sound.sound_2);
+                new SoundDriver().PlaySound(Sound.sound_2);
                 ovr025.load_missile_icons(0x12);
 
                 ovr025.draw_missile_attack(0x1E, 4, ovr033.PlayerMapPos(target), ovr033.PlayerMapPos(gbl.SelectedPlayer));
@@ -1457,7 +1457,7 @@ internal class ovr023
         ovr025.DisplayPlayerStatusString(false, 10, "Creates a noxious cloud", gbl.SelectedPlayer);
 
         ovr033.redrawCombatArea(8, 0xff, gbl.targetPos);
-        seg041.GameDelay();
+        DisplayDriver.GameDelay();
         ovr025.ClearPlayerTextArea();
         for (int var_11 = 0; var_11 < 4; var_11++)
         {
@@ -2734,7 +2734,7 @@ internal class ovr023
         ovr025.DisplayPlayerStatusString(false, 10, "Creates a poisonous cloud", gbl.SelectedPlayer);
 
         ovr033.redrawCombatArea(8, 0xFF, gbl.targetPos);
-        seg041.GameDelay();
+        DisplayDriver.GameDelay();
         ovr025.ClearPlayerTextArea();
 
         for (int idx = 0; idx < max_targets; idx++)
@@ -3136,7 +3136,7 @@ internal class ovr023
             ovr025.DisplayPlayerStatusString(true, 10, "Casts a Spell", player);
             seg037.draw8x8_clear_area(0x17, 0x27, 0x17, 0);
 
-            seg041.displayString("Spell:" + SpellNames[spellId], 0, 10, 0x17, 0);
+            DisplayDriver.displayString("Spell:" + SpellNames[spellId], 0, 10, 0x17, 0);
         }
         else
         {
@@ -3144,9 +3144,9 @@ internal class ovr023
 
             ovr025.displayPlayerName(false, 0x13, 1, player);
 
-            seg041.displayString(arg_2, 0, 10, 0x13, player.name.Length + 2);
-            seg041.displayString(SpellNames[spellId], 0, 10, 0x14, 1);
-            seg041.GameDelay();
+            DisplayDriver.displayString(arg_2, 0, 10, 0x13, player.name.Length + 2);
+            DisplayDriver.displayString(SpellNames[spellId], 0, 10, 0x14, 1);
+            DisplayDriver.GameDelay();
             ovr025.ClearPlayerTextArea();
         }
     }

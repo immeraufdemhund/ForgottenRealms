@@ -12,7 +12,7 @@ public class seg043
         {
             in_print_and_exit = true;
 
-            seg044.PlaySound(Sound.sound_FF);
+            new SoundDriver().PlaySound(Sound.sound_FF);
 
             Logger.Close();
 
@@ -45,7 +45,7 @@ public class seg043
 
         if (key == 0x13)
         {
-            seg044.PlaySound(Sound.sound_0);
+            new SoundDriver().PlaySound(Sound.sound_0);
         }
 
         if (Cheats.allow_keyboard_exit && key == 3)

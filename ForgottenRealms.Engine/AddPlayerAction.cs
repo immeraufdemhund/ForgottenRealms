@@ -129,7 +129,7 @@ public class AddPlayerAction
                         if (new_player.paladin_lvl > 0 && evil_present == true)
                         {
                             ovr025.string_print01("paladins do not join with evil scum");
-                            seg041.GameDelay();
+                            DisplayDriver.GameDelay();
                         }
                         else if (new_player.ranger_lvl > 0 && ranger_count > 2)
                         {

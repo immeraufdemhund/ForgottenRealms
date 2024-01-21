@@ -620,7 +620,7 @@ internal class ovr026
 
         if (list.Count == 1)
         {
-            seg041.DisplayStatusText(15, 4, player.name + " doesn't qualify.");
+            DisplayDriver.DisplayStatusText(15, 4, player.name + " doesn't qualify.");
             list.Clear();
             return;
         }
@@ -683,7 +683,7 @@ internal class ovr026
 
         player._class = (ClassId)newClass;
 
-        seg041.DisplayStatusText(0, 10, player.name + " is now a 1st level " + ovr020.classString[newClass] + ".");
+        DisplayDriver.DisplayStatusText(0, 10, player.name + " is now a 1st level " + ovr020.classString[newClass] + ".");
 
         player.spellList.Clear();
 

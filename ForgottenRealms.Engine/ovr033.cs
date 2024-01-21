@@ -536,8 +536,8 @@ internal class ovr033
     {
         if (gbl.game_state != GameState.Combat)
         {
-            seg044.PlaySound(Sound.sound_5);
-            seg041.GameDelay();
+            new SoundDriver().PlaySound(Sound.sound_5);
+            DisplayDriver.GameDelay();
         }
         else
         {
@@ -554,7 +554,7 @@ internal class ovr033
                 }
 
                 RedrawPlayerBackground(player_index);
-                seg044.PlaySound(Sound.sound_5);
+                new SoundDriver().PlaySound(Sound.sound_5);
 
                 // Draw skull overlay
                 DaxBlock attackIcon = gbl.combat_icons[24].GetIcon(Icon.Attack, 0);
@@ -594,7 +594,7 @@ internal class ovr033
 
 
                 // clean-up combat stuff
-                seg041.GameDelay();
+                DisplayDriver.GameDelay();
                 RedrawPlayerBackground(player_index);
 
                 gbl.CombatMap[GetPlayerIndex(player)].size = 0;

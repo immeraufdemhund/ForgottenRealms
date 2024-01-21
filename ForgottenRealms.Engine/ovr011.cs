@@ -1180,9 +1180,9 @@ internal class ovr011
         gbl.current_head_id = 0xff;
         gbl.current_body_id = 0xff;
         ovr027.ClearPromptArea();
-        seg041.GameDelay();
+        DisplayDriver.GameDelay();
 
-        seg041.displayString("A battle begins...", 0, 0x0a, 0x18, 0);
+        DisplayDriver.displayString("A battle begins...", 0, 0x0a, 0x18, 0);
 
         gbl.AutoPCsCastMagic = false; // TODO review this...
         gbl.combat_round = 0;

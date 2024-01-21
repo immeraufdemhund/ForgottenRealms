@@ -46,7 +46,7 @@ internal class ovr030
                 if (gbl.AnimationsOn)
                 {
                     ovr027.ClearPromptAreaNoUpdate();
-                    seg041.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+                    DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
                 }
 
                 DaxArrayFreeDaxBlocks(daxArray);
@@ -63,7 +63,7 @@ internal class ovr030
 
                 if (uncompressed_size == 0)
                 {
-                    seg041.DisplayAndPause("PIC not found", 14);
+                    DisplayDriver.DisplayAndPause("PIC not found", 14);
                 }
                 else
                 {
@@ -180,7 +180,7 @@ internal class ovr030
 
             if (gbl.headX_dax == null)
             {
-                seg041.DisplayAndPause("head not found", 14);
+                DisplayDriver.DisplayAndPause("head not found", 14);
             }
 
             gbl.current_head_id = head_id;
@@ -192,7 +192,7 @@ internal class ovr030
             gbl.bodyX_dax = DaxBlockReader.LoadDax(0, 0, body_id, "BODY" + text);
             if (gbl.bodyX_dax == null)
             {
-                seg041.DisplayAndPause("body not found", 14);
+                DisplayDriver.DisplayAndPause("body not found", 14);
             }
 
             gbl.current_body_id = body_id;

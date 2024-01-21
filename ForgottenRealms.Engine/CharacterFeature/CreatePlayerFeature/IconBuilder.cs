@@ -52,10 +52,10 @@ public class IconBuilder
             duplicateCombatIcon(true, 12, player.icon_id);
             drawIconEditorIcons(2, 1);
 
-            seg041.displayString("old", 0, 15, 6, 8);
-            seg041.displayString("ready   action", 0, 15, 10, 3);
-            seg041.displayString("new", 0, 15, 12, 8);
-            seg041.displayString("ready   action", 0, 15, 16, 3);
+            DisplayDriver.displayString("old", 0, 15, 6, 8);
+            DisplayDriver.displayString("ready   action", 0, 15, 10, 3);
+            DisplayDriver.displayString("new", 0, 15, 12, 8);
+            DisplayDriver.displayString("ready   action", 0, 15, 16, 3);
 
             do
             {

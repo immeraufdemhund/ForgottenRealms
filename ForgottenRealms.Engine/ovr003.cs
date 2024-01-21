@@ -364,7 +364,7 @@ internal class ovr003
 
         ushort loc = gbl.cmd_opps[2].Word;
 
-        ushort var_4 = seg041.getUserInputShort(0, 0x0a, string.Empty);
+        ushort var_4 = DisplayDriver.getUserInputShort(0, 0x0a, string.Empty);
 
         ovr008.vm_SetMemoryValue(var_4, loc);
     }
@@ -376,7 +376,7 @@ internal class ovr003
 
         ushort loc = gbl.cmd_opps[2].Word;
 
-        string str = seg041.getUserInputString(0x28, 0, 10, string.Empty);
+        string str = DisplayDriver.getUserInputString(0x28, 0, 10, string.Empty);
 
         if (str.Length == 0)
         {
@@ -404,14 +404,14 @@ internal class ovr003
 
         if (gbl.command == 0x11)
         {
-            seg041.press_any_key(gbl.unk_1D972[1], false, 10, TextRegion.NormalBottom);
+            DisplayDriver.press_any_key(gbl.unk_1D972[1], false, 10, TextRegion.NormalBottom);
         }
         else
         {
             gbl.textYCol = 0x11;
             gbl.textXCol = 1;
 
-            seg041.press_any_key(gbl.unk_1D972[1], true, 10, TextRegion.NormalBottom);
+            DisplayDriver.press_any_key(gbl.unk_1D972[1], true, 10, TextRegion.NormalBottom);
         }
 
         gbl.DelayBetweenCharacters = false;
@@ -680,7 +680,7 @@ internal class ovr003
         gbl.textXCol = 1;
         gbl.textYCol = 0x11;
 
-        seg041.press_any_key(delay_text, true, 10, 22, 38, 17, 1);
+        DisplayDriver.press_any_key(delay_text, true, 10, 22, 38, 17, 1);
 
         for (int i = 0; i < menuCount; i++)
         {
@@ -1348,7 +1348,7 @@ internal class ovr003
                 clearTextArea = false;
             }
 
-            seg041.press_any_key(text, clearTextArea, 10, TextRegion.NormalBottom);
+            DisplayDriver.press_any_key(text, clearTextArea, 10, TextRegion.NormalBottom);
 
             if (gbl.area2_ptr.encounter_distance == 0 ||
                 gbl.area_ptr.inDungeon == 0)
@@ -1401,7 +1401,7 @@ internal class ovr003
                     else if (menu_selected == 1)
                     {
                         init_max = 1;
-                        seg041.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
+                        DisplayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
                     }
                     else if (menu_selected == 2)
                     {
@@ -1417,7 +1417,7 @@ internal class ovr003
                         }
                         else
                         {
-                            seg041.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
+                            DisplayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
                         }
 
                         init_max = 1;
@@ -1446,7 +1446,7 @@ internal class ovr003
 
                             gbl.textXCol = 1;
                             gbl.textYCol = 0x11;
-                            seg041.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
+                            DisplayDriver.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
                         }
                         else
                         {
@@ -1459,7 +1459,7 @@ internal class ovr003
 
                         gbl.textXCol = 1;
                         gbl.textYCol = 0x11;
-                        seg041.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
+                        DisplayDriver.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
                     }
                     break;
 
@@ -1478,7 +1478,7 @@ internal class ovr003
                         }
                         else
                         {
-                            seg041.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
+                            DisplayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
                         }
 
                         init_max = 1;
@@ -1589,7 +1589,7 @@ internal class ovr003
     internal static void CMD_Delay()
     {
         gbl.ecl_offset++;
-        seg041.GameDelay();
+        DisplayDriver.GameDelay();
     }
 
 
@@ -1696,12 +1696,12 @@ internal class ovr003
             gbl.textXCol = 2;
             gbl.textYCol = 2;
 
-            seg041.press_any_key("The entire party is killed!", true, 10, 0x16, 0x26, 1, 1);
+            DisplayDriver.press_any_key("The entire party is killed!", true, 10, 0x16, 0x26, 1, 1);
             seg049.SysDelay(3000);
         }
 
         gbl.SelectedPlayer = currentPlayerBackup;
-        seg041.DisplayAndPause("press <enter>/<return> to continue", 15);
+        DisplayDriver.DisplayAndPause("press <enter>/<return> to continue", 15);
     }
 
 
@@ -1877,15 +1877,15 @@ internal class ovr003
             case 0x3201:
                 if (gbl.word_1EE76 == 8)
                 {
-                    seg044.PlaySound(Sound.sound_a);
+                    new SoundDriver().PlaySound(Sound.sound_a);
                 }
                 else if (gbl.word_1EE76 == 10)
                 {
-                    seg044.PlaySound(Sound.sound_b);
+                    new SoundDriver().PlaySound(Sound.sound_b);
                 }
                 else
                 {
-                    seg044.PlaySound(Sound.sound_a);
+                    new SoundDriver().PlaySound(Sound.sound_a);
                 }
                 break;
 
@@ -1905,7 +1905,7 @@ internal class ovr003
 
                 gbl.byte_1D556.NextFrame();
 
-                seg041.GameDelay();
+                DisplayDriver.GameDelay();
                 break;
         }
     }
@@ -2378,7 +2378,7 @@ internal class ovr003
                         if (gbl.area_ptr.lastXPos != gbl.mapPosX ||
                             gbl.area_ptr.lastYPos != gbl.mapPosY)
                         {
-                            seg044.PlaySound(Sound.sound_a);
+                            new SoundDriver().PlaySound(Sound.sound_a);
                         }
 
                         gbl.spriteChanged = false;

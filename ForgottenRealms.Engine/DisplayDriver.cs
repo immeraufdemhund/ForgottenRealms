@@ -3,7 +3,7 @@ using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine;
 
-internal class seg041
+internal class DisplayDriver
 {
     internal static void DrawRectangle(byte color, int yEnd, int xEnd, int yStart, int xStart)
     {

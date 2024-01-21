@@ -257,11 +257,11 @@ internal class ovr016
                             break;
                     }
 
-                    seg041.displayString(text, 0, 10, y_col + 17, 1);
+                    DisplayDriver.displayString(text, 0, 10, y_col + 17, 1);
                     int x_col = 0x13;
                     for (int spellLevel = 0; spellLevel < MaxSpellLevel; spellLevel++)
                     {
-                        seg041.displayString(var_60[spellClass, spellLevel], 0, 10, y_col + 0x11, x_col + 1);
+                        DisplayDriver.displayString(var_60[spellClass, spellLevel], 0, 10, y_col + 0x11, x_col + 1);
                         x_col += 3;
                     }
                     y_col++;
@@ -739,7 +739,7 @@ internal class ovr016
 
         do
         {
-            seg041.displayString(string.Format("Game Speed = {0} (0=fastest 9=slowest)", gbl.game_speed_var), 0, 10, 18, 1);
+            DisplayDriver.displayString(string.Format("Game Speed = {0} (0=fastest 9=slowest)", gbl.game_speed_var), 0, 10, 18, 1);
 
             string text = string.Empty;
 
@@ -1056,7 +1056,7 @@ internal class ovr016
         ovr025.LoadPic();
         seg037.draw8x8_clear_area(TextRegion.NormalBottom);
 
-        seg041.displayString("The party makes camp...", 0, 10, 18, 1);
+        DisplayDriver.displayString("The party makes camp...", 0, 10, 18, 1);
         cancel_spells();
         bool actionInterrupted = false;
         char input_key = ' ';

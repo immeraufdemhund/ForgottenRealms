@@ -546,7 +546,7 @@ public class CreatePlayerService
                 }
             }
 
-            seg041.displayString(text, 0, 15, 15, 7);
+            DisplayDriver.displayString(text, 0, 15, 15, 7);
             ovr020.display_player_stats01();
             ovr020.displayMoney();
 
@@ -557,7 +557,7 @@ public class CreatePlayerService
 
         do
         {
-            player.name = seg041.getUserInputString(15, 0, 13, "Character name: ");
+            player.name = DisplayDriver.getUserInputString(15, 0, 13, "Character name: ");
         } while (player.name.Length == 0);
 
         _iconBuilder.Show();

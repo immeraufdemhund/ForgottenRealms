@@ -144,7 +144,7 @@ internal class ovr008
         do
         {
             ovr027.ClearPromptArea();
-            seg041.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+            DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
 
             DaxFileDecoder.LoadDecodeDax(out block_mem, out block_size, block_id, $"ECL{gbl.game_area}.dax");
         } while (block_size < 2);
@@ -1420,7 +1420,7 @@ internal class ovr008
             {
                 gbl.textYCol = 0x11;
                 clear_text_area = true;
-                seg041.DisplayAndPause("press <enter>/<return> to continue", 15);
+                DisplayDriver.DisplayAndPause("press <enter>/<return> to continue", 15);
             }
             else
             {
@@ -1429,7 +1429,7 @@ internal class ovr008
 
             gbl.textXCol = 0x26;
 
-            seg041.press_any_key(text, clear_text_area, 15, 0x16, 0x26, 17, 1);
+            DisplayDriver.press_any_key(text, clear_text_area, 15, 0x16, 0x26, 17, 1);
 
             ovr025.damage_player(damage, player);
             seg037.draw8x8_clear_area(0x0f, 0x26, 1, 0x11);

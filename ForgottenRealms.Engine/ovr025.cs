@@ -209,7 +209,7 @@ internal class ovr025
 
 		if (display_new_name)
 		{
-			seg041.displayString(item.name, 0, 10, yCol, xCol);
+			DisplayDriver.displayString(item.name, 0, 10, yCol, xCol);
 		}
 	}
 
@@ -224,8 +224,8 @@ internal class ovr025
 		int x_pos = (gbl.game_state == GameState.StartGameMenu) ? 1 : 17;
 		int y_pos = 2;
 
-		seg041.displayString("Name", 0, 15, y_pos, x_pos);
-		seg041.displayString("AC  HP", 0, 15, y_pos, 0x21);
+		DisplayDriver.displayString("Name", 0, 15, y_pos, x_pos);
+		DisplayDriver.displayString("AC  HP", 0, 15, y_pos, 0x21);
 
 		y_pos += 2;
 
@@ -235,14 +235,14 @@ internal class ovr025
 
 			if (tmp_player == player)
 			{
-				seg041.displayString(tmp_player.name, 0, 15, y_pos, x_pos);
+				DisplayDriver.displayString(tmp_player.name, 0, 15, y_pos, x_pos);
 			}
 			else
 			{
 				displayPlayerName(false, y_pos, x_pos, tmp_player);
 			}
 
-			seg041.displayString(string.Format("{0,-3}", tmp_player.DisplayAc), 0, 10, y_pos, 0x1F);
+			DisplayDriver.displayString(string.Format("{0,-3}", tmp_player.DisplayAc), 0, 10, y_pos, 0x1F);
 
 			int hpXPos = 0;
 			if (tmp_player.hit_point_current >= 0 && tmp_player.hit_point_current <= 9)
@@ -264,7 +264,7 @@ internal class ovr025
 
 	internal static void display_AC(int y_offset, int x_offset, Player player)
 	{
-		seg041.displayString(player.DisplayAc.ToString(), 0, 10, y_offset, x_offset);
+		DisplayDriver.displayString(player.DisplayAc.ToString(), 0, 10, y_offset, x_offset);
 	}
 
 
@@ -286,7 +286,7 @@ internal class ovr025
 			colour = 0x0D;
 		}
 
-		seg041.displayString(player.hit_point_current.ToString(), 0, colour, y_pos, x_pos);
+		DisplayDriver.displayString(player.hit_point_current.ToString(), 0, colour, y_pos, x_pos);
 	}
 
 
@@ -303,12 +303,12 @@ internal class ovr025
 
 			line++;
 
-			seg041.displayString("Hitpoints", 0, 10, line + 1, 0x17);
+			DisplayDriver.displayString("Hitpoints", 0, 10, line + 1, 0x17);
 
 			display_hp(false, line + 1, 0x21, player);
 			line += 2;
 
-			seg041.displayString("AC", 0, 10, line + 1, 0x17);
+			DisplayDriver.displayString("AC", 0, 10, line + 1, 0x17);
 			display_AC(line + 1, 0x1A, player);
 
 			gbl.textYCol = line + 1;
@@ -319,18 +319,18 @@ internal class ovr025
 				/*var_1 = 0x17;*/
 				ItemDisplayNameBuild(false, false, 0, 0, player.activeItems.primaryWeapon);
 
-				seg041.press_any_key(player.activeItems.primaryWeapon.name, true, 10, line + 3, 0x26, line + 1, 0x17);
+				DisplayDriver.press_any_key(player.activeItems.primaryWeapon.name, true, 10, line + 3, 0x26, line + 1, 0x17);
 			}
 
 			line = gbl.textYCol + 1;
 
 			if (player.in_combat == false)
 			{
-				seg041.displayString(ovr020.statusString[(int)player.health_status], 0, 15, line + 1, 0x17);
+				DisplayDriver.displayString(ovr020.statusString[(int)player.health_status], 0, 15, line + 1, 0x17);
 			}
 			else if (player.IsHeld() == true)
 			{
-				seg041.displayString("(Helpless)", 0, 15, line + 1, 0x17);
+				DisplayDriver.displayString("(Helpless)", 0, 15, line + 1, 0x17);
 			}
 		}
 	}
@@ -768,7 +768,7 @@ internal class ovr025
 	{
 		if (!player.items.Remove(item))
 		{
-			seg041.DisplayAndPause("Tried to Lose item & couldn't find it!", 14);
+			DisplayDriver.DisplayAndPause("Tried to Lose item & couldn't find it!", 14);
 		}
 	}
 
@@ -777,9 +777,9 @@ internal class ovr025
 	{
 		ovr027.ClearPromptAreaNoUpdate();
 
-		seg041.displayString(text, 0, 10, 0x18, 0);
+		DisplayDriver.displayString(text, 0, 10, 0x18, 0);
 
-		seg041.GameDelay();
+		DisplayDriver.GameDelay();
 
 		ovr027.ClearPromptAreaNoUpdate();
 	}
@@ -792,7 +792,7 @@ internal class ovr025
 			seg037.draw8x8_clear_area(0x15, 0x26, lineY, 0x17);
 
 			displayPlayerName(false, lineY, 0x17, player);
-			seg041.press_any_key(text, true, 10, 0x15, 0x26, lineY + 1, 0x17);
+			DisplayDriver.press_any_key(text, true, 10, 0x15, 0x26, lineY + 1, 0x17);
 		}
 		else
 		{
@@ -801,12 +801,12 @@ internal class ovr025
 			seg037.draw8x8_clear_area(0x16, 0x26, line_y, 1);
 
 			displayPlayerName(false, line_y + 1, 1, player);
-			seg041.press_any_key(text, true, 10, 0x16, 0x26, line_y + 2, 1);
+			DisplayDriver.press_any_key(text, true, 10, 0x16, 0x26, line_y + 2, 1);
 		}
 
 		if (clearDisplay == true)
 		{
-			seg041.GameDelay();
+			DisplayDriver.GameDelay();
 			ovr025.ClearPlayerTextArea();
 		}
 	}
@@ -844,7 +844,7 @@ internal class ovr025
 
 		string name = player.name + ((pural) ? "'s" : "");
 
-		seg041.displayString(name, 0, color, y_offset, x_offset);
+		DisplayDriver.displayString(name, 0, color, y_offset, x_offset);
 	}
 
 
@@ -1131,11 +1131,11 @@ internal class ovr025
 
 			if (showMagicStars)
 			{
-				seg044.PlaySound(Sound.sound_4);
+				new SoundDriver().PlaySound(Sound.sound_4);
 			}
 			else
 			{
-				seg044.PlaySound(Sound.sound_3);
+				new SoundDriver().PlaySound(Sound.sound_3);
 			}
 
 			DisplayPlayerStatusString(false, 10, text, player);
@@ -1163,7 +1163,7 @@ internal class ovr025
 
 			if (loops == 0)
 			{
-				seg041.GameDelay();
+				DisplayDriver.GameDelay();
 			}
 		}
 		else
@@ -1507,7 +1507,7 @@ internal class ovr025
 
 			seg037.draw8x8_clear_area(15, 0x26, 15, 17);
 
-			seg041.displayString(output, 0, 10, 15, 17);
+			DisplayDriver.displayString(output, 0, 10, 15, 17);
 		}
 	}
 

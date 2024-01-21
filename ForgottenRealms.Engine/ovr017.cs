@@ -168,7 +168,7 @@ internal class ovr017
 
                 while (file_text == string.Empty)
                 {
-                    file_text = seg041.getUserInputString(8, 0, 10, "New file name: ");
+                    file_text = DisplayDriver.getUserInputString(8, 0, 10, "New file name: ");
                 }
             }
         }
@@ -491,7 +491,7 @@ internal class ovr017
 
         seg042.find_and_open_file(out file, false, Path.Combine(Config.GetSavePath(), arg_8));
 
-        seg041.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+        DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
 
 
         if (gbl.import_from == ImportSource.Curse)
@@ -835,7 +835,7 @@ internal class ovr017
         {
             if (exit)
             {
-                seg041.DisplayAndPause("Unable to load monster", 15);
+                DisplayDriver.DisplayAndPause("Unable to load monster", 15);
                 seg043.print_and_exit();
             }
             else
@@ -981,7 +981,7 @@ internal class ovr017
         seg042.find_and_open_file(out file, true, file_name);
 
         ovr027.ClearPromptArea();
-        seg041.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+        DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
         gbl.reload_ecl_and_pictures = true;
 
         byte[] data = new byte[0x2000];
@@ -1137,14 +1137,14 @@ internal class ovr017
 
                 if (unk_4AEEF.MemberOf(var_1FC) == false)
                 {
-                    seg041.DisplayAndPause("Unexpected error during save: " + var_1FC.ToString(), 14);
+                    DisplayDriver.DisplayAndPause("Unexpected error during save: " + var_1FC.ToString(), 14);
                     seg051.Close(save_file);
                     return;
                 }
             } while (unk_4AEEF.MemberOf(var_1FC) == false);
 
             ovr027.ClearPromptArea();
-            seg041.displayString("Saving...Please Wait", 0, 10, 0x18, 0);
+            DisplayDriver.displayString("Saving...Please Wait", 0, 10, 0x18, 0);
 
             gbl.area_ptr.game_speed = (byte)gbl.game_speed_var;
             gbl.area_ptr.pics_on = (byte)(((gbl.PicsOn) ? 0x02 : 0) | ((gbl.AnimationsOn) ? 0x01 : 0));

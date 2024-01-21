@@ -174,12 +174,12 @@ internal class ovr014
 
         if (target.health_status != Status.gone)
         {
-            seg041.press_any_key(text, true, 10, line + 3, 0x26, line, 0x17);
+            DisplayDriver.press_any_key(text, true, 10, line + 3, 0x26, line, 0x17);
         }
 
         line = gbl.textYCol + 1;
 
-        seg041.GameDelay();
+        DisplayDriver.GameDelay();
 
         if (actualDamage > 0)
         {
@@ -193,7 +193,7 @@ internal class ovr014
 
             if (target.health_status == Status.dying)
             {
-                seg041.displayString("and is Dying", 0, 10, line, 0x17);
+                DisplayDriver.displayString("and is Dying", 0, 10, line, 0x17);
             }
 
             if (target.health_status == Status.dead ||
@@ -215,7 +215,7 @@ internal class ovr014
             }
             else
             {
-                seg041.GameDelay();
+                DisplayDriver.GameDelay();
             }
         }
 
@@ -311,7 +311,7 @@ internal class ovr014
 
         player.actions.AttacksReceived = 0;
         player.actions.directionChanges = 0;
-        seg044.PlaySound(Sound.sound_a);
+        new SoundDriver().PlaySound(Sound.sound_a);
 
         move_step_into_attack(player);
 
@@ -608,7 +608,7 @@ internal class ovr014
     {
         ovr025.DisplayPlayerStatusString(false, 10, "turns undead...", player);
         ovr027.ClearPromptArea();
-        seg041.GameDelay();
+        DisplayDriver.GameDelay();
 
         bool any_turned = false;
         byte var_6 = 0;
@@ -739,7 +739,7 @@ internal class ovr014
 
         if (target.IsHeld() == true)
         {
-            seg044.PlaySound(Sound.sound_attackHeld);
+            new SoundDriver().PlaySound(Sound.sound_attackHeld);
 
             while (attacker.AttacksLeft(attacker.actions.attackIdx) == 0)
             {
@@ -823,7 +823,7 @@ internal class ovr014
                     {
                         gbl.bytes_1D2C9[attackIdx] += 1;
 
-                        seg044.PlaySound(Sound.sound_attackHeld);
+                        new SoundDriver().PlaySound(Sound.sound_attackHeld);
                         var_11 = true;
                         sub_3E192(attackIdx, target, attacker);
                         DisplayAttackMessage(true, gbl.damage, gbl.damage, attack_type, target, attacker);
@@ -856,7 +856,7 @@ internal class ovr014
 
             if (var_11 == false)
             {
-                seg044.PlaySound(Sound.sound_9);
+                new SoundDriver().PlaySound(Sound.sound_9);
                 DisplayAttackMessage(false, 0, 0, attack_type, target, attacker);
             }
 
@@ -1589,7 +1589,7 @@ internal class ovr014
 
     internal static void DrawRangedAttack(Item item, Player target, Player attacker) /* sub_40BF1 */
     {
-        seg044.PlaySound(Sound.sound_c);
+        new SoundDriver().PlaySound(Sound.sound_c);
 
         int dir = getTargetDirection(target, attacker);
 
@@ -1627,7 +1627,7 @@ internal class ovr014
                         ovr025.load_missile_dax(false, 0, Icon.Normal, iconId + (dir % 4));
                     }
                 }
-                seg044.PlaySound(Sound.sound_c);
+                new SoundDriver().PlaySound(Sound.sound_c);
                 break;
 
             case ItemType.HandAxe:
@@ -1636,7 +1636,7 @@ internal class ovr014
                 ovr025.load_missile_icons(iconId + 3);
                 frame_count = 4;
                 delay = 50;
-                seg044.PlaySound(Sound.sound_9);
+                new SoundDriver().PlaySound(Sound.sound_9);
                 break;
 
             case ItemType.Type_85:
@@ -1644,7 +1644,7 @@ internal class ovr014
                 ovr025.load_missile_icons(iconId + 4);
                 frame_count = 4;
                 delay = 50;
-                seg044.PlaySound(Sound.sound_6);
+                new SoundDriver().PlaySound(Sound.sound_6);
                 break;
 
             case ItemType.StaffSling:
@@ -1655,7 +1655,7 @@ internal class ovr014
                 ovr025.load_missile_dax(false, 1, Icon.Attack, iconId + 7);
                 frame_count = 2;
                 delay = 10;
-                seg044.PlaySound(Sound.sound_6);
+                new SoundDriver().PlaySound(Sound.sound_6);
                 break;
 
             default:
@@ -1663,7 +1663,7 @@ internal class ovr014
                 ovr025.load_missile_dax(false, 1, Icon.Attack, iconId + 7);
                 frame_count = 2;
                 delay = 20;
-                seg044.PlaySound(Sound.sound_9);
+                new SoundDriver().PlaySound(Sound.sound_9);
                 break;
         }
 
@@ -1758,7 +1758,7 @@ internal class ovr014
         if (showRange == true)
         {
             string range_txt = "Range = " + range.ToString() + "  ";
-            seg041.displayString(range_txt, 0, 10, 0x17, 0);
+            DisplayDriver.displayString(range_txt, 0, 10, 0x17, 0);
         }
 
         if (range <= maxRange)
@@ -1894,7 +1894,7 @@ internal class ovr014
                 {
                     string range_text = "Range = " + (range / 2).ToString() + "  ";
 
-                    seg041.displayString(range_text, 0, 10, 0x17, 0);
+                    DisplayDriver.displayString(range_text, 0, 10, 0x17, 0);
                 }
             }
             else
