@@ -7,6 +7,7 @@ namespace ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
 public class CreatePlayerService
 {
     private readonly IconBuilder _iconBuilder = new ();
+    private readonly Thac0Table _thac0Table = new ();
 
     internal void createPlayer()
     {
@@ -260,9 +261,10 @@ public class CreatePlayerService
             {
                 int skill_lvl = player.ClassLevel[class_idx];
 
-                if (ovr018.thac0_table[class_idx, skill_lvl] > player.thac0)
+                var playerThac0 = _thac0Table.GetThac0ForClassByLevel((ClassId)class_idx, skill_lvl);
+                if (playerThac0 > player.thac0)
                 {
-                    player.thac0 = ovr018.thac0_table[class_idx, skill_lvl];
+                    player.thac0 = playerThac0;
                 }
 
                 player.classFlags += ovr018.unk_1A1B2[class_idx];

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ForgottenRealms.Engine.CharacterFeature;
 using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
@@ -189,7 +190,8 @@ internal class ovr026
         {
             byte class_lvl = player.ClassLevel[_class];
 
-            player.thac0 = System.Math.Max(ovr018.thac0_table[_class, class_lvl], player.thac0);
+            var thaco = Thac0Table.GetThac0ForClassByLevel((ClassId)_class, class_lvl);
+            player.thac0 = System.Math.Max(thaco, player.thac0);
             player.HitDice = System.Math.Max(class_lvl, player.HitDice);
         }
 
@@ -243,9 +245,10 @@ internal class ovr026
                     }
                 }
 
-                if (ovr018.thac0_table[class_index, skill_lvl] > player.thac0)
+                var playerThac0 = Thac0Table.GetThac0ForClassByLevel((ClassId)class_index, skill_lvl);
+                if (playerThac0 > player.thac0)
                 {
-                    player.thac0 = ovr018.thac0_table[class_index, skill_lvl];
+                    player.thac0 = playerThac0;
                 }
             }
 
@@ -477,6 +480,7 @@ internal class ovr026
         { 0, 0x48, 0x46, 0x56, 0x46, 0x23, 0x63, 0x3C, 0x64},
         { 0, 0x64, 0x4D, 0x4B, 0x5E, 0x4D, 0x23, 0x63, 0x41 } };
 
+    private static readonly Thac0Table Thac0Table = new ();
 
 
     internal static void reclac_thief_skills(Player player) // sub_6AAEA
