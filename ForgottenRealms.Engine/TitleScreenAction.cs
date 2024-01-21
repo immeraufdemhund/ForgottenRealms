@@ -9,6 +9,7 @@ public class TitleScreenAction
     private readonly DrawPictureAction _drawPictureAction = new ();
     private readonly DaxBlockReader _daxBlockReader = new ();
     private readonly SoundDriver _soundDriver = new ();
+    private readonly DisplayDriver _displayDriver = new ();
 
     public void ShowTitleScreen()
     {
@@ -33,11 +34,11 @@ public class TitleScreenAction
         _drawPictureAction.DrawPicture(dax_ptr, 0x0b, 0, 0);
         delay_or_key(10);
 
-        DisplayDriver.ClearScreen();
+        _displayDriver.ClearScreen();
         ShowCredits();
         delay_or_key(10);
 
-        DisplayDriver.ClearScreen();
+        _displayDriver.ClearScreen();
     }
 
     private static void delay_or_key(int seconds)

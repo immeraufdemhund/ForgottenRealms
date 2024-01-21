@@ -316,7 +316,7 @@ internal class DisplayDriver
     }
 
 
-    internal static void ClearScreen()
+    public void ClearScreen()
     {
         DrawRectangle(0, 0x18, 0x27, 0, 0);
     }
