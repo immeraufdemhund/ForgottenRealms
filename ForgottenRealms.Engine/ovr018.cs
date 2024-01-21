@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using ForgottenRealms.Engine.CharacterFeature;
 using ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
 using ForgottenRealms.Engine.CharacterFeature.DropCharacterFeature;
@@ -10,10 +9,12 @@ namespace ForgottenRealms.Engine;
 
 internal class ovr018
 {
-    private static readonly CreatePlayerService _createPlayerService = new ();
-    private static readonly DropCharacterService _dropCharacterService = new();
-    private static readonly TrainCharacterService _trainCharacterService = new();
-    private static readonly ModifyCharacterService _modifyCharacterService = new();
+    private static readonly CreatePlayerService CreatePlayerService = new ();
+    private static readonly DropCharacterService DropCharacterService = new();
+    private static readonly TrainCharacterService TrainCharacterService = new();
+    private static readonly ModifyCharacterService ModifyCharacterService = new();
+    private static readonly HitPointTable HitPointTable = new ();
+    private static readonly AddPlayerAction AddPlayerAction = new ();
 
     private static Set unk_4C13D = new Set(71, 79);
     private static Set unk_4C15D = new Set(69, 83);
@@ -156,16 +157,16 @@ internal class ovr018
                 switch (inputkey)
                 {
                     case 'C':
-                        if (menuFlags[allow_create] == true) _createPlayerService.createPlayer();
+                        if (menuFlags[allow_create] == true) CreatePlayerService.createPlayer();
                         break;
                     case 'D':
-                        if (menuFlags[allow_drop] == true) _dropCharacterService.dropPlayer();
+                        if (menuFlags[allow_drop] == true) DropCharacterService.dropPlayer();
                         break;
                     case 'M':
-                        if (menuFlags[allow_modify] == true) _modifyCharacterService.modifyPlayer();
+                        if (menuFlags[allow_modify] == true) ModifyCharacterService.modifyPlayer();
                         break;
                     case 'T':
-                        if (menuFlags[allow_training] == true) _trainCharacterService.train_player();
+                        if (menuFlags[allow_training] == true) TrainCharacterService.train_player();
                         break;
                     case 'H':
                         if (menuFlags[allow_duelclass] == true) ovr026.DuelClass(gbl.SelectedPlayer);
@@ -175,7 +176,7 @@ internal class ovr018
                         break;
 
                     case 'A':
-                        if (menuFlags[allow_add] == true) AddPlayer();
+                        if (menuFlags[allow_add] == true) AddPlayerAction.AddPlayer();
                         break;
 
                     case 'R':
@@ -291,7 +292,7 @@ internal class ovr018
             }
             else
             {
-                _dropCharacterService.dropPlayer();
+                DropCharacterService.dropPlayer();
             }
         }
     }
@@ -370,155 +371,6 @@ internal class ovr018
             }
         }
     }
-
-    internal static void AddPlayer()
-    {
-        seg037.draw8x8_clear_area(0x16, 0x26, 1, 1);
-
-        char input_key = ovr027.displayInput(false, 0, gbl.defaultMenuColors, "Curse Pool Hillsfar Exit", "Add from where? ");
-
-        switch (input_key)
-        {
-            case 'C':
-                gbl.import_from = ImportSource.Curse;
-                break;
-
-            case 'P':
-                gbl.import_from = ImportSource.Pool;
-                break;
-
-            case 'H':
-                gbl.import_from = ImportSource.Hillsfar;
-                break;
-
-            case 'E':
-            case '\0':
-                return;
-        }
-
-        List<MenuItem> strList;
-        List<MenuItem> nameList;
-        ovr017.BuildLoadablePlayersLists(out strList, out nameList);
-
-        if (nameList.Count > 0)
-        {
-            int pc_count = 0;
-
-            int strList_index = 0;
-            MenuItem select_sl;
-            bool menuRedraw = true;
-
-            do
-            {
-                bool showExit = true;
-                input_key = ovr027.sl_select_item(out select_sl, ref strList_index, ref menuRedraw, showExit, nameList,
-                    22, 38, 2, 1, gbl.defaultMenuColors, "Add", "Add a character: ");
-
-                if ((input_key == 13 || input_key == 'A') &&
-                    select_sl.Text[0] != '*')
-                {
-                    ovr027.ClearPromptArea();
-
-                    Player new_player = new Player();
-
-                    MenuItem var_10 = ovr027.getStringListEntry(strList, strList_index);
-
-                    ovr017.import_char01(ref new_player, var_10.Text);
-
-                    select_sl.Text = "* " + select_sl.Text;
-                    pc_count = 0;
-
-                    if (gbl.TeamList.Count == 0)
-                    {
-                        gbl.area2_ptr.party_size = 0;
-                        ovr017.AssignPlayerIconId(new_player);
-
-                        ovr017.LoadPlayerCombatIcon(true);
-                    }
-                    else
-                    {
-                        bool paladin_present = false;
-                        string paladins_name = "";
-                        bool evil_present = false;
-                        int ranger_count = 0;
-                        bool found = false;
-
-                        foreach (Player tmp_player in gbl.TeamList)
-                        {
-                            if (tmp_player.name == new_player.name &&
-                                tmp_player.mod_id == new_player.mod_id)
-                            {
-                                found = true;
-                                break;
-                            }
-
-                            if (tmp_player.control_morale < Control.NPC_Base)
-                            {
-                                pc_count++;
-                            }
-
-                            if (tmp_player.ranger_lvl > 0)
-                            {
-                                ranger_count++;
-                            }
-
-                            if ((tmp_player.alignment + 1) % 3 == 0)
-                            {
-                                evil_present = true;
-                            }
-
-                            if (tmp_player.paladin_lvl > 0)
-                            {
-                                paladin_present = true;
-                                paladins_name = tmp_player.name;
-                            }
-                        }
-
-                        if (found == false &&
-                            ((new_player.control_morale < Control.NPC_Base && pc_count < 6) ||
-                             (new_player.control_morale >= Control.NPC_Base && gbl.area2_ptr.party_size < 8)) &&
-                            (new_player.paladin_lvl == 0 || evil_present == false) &&
-                            (new_player.ranger_lvl == 0 || ranger_count < 3) &&
-                            (((new_player.alignment + 1) % 3) != 0 || paladin_present == false))
-                        {
-                            ovr017.AssignPlayerIconId(new_player);
-                            ovr017.LoadPlayerCombatIcon(true);
-
-                            if (new_player.control_morale < Control.NPC_Base)
-                            {
-                                pc_count++;
-                            }
-                        }
-                        else
-                        {
-                            select_sl.Text = select_sl.Text.Substring(2);
-
-                            if (new_player.paladin_lvl > 0 && evil_present == true)
-                            {
-                                ovr025.string_print01("paladins do not join with evil scum");
-                                seg041.GameDelay();
-                            }
-                            else if (new_player.ranger_lvl > 0 && ranger_count > 2)
-                            {
-                                ovr025.string_print01("too many rangers in party");
-                            }
-                            else if (((new_player.alignment + 1) % 3) == 0 &&
-                                     paladin_present == true)
-                            {
-                                ovr025.string_print01(paladins_name + " will tolerate no evil!");
-                            }
-
-                            new_player = null; // FreeMem( Player.StructSize, player_ptr1 );
-                        }
-                    }
-                }
-
-            } while (input_key != 0x45 && input_key != '\0' && pc_count <= 5 && gbl.area2_ptr.party_size <= 7);
-
-            nameList.Clear();
-        }
-    }
-
 
     internal static Player FreeCurrentPlayer(Player player, bool free_icon, bool leave_party_size) // free_players
     {
@@ -647,7 +499,6 @@ internal class ovr018
 
     private static byte[] /* seg600:081A */ unk_16B2A = { 1, 1, 1, 1, 2, 1, 1, 2 };
     private static byte[] /* seg600:0822 */ unk_16B32 = { 8, 8, 0xA, 0xA, 8, 4, 6, 4 };
-    private static readonly HitPointTable HitPointTable = new ();
 
     internal static byte sub_509E0(byte arg_0, Player player)
     {
@@ -656,7 +507,7 @@ internal class ovr018
         for (int _class = 0; _class <= 7; _class++)
         {
             if (player.ClassLevel[_class] > 0 &&
-                _trainCharacterService.IsAllowedToTrainClass(arg_0, (ClassId)_class) == true)
+                TrainCharacterService.IsAllowedToTrainClass(arg_0, (ClassId)_class) == true)
             {
                 if (player.ClassLevel[_class] < gbl.max_class_hit_dice[_class])
                 {
