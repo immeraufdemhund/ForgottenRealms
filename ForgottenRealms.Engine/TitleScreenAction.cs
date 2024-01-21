@@ -43,17 +43,17 @@ public class TitleScreenAction
 
     private static void delay_or_key(int seconds)
     {
-        KeyboardDriver.clear_keyboard();
+        KeyboardService.clear_keyboard();
 
         var timeEnd = DateTime.Now.AddSeconds(seconds);
 
-        while (seg049.KEYPRESSED() == false &&
+        while (KeyboardDriver.KEYPRESSED() == false &&
                DateTime.Now < timeEnd)
         {
             System.Threading.Thread.Sleep(100);
         }
 
-        KeyboardDriver.clear_keyboard();
+        KeyboardService.clear_keyboard();
     }
 
     private void ShowCredits()

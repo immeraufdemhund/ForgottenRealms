@@ -103,7 +103,7 @@ internal class DisplayDriver
 
             if (gbl.DelayBetweenCharacters)
             {
-                seg049.SysDelay(gbl.game_speed_var * 3);
+                KeyboardDriver.SysDelay(gbl.game_speed_var * 3);
             }
 
             text_index += 1;
@@ -216,7 +216,7 @@ internal class DisplayDriver
                         gbl.textYCol = yStart;
 
                         DisplayAndPause("Press any key to continue", 13);
-                        KeyboardDriver.clear_keyboard();
+                        KeyboardService.clear_keyboard();
 
                         seg037.draw8x8_clear_area(yEnd, xEnd, yStart, xStart);
 
@@ -252,7 +252,7 @@ internal class DisplayDriver
 
         do
         {
-            ch = (char)KeyboardDriver.GetInputKey();
+            ch = (char)KeyboardService.GetInputKey();
 
             if (ch >= 0x20 && ch <= 0x7A)
             {
@@ -307,7 +307,7 @@ internal class DisplayDriver
         ovr027.ClearPromptAreaNoUpdate();
 
         displayString(txt, 0, fgColor, 0x18, 0);
-        KeyboardDriver.GetInputKey();
+        KeyboardService.GetInputKey();
     }
 
 
@@ -343,6 +343,6 @@ internal class DisplayDriver
     internal static void GameDelay()
     {
         //Display.Update();
-        seg049.SysDelay(gbl.game_speed_var * 100);
+        KeyboardDriver.SysDelay(gbl.game_speed_var * 100);
     }
 }

@@ -552,7 +552,7 @@ internal class ovr021
                 gbl.timeToRest.field_2 > 0))
         {
             if (interactive_resting == true &&
-                seg049.KEYPRESSED() == true)
+                KeyboardDriver.KEYPRESSED() == true)
             {
                 display_resting_time(0);
 

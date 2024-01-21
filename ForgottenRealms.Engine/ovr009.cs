@@ -176,8 +176,8 @@ internal class ovr009
                             case 'Q':
                                 SetPlayerQuickFight(player);
                                 ovr027.ClearPromptArea();
-                                KeyboardDriver.clear_keyboard();
-                                seg049.SysDelay(0x0C8);
+                                KeyboardService.clear_keyboard();
+                                KeyboardDriver.SysDelay(0x0C8);
                                 var_2 = true;
                                 ovr010.PlayerQuickFight(player);
                                 break;
@@ -270,7 +270,7 @@ internal class ovr009
                                     SetPlayerQuickFight(p);
                                 }
                                 ovr027.ClearPromptArea();
-                                seg049.SysDelay(0x0C8);
+                                KeyboardDriver.SysDelay(0x0C8);
 
                                 var_2 = true;
                                 break;

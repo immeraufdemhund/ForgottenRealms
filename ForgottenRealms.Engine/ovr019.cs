@@ -26,7 +26,7 @@ internal class ovr019
     internal static void sub_52068()
     {
         seg040.SetPaletteColor(15, 9);
-        seg049.SysDelay(1);
+        KeyboardDriver.SysDelay(1);
         seg040.SetPaletteColor(9, 9);
     }
 
@@ -329,7 +329,7 @@ internal class ovr019
                 SetPixel((byte)(seg051.Random(7) + 8), var_4, var_2);
             }
 
-            seg049.SysDelay(0x0F);
+            KeyboardDriver.SysDelay(0x0F);
 
             arg_10 = var_2;
             arg_C = var_4;
@@ -398,9 +398,9 @@ internal class ovr019
 
                 sub_5279B(gbl.unk_1AE0B);/*TODO - extra params - gbl.word_1AE15, gbl.word_1AE13, gbl.word_1AE11, gbl.word_1AE0F );*/
 
-                if (seg049.KEYPRESSED() == true)
+                if (KeyboardDriver.KEYPRESSED() == true)
                 {
-                    gbl.byte_1AE0A = seg049.READKEY();
+                    gbl.byte_1AE0A = KeyboardDriver.READKEY();
                 }
             }
         } while (gbl.byte_1AE0A == 0);

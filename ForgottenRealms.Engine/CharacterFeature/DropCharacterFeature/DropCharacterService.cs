@@ -11,7 +11,7 @@ public class DropCharacterService
             if (ovr027.yes_no(gbl.alertMenuColors, "quit TO DOS: ") == 'Y')
             {
                 ovr018.FreeCurrentPlayer(gbl.TeamList[0], true, false);
-                KeyboardDriver.print_and_exit();
+                KeyboardService.print_and_exit();
             }
         }
         else

@@ -1110,7 +1110,7 @@ internal class ovr011
         List<Player> to_remove = new List<Player>();
         foreach (Player player in gbl.TeamList)
         {
-            KeyboardDriver.clear_one_keypress();
+            KeyboardService.clear_one_keypress();
 
             gbl.player_array[loop_var] = player;
 
@@ -1202,7 +1202,7 @@ internal class ovr011
         SetupCombatActions();
         PlaceCombatants();
 
-        KeyboardDriver.clear_one_keypress();
+        KeyboardService.clear_one_keypress();
 
         gbl.missile_dax = new DaxBlock(1, 4, 3, 0x18);
 

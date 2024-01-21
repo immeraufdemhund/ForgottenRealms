@@ -54,12 +54,12 @@ namespace ForgottenRealms
                 Display.ForceUpdate();
             }
 
-            seg049.AddKey(IbmKeyboard.KeyToIBMKey(e.Key));
+            KeyboardDriver.AddKey(IbmKeyboard.KeyToIBMKey(e.Key));
         }
 
         private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
         {
-            KeyboardDriver.print_and_exit();
+            KeyboardService.print_and_exit();
         }
     }
 }

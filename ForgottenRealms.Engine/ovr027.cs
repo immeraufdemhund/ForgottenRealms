@@ -204,13 +204,13 @@ internal class ovr027
                 input_key = gbl.displayInputTimeoutValue;
                 stopLoop = true;
             }
-            else if (seg049.KEYPRESSED() == true)
+            else if (KeyboardDriver.KEYPRESSED() == true)
             {
-                input_key = (char)KeyboardDriver.GetInputKey();
+                input_key = (char)KeyboardService.GetInputKey();
 
                 if (input_key == 0)
                 {
-                    input_key = (char)KeyboardDriver.GetInputKey();
+                    input_key = (char)KeyboardService.GetInputKey();
 
                     if (accept_ctrlkeys != 0)
                     {

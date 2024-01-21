@@ -938,7 +938,7 @@ internal class ovr014
 
         attacker.actions.target = target;
 
-        seg049.SysDelay(100);
+        KeyboardDriver.SysDelay(100);
 
         if (rangedWeapon != null)
         {
@@ -1882,7 +1882,7 @@ internal class ovr014
             int playerAtXY;
 
             ovr033.AtMapXY(out groundTile, out playerAtXY, pos);
-            KeyboardDriver.clear_keyboard();
+            KeyboardService.clear_keyboard();
             bool can_target = false;
             int range = 255;
 

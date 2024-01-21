@@ -1080,7 +1080,7 @@ internal class ovr016
                         ovr017.SaveGame();
                         if (ovr027.yes_no(gbl.alertMenuColors, "Quit TO DOS ") == 'Y')
                         {
-                            KeyboardDriver.print_and_exit();
+                            KeyboardService.print_and_exit();
                         }
                         break;
 

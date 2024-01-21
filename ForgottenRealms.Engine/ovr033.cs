@@ -573,7 +573,7 @@ internal class ovr033
                     }
 
                     seg040.DrawOverlay();
-                    seg049.SysDelay(10);
+                    KeyboardDriver.SysDelay(10);
                 }
 
                 // Add downed corpse for team players.

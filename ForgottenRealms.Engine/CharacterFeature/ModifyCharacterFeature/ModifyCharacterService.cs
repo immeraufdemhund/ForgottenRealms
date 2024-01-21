@@ -42,16 +42,16 @@ public class ModifyCharacterService
         {
             if (edited_stat == 7)
             {
-                while (seg049.KEYPRESSED() == false)
+                while (KeyboardDriver.KEYPRESSED() == false)
                 {
                     /* empty */
                 }
 
-                inputkey = (char)KeyboardDriver.GetInputKey();
+                inputkey = (char)KeyboardService.GetInputKey();
 
                 if (inputkey == 0)
                 {
-                    inputkey = (char)KeyboardDriver.GetInputKey();
+                    inputkey = (char)KeyboardService.GetInputKey();
                     controlkey = true;
                 }
                 else

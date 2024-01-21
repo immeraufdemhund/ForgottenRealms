@@ -24,7 +24,7 @@ internal class ovr034
             System.Array.Copy(tmp_block.data, 0, gbl.dax24x24Set.data, destByteOffset, dateLength);
         }
 
-        KeyboardDriver.clear_keyboard();
+        KeyboardService.clear_keyboard();
     }
 
 
@@ -85,7 +85,7 @@ internal class ovr034
             gbl.combat_icons[combat_icon_index].Recolor(false, unk_16E40, unk_16E30);
         }
 
-        KeyboardDriver.clear_keyboard();
+        KeyboardService.clear_keyboard();
     }
 
 

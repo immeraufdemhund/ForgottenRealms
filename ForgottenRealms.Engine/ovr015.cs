@@ -318,7 +318,7 @@ internal class ovr015
     internal static void MovePartyForward() /* sub_43813 */
     {
         new SoundDriver().PlaySound(Sound.sound_a);
-        seg049.SysDelay(50);
+        KeyboardDriver.SysDelay(50);
 
         gbl.mapPosX += gbl.MapDirectionXDelta[gbl.mapDirection];
         gbl.mapPosY += gbl.MapDirectionYDelta[gbl.mapDirection];

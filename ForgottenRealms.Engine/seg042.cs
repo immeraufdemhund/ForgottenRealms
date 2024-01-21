@@ -7,7 +7,7 @@ internal class seg042
     private static void debug_display(string text)
     {
         Logging.Logger.Log(text);
-        KeyboardDriver.GetInputKey();
+        KeyboardService.GetInputKey();
     }
 
 

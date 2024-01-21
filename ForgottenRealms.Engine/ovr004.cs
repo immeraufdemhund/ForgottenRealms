@@ -105,8 +105,8 @@ internal class ovr004
             new SoundDriver().PlaySound(Sound.sound_5);
             gbl.game_speed_var = 9;
             DisplayDriver.DisplayStatusText(0, 14, "An unseen force hurls you into the abyss!");
-            seg049.SysDelay(0x3E8);
-            KeyboardDriver.print_and_exit();
+            KeyboardDriver.SysDelay(0x3E8);
+            KeyboardService.print_and_exit();
         }
     }
 }

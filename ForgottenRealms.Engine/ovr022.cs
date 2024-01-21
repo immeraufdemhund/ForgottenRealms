@@ -69,7 +69,7 @@ internal class ovr022
 
         do
         {
-            inputKey = (char)KeyboardDriver.GetInputKey();
+            inputKey = (char)KeyboardService.GetInputKey();
 
             if (inputKey >= 0x30 &&
                 inputKey <= 0x39)

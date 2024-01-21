@@ -1,85 +1,122 @@
-using ForgottenRealms.Engine.Classes;
-using ForgottenRealms.Engine.Logging;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace ForgottenRealms.Engine;
 
 public class KeyboardDriver
 {
-    private static bool in_print_and_exit = false;
-    private static readonly SoundDriver SoundDriver = new ();
+    private static byte skipReadFlag;
 
-    public static void print_and_exit()
+    internal static void SysDelay(int milliseconds)
     {
-        if (in_print_and_exit == false)
+        if (milliseconds != 0)
         {
-            in_print_and_exit = true;
-
-            SoundDriver.PlaySound(Sound.sound_FF);
-
-            Logger.Close();
-
-            ItemLibrary.Write();
-
-            MainGameEngine.EngineStop();
+            System.Threading.Thread.Sleep(milliseconds);
         }
     }
 
 
-    internal static byte GetInputKey()
+    private static Queue<ushort> keysPressed = new Queue<ushort>();
+    private static Semaphore WaitForKey = new Semaphore(0, 1);
+
+    static public void AddKey(ushort key)
     {
-        byte key;
-
-        if (gbl.inDemo == true)
+        lock (keysPressed)
         {
-            if (seg049.KEYPRESSED() == true)
+            keysPressed.Enqueue(key);
+
+            if (keysPressed.Count == 1)
             {
-                key = seg049.READKEY();
-            }
-            else
-            {
-                key = 0;
+                WaitForKey.Release();
             }
         }
-        else
-        {
-            key = seg049.READKEY();
-        }
+    }
 
-        if (key == 0x13)
-        {
-            SoundDriver.PlaySound(Sound.sound_0);
-        }
 
-        if (Cheats.allow_keyboard_exit && key == 3)
-        {
-            print_and_exit();
-        }
+    private static ushort int_check_keyPressed()
+    {
+        //INT 16 - KEYBOARD - CHECK FOR KEYSTROKE
+        //AH = 01h
+        //Return: ZF set if no keystroke available
+        //ZF clear if keystroke available
+        //AH = BIOS scan code
+        //AL = ASCII character
+        //Note:	if a keystroke is present, it is not removed from the keyboard buffer;
 
-        if (key != 0)
+        //System.Threading.Thread.Sleep(10);
+
+        lock (keysPressed)
         {
-            while (seg049.KEYPRESSED() == true)
+            if (keysPressed.Count > 0)
             {
-                key = seg049.READKEY();
+                return keysPressed.Peek();
+            }
+
+            return 0;
+        }
+    }
+
+    private static ushort int_get_keyPressed()
+    {
+        //INT 16 - KEYBOARD - GET KEYSTROKE
+        //AH = 00h
+        //Return: AH = BIOS scan code
+        //AL = ASCII character
+        //Notes:	on extended keyboards, this function discards any extended keystrokes,
+        //returning only when a non-extended keystroke is available
+
+        ushort key = 0;
+
+        WaitForKey.WaitOne();
+        lock (keysPressed)
+        {
+            key = keysPressed.Dequeue();
+
+            if (keysPressed.Count > 0)
+            {
+                WaitForKey.Release();
             }
         }
 
         return key;
     }
 
-    internal static void clear_keyboard()
+
+
+    internal static bool KEYPRESSED()
     {
-        while (seg049.KEYPRESSED() == true)
+        if (skipReadFlag == 0)
         {
-            GetInputKey();
+            return (int_check_keyPressed() != 0);
+        }
+        else
+        {
+            return true;
         }
     }
 
 
-    internal static void clear_one_keypress()
+    internal static byte READKEY()
     {
-        if (seg049.KEYPRESSED() == true)
+        byte lastCode = skipReadFlag;
+
+        skipReadFlag = 0;
+
+        if (lastCode == 0)
         {
-            GetInputKey();
+            ushort responce = int_get_keyPressed();
+            lastCode = (byte)responce;
+
+            if ((responce & 0x00ff) == 0)
+            {
+                skipReadFlag = (byte)(responce >> 8);
+                if (skipReadFlag == 0)
+                {
+                    lastCode = 3;
+                }
+            }
         }
+
+        return lastCode;
     }
 }

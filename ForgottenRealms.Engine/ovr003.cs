@@ -1697,7 +1697,7 @@ internal class ovr003
             gbl.textYCol = 2;
 
             DisplayDriver.press_any_key("The entire party is killed!", true, 10, 0x16, 0x26, 1, 1);
-            seg049.SysDelay(3000);
+            KeyboardDriver.SysDelay(3000);
         }
 
         gbl.SelectedPlayer = currentPlayerBackup;
@@ -1971,7 +1971,7 @@ internal class ovr003
                 ovr017.SaveGame();
             }
 
-            KeyboardDriver.print_and_exit();
+            KeyboardService.print_and_exit();
         }
         else if (var_1 == 9)
         {
