@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ForgottenRealms.Engine.CharacterFeature;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.Combat;
 
@@ -843,6 +844,7 @@ internal class ovr023
 
 	private static Point[] unk_16D22 = { new Point(-1, 0), new Point(0, -1), new Point(0, -1), new Point(1, 0), new Point(1, 0), new Point(0, 1), new Point(0, 1), new Point(-1, 0) };
 	private static Point[] unk_16D32 = { new Point(1, 0), new Point(1, 0), new Point(0, 1), new Point(0, 1), new Point(-1, 0), new Point(-1, 0), new Point(0, -1), new Point(0, -1) };
+	private static readonly ExperienceTable ExperienceTable = new ();
 
 
 	private static void BuildAreaDamageTargets(int max_range, int playerSize, Point targetPos, Point casterPos) // sub_5D7CF
@@ -2141,13 +2143,14 @@ internal class ovr023
 				if (lvl > 0 &&
 				    lvl <= max_lvl)
 				{
-					if (ovr018.exp_table[skill, lvl] > 0 &&
-					    ovr018.exp_table[skill, lvl] < max_exp &&
+					var currentMinimumExperience = ExperienceTable.GetMinimumExperience((ClassId)skill, lvl);
+					if (ExperienceTable.IsTrainingAllowed((ClassId)skill, lvl) &&
+					    currentMinimumExperience < max_exp &&
 					    Limits.RaceStatLevelRestricted((ClassId)skill, player) == false)
 					{
 						max_lvl = lvl;
 						var_C = skill;
-						max_exp = ovr018.exp_table[skill, lvl];
+						max_exp = currentMinimumExperience;
 					}
 				}
 			}

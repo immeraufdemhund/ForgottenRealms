@@ -4,6 +4,7 @@ namespace ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 
 public class TrainCharacterService
 {
+    private static readonly ExperienceTable ExperienceTable = new();
     private static byte[] classMasks = { 2, 2, 8, 0x10, 0x20, 1, 4, 4 };
 
     public bool IsAllowedToTrainClass(byte arg_0, ClassId classId)
@@ -48,13 +49,13 @@ public class TrainCharacterService
 
                 if (Limits.RaceClassLimit(class_lvl, player, (ClassId)_class) == false)
                 {
-                    if ((ovr018.exp_table[_class, class_lvl] > 0) &&
-                        (ovr018.exp_table[_class, class_lvl] <= player.exp ||
+                    if (ExperienceTable.IsTrainingAllowed((ClassId)_class, class_lvl) &&
+                        (ExperienceTable.HasEnoughExperienceToTrain((ClassId)_class, class_lvl, player) ||
                          Cheats.free_training == true))
                     {
                         if (Cheats.free_training == true)
                         {
-                            int tmpExp = ovr018.exp_table[_class, class_lvl];
+                            var tmpExp = ExperienceTable.GetMinimumExperience((ClassId)_class, class_lvl);
                             if (tmpExp > 0)
                             {
                                 if (tmpExp > player.exp)
@@ -66,7 +67,7 @@ public class TrainCharacterService
 
                         classesExpTrainMask += classMasks[_class];
 
-                        int next_lvl_exp = ovr018.exp_table[_class, (class_lvl + 1)];
+                        int next_lvl_exp = ExperienceTable.GetMinimumExperience((ClassId)_class, class_lvl + 1);
 
                         if (next_lvl_exp > 0)
                         {
@@ -90,9 +91,10 @@ public class TrainCharacterService
             {
                 if ((classMasks[_class] & classesExpTrainMask) != 0)
                 {
-                    if (ovr018.exp_table[_class, class_lvl] > max_exp)
+                    var currentMaximumExperience = ExperienceTable.GetMinimumExperience((ClassId)_class, class_lvl);
+                    if (currentMaximumExperience > max_exp)
                     {
-                        max_exp = ovr018.exp_table[_class, class_lvl];
+                        max_exp = currentMaximumExperience;
                         max_class = _class;
                     }
                 }
@@ -102,7 +104,7 @@ public class TrainCharacterService
             if (max_exp > 0)
             {
                 classesExpTrainMask = classMasks[max_class];
-                int var_9 = ovr018.exp_table[max_class, class_lvl + 1];
+                int var_9 = ExperienceTable.GetMinimumExperience((ClassId)max_class, class_lvl + 1);
 
                 if (var_9 > 0 &&
                     player.exp >= var_9 &&
