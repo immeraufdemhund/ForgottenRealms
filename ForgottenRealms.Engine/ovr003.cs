@@ -78,105 +78,6 @@ internal class ovr003
         CommandTable.Add(0x40, new CmdItem(1, "DESTROY ITEMS", new DestroyItemsCommand()));
     }
 
-    internal static void TryEncamp()
-    {
-        RunEclVm(gbl.PreCampCheckAddr);
-
-        if (ovr016.MakeCamp() == true)
-        {
-            ovr025.LoadPic();
-            RunEclVm(gbl.CampInterruptedAddr);
-        }
-
-        gbl.can_draw_bigpic = true;
-        ovr029.RedrawView();
-        gbl.gameSaved = false;
-    }
-
-
-    internal static void RunEclVm(ushort offset) // sub_29607
-    {
-        gbl.ecl_offset = offset;
-        gbl.stopVM = false;
-
-        //System.Console.Out.WriteLine("RunEclVm {0,4:X} start", offset);
-
-        while (gbl.stopVM == false &&
-               gbl.party_killed == false)
-        {
-            gbl.command = gbl.ecl_ptr[gbl.ecl_offset + 0x8000];
-
-            VmLog.Write("0x{0:X} ", gbl.ecl_offset);
-
-            CmdItem cmd;
-            if (CommandTable.TryGetValue(gbl.command, out cmd))
-            {
-                if (gbl.printCommands)
-                {
-                    Logger.Debug("{0} 0x{1:X}", cmd.Name(), gbl.command);
-                }
-                cmd.Run();
-            }
-            else
-            {
-                Logger.Log("Unknown command id {0}", gbl.command);
-            }
-        }
-
-        gbl.stopVM = false;
-    }
-
-
-    internal static void sub_29677()
-    {
-        do
-        {
-            ovr030.DaxArrayFreeDaxBlocks(gbl.byte_1D556);
-            gbl.byte_1D5AB = string.Empty;
-            gbl.byte_1D5B5 = 0x0FF;
-            gbl.vmFlag01 = false;
-            gbl.mapWallRoof = ovr031.get_wall_x2(gbl.mapPosY, gbl.mapPosX);
-
-            gbl.area2_ptr.tried_to_exit_map = false;
-
-            gbl.LastSelectedPlayer = gbl.SelectedPlayer;
-
-            RunEclVm(gbl.ecl_initial_entryPoint);
-
-            if (gbl.vmFlag01 == false)
-            {
-                gbl.area_ptr.LastEclBlockId = gbl.EclBlockId;
-            }
-
-            if (gbl.vmFlag01 == false)
-            {
-                if (((gbl.last_game_state != GameState.DungeonMap || gbl.game_state == GameState.DungeonMap) && gbl.byte_1AB0B == true) ||
-                    (gbl.last_game_state == GameState.DungeonMap && gbl.game_state == GameState.DungeonMap))
-                {
-                    ovr029.RedrawView();
-                }
-                gbl.vmFlag01 = false;
-
-                RunEclVm(gbl.vm_run_addr_1);
-
-                if (gbl.vmFlag01 == false)
-                {
-                    RunEclVm(gbl.SearchLocationAddr);
-
-                    if (gbl.vmFlag01 == false)
-                    {
-                        gbl.SelectedPlayer = gbl.LastSelectedPlayer;
-                        ovr025.PartySummary(gbl.SelectedPlayer);
-                    }
-                }
-
-            }
-        } while (gbl.vmFlag01 == true);
-
-        gbl.last_game_state = gbl.game_state;
-    }
-
-
     internal static void sub_29758()
     {
         gbl.LastSelectedPlayer = gbl.SelectedPlayer;
@@ -343,5 +244,103 @@ internal class ovr003
 
             gbl.party_killed = false;
         }
+    }
+
+    internal static void TryEncamp()
+    {
+        RunEclVm(gbl.PreCampCheckAddr);
+
+        if (ovr016.MakeCamp() == true)
+        {
+            ovr025.LoadPic();
+            RunEclVm(gbl.CampInterruptedAddr);
+        }
+
+        gbl.can_draw_bigpic = true;
+        ovr029.RedrawView();
+        gbl.gameSaved = false;
+    }
+
+
+    private static void RunEclVm(ushort offset) // sub_29607
+    {
+        gbl.ecl_offset = offset;
+        gbl.stopVM = false;
+
+        //System.Console.Out.WriteLine("RunEclVm {0,4:X} start", offset);
+
+        while (gbl.stopVM == false &&
+               gbl.party_killed == false)
+        {
+            gbl.command = gbl.ecl_ptr[gbl.ecl_offset + 0x8000];
+
+            VmLog.Write("0x{0:X} ", gbl.ecl_offset);
+
+            CmdItem cmd;
+            if (CommandTable.TryGetValue(gbl.command, out cmd))
+            {
+                if (gbl.printCommands)
+                {
+                    Logger.Debug("{0} 0x{1:X}", cmd.Name(), gbl.command);
+                }
+                cmd.Run();
+            }
+            else
+            {
+                Logger.Log("Unknown command id {0}", gbl.command);
+            }
+        }
+
+        gbl.stopVM = false;
+    }
+
+
+    private static void sub_29677()
+    {
+        do
+        {
+            ovr030.DaxArrayFreeDaxBlocks(gbl.byte_1D556);
+            gbl.byte_1D5AB = string.Empty;
+            gbl.byte_1D5B5 = 0x0FF;
+            gbl.vmFlag01 = false;
+            gbl.mapWallRoof = ovr031.get_wall_x2(gbl.mapPosY, gbl.mapPosX);
+
+            gbl.area2_ptr.tried_to_exit_map = false;
+
+            gbl.LastSelectedPlayer = gbl.SelectedPlayer;
+
+            RunEclVm(gbl.ecl_initial_entryPoint);
+
+            if (gbl.vmFlag01 == false)
+            {
+                gbl.area_ptr.LastEclBlockId = gbl.EclBlockId;
+            }
+
+            if (gbl.vmFlag01 == false)
+            {
+                if (((gbl.last_game_state != GameState.DungeonMap || gbl.game_state == GameState.DungeonMap) && gbl.byte_1AB0B == true) ||
+                    (gbl.last_game_state == GameState.DungeonMap && gbl.game_state == GameState.DungeonMap))
+                {
+                    ovr029.RedrawView();
+                }
+                gbl.vmFlag01 = false;
+
+                RunEclVm(gbl.vm_run_addr_1);
+
+                if (gbl.vmFlag01 == false)
+                {
+                    RunEclVm(gbl.SearchLocationAddr);
+
+                    if (gbl.vmFlag01 == false)
+                    {
+                        gbl.SelectedPlayer = gbl.LastSelectedPlayer;
+                        ovr025.PartySummary(gbl.SelectedPlayer);
+                    }
+                }
+
+            }
+        } while (gbl.vmFlag01 == true);
+
+        gbl.last_game_state = gbl.game_state;
     }
 }
