@@ -255,7 +255,7 @@ internal class ovr018
 
                 if (inputkey == 'Y')
                 {
-                    seg043.print_and_exit();
+                    KeyboardDriver.print_and_exit();
                 }
             }
         }

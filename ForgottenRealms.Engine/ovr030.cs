@@ -141,7 +141,7 @@ internal class ovr030
                     daxArray.numFrames = frames_count; // also pointless
 
                     uncompressed_data = null;
-                    seg043.clear_keyboard();
+                    KeyboardDriver.clear_keyboard();
 
                     if (gbl.AnimationsOn)
                     {
@@ -198,7 +198,7 @@ internal class ovr030
             gbl.current_body_id = body_id;
         }
 
-        seg043.clear_keyboard();
+        KeyboardDriver.clear_keyboard();
     }
 
 

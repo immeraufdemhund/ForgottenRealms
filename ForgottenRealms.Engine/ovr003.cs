@@ -1971,7 +1971,7 @@ internal class ovr003
                 ovr017.SaveGame();
             }
 
-            seg043.print_and_exit();
+            KeyboardDriver.print_and_exit();
         }
         else if (var_1 == 9)
         {

@@ -47,11 +47,11 @@ public class ModifyCharacterService
                     /* empty */
                 }
 
-                inputkey = (char)seg043.GetInputKey();
+                inputkey = (char)KeyboardDriver.GetInputKey();
 
                 if (inputkey == 0)
                 {
-                    inputkey = (char)seg043.GetInputKey();
+                    inputkey = (char)KeyboardDriver.GetInputKey();
                     controlkey = true;
                 }
                 else

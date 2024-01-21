@@ -21,7 +21,7 @@ internal class ovr038
                 Logger.LogAndExit("Unable to load {0} from 8x8D{1}", block_id, gbl.game_area);
             }
 
-            seg043.clear_keyboard();
+            KeyboardDriver.clear_keyboard();
         }
     }
 

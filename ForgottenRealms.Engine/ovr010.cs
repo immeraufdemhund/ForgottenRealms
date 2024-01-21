@@ -708,11 +708,11 @@ internal class ovr010
 
         if (seg049.KEYPRESSED() == true)
         {
-            byte var_6 = seg043.GetInputKey();
+            byte var_6 = KeyboardDriver.GetInputKey();
 
             if (var_6 == 0)
             {
-                var_6 = seg043.GetInputKey();
+                var_6 = KeyboardDriver.GetInputKey();
             }
 
             if (var_6 == '2')
@@ -751,7 +751,7 @@ internal class ovr010
             }
         }
 
-        seg043.clear_keyboard();
+        KeyboardDriver.clear_keyboard();
 
         return player_turn;
     }

@@ -3,9 +3,10 @@ using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
 
-public class seg043
+public class KeyboardDriver
 {
     private static bool in_print_and_exit = false;
+    private static readonly SoundDriver SoundDriver = new ();
 
     public static void print_and_exit()
     {
@@ -13,7 +14,7 @@ public class seg043
         {
             in_print_and_exit = true;
 
-            new SoundDriver().PlaySound(Sound.sound_FF);
+            SoundDriver.PlaySound(Sound.sound_FF);
 
             Logger.Close();
 
@@ -46,7 +47,7 @@ public class seg043
 
         if (key == 0x13)
         {
-            new SoundDriver().PlaySound(Sound.sound_0);
+            SoundDriver.PlaySound(Sound.sound_0);
         }
 
         if (Cheats.allow_keyboard_exit && key == 3)
@@ -63,27 +64,6 @@ public class seg043
         }
 
         return key;
-    }
-
-    public static void DumpPlayerAffects()
-    {
-        foreach (Player player in gbl.TeamList)
-        {
-            foreach (Affect affect in player.affects)
-            {
-                Logger.Debug("who: {0}  sp#: {1} - {2}", player.name, (int)affect.type, affect.type);
-            }
-        }
-    }
-
-    public static void ToggleCommandDebugging()
-    {
-        gbl.printCommands = !gbl.printCommands;
-
-        if (gbl.printCommands == true)
-        {
-            Logger.Debug(System.DateTime.Now.ToString());
-        }
     }
 
     internal static void clear_keyboard()

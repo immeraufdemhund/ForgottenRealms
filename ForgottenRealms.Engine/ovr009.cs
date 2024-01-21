@@ -176,7 +176,7 @@ internal class ovr009
                             case 'Q':
                                 SetPlayerQuickFight(player);
                                 ovr027.ClearPromptArea();
-                                seg043.clear_keyboard();
+                                KeyboardDriver.clear_keyboard();
                                 seg049.SysDelay(0x0C8);
                                 var_2 = true;
                                 ovr010.PlayerQuickFight(player);

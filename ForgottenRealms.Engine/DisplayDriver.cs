@@ -216,7 +216,7 @@ internal class DisplayDriver
                         gbl.textYCol = yStart;
 
                         DisplayAndPause("Press any key to continue", 13);
-                        seg043.clear_keyboard();
+                        KeyboardDriver.clear_keyboard();
 
                         seg037.draw8x8_clear_area(yEnd, xEnd, yStart, xStart);
 
@@ -252,7 +252,7 @@ internal class DisplayDriver
 
         do
         {
-            ch = (char)seg043.GetInputKey();
+            ch = (char)KeyboardDriver.GetInputKey();
 
             if (ch >= 0x20 && ch <= 0x7A)
             {
@@ -307,7 +307,7 @@ internal class DisplayDriver
         ovr027.ClearPromptAreaNoUpdate();
 
         displayString(txt, 0, fgColor, 0x18, 0);
-        seg043.GetInputKey();
+        KeyboardDriver.GetInputKey();
     }
 
 

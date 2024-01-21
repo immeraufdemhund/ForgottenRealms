@@ -159,7 +159,7 @@ public class MainGameEngine
             if (gbl.inDemo == true)
             {
                 TitleScreenAction.ShowTitleScreen();
-                seg043.clear_keyboard();
+                KeyboardDriver.clear_keyboard();
 
                 gbl.displayInputSecondsToWait = 10;
                 gbl.displayInputTimeoutValue = 'D';

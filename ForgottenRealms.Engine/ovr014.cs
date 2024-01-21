@@ -1882,7 +1882,7 @@ internal class ovr014
             int playerAtXY;
 
             ovr033.AtMapXY(out groundTile, out playerAtXY, pos);
-            seg043.clear_keyboard();
+            KeyboardDriver.clear_keyboard();
             bool can_target = false;
             int range = 255;
 

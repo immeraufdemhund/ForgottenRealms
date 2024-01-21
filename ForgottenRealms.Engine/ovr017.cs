@@ -120,7 +120,7 @@ internal class ovr017
 
         ovr034.ReleaseCombatIcon(11);
         seg042.restore_game_area();
-        seg043.clear_keyboard();
+        KeyboardDriver.clear_keyboard();
     }
 
 
@@ -609,7 +609,7 @@ internal class ovr017
             }
         }
 
-        seg043.clear_keyboard();
+        KeyboardDriver.clear_keyboard();
         ovr025.reclac_player_values(player);
         ovr026.ReclacClassBonuses(player);
     }
@@ -836,7 +836,7 @@ internal class ovr017
             if (exit)
             {
                 DisplayDriver.DisplayAndPause("Unable to load monster", 15);
-                seg043.print_and_exit();
+                KeyboardDriver.print_and_exit();
             }
             else
             {
@@ -871,7 +871,7 @@ internal class ovr017
             }
         }
 
-        seg043.clear_keyboard();
+        KeyboardDriver.clear_keyboard();
 
         return player;
     }
@@ -1096,7 +1096,7 @@ internal class ovr017
             ovr030.load_bigpic(0x79);
         }
 
-        seg043.clear_keyboard();
+        KeyboardDriver.clear_keyboard();
         ovr027.ClearPromptArea();
 
         gbl.last_game_state = gbl.game_state;

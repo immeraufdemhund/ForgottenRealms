@@ -206,11 +206,11 @@ internal class ovr027
             }
             else if (seg049.KEYPRESSED() == true)
             {
-                input_key = (char)seg043.GetInputKey();
+                input_key = (char)KeyboardDriver.GetInputKey();
 
                 if (input_key == 0)
                 {
-                    input_key = (char)seg043.GetInputKey();
+                    input_key = (char)KeyboardDriver.GetInputKey();
 
                     if (accept_ctrlkeys != 0)
                     {

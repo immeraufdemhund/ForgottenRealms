@@ -17,7 +17,7 @@ namespace ForgottenRealms
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             Config.Setup();
-            Logger.SetExitFunc(seg043.print_and_exit);
+            Logger.SetExitFunc(KeyboardDriver.print_and_exit);
             StartEngine();
             var mainWindow = new MainWindow();
             mainWindow.Show();

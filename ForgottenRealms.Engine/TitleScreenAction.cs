@@ -43,7 +43,7 @@ public class TitleScreenAction
 
     private static void delay_or_key(int seconds)
     {
-        seg043.clear_keyboard();
+        KeyboardDriver.clear_keyboard();
 
         var timeEnd = DateTime.Now.AddSeconds(seconds);
 
@@ -53,7 +53,7 @@ public class TitleScreenAction
             System.Threading.Thread.Sleep(100);
         }
 
-        seg043.clear_keyboard();
+        KeyboardDriver.clear_keyboard();
     }
 
     private void ShowCredits()

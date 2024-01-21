@@ -59,7 +59,7 @@ namespace ForgottenRealms
 
         private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
         {
-            seg043.print_and_exit();
+            KeyboardDriver.print_and_exit();
         }
     }
 }
