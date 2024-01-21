@@ -8,20 +8,20 @@ public class SpellCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(3);
 
-        byte spell_id = (byte)ovr008.vm_GetCmdValue(1);
-        ushort loc_a = gbl.cmd_opps[2].Word;
-        ushort loc_b = gbl.cmd_opps[3].Word;
+        var spell_id = (byte)ovr008.vm_GetCmdValue(1);
+        var loc_a = gbl.cmd_opps[2].Word;
+        var loc_b = gbl.cmd_opps[3].Word;
 
         byte spell_index = 1;
         byte player_index = 0;
 
-        bool spell_found = false;
+        var spell_found = false;
 
-        foreach (Player player in gbl.TeamList)
+        foreach (var player in gbl.TeamList)
         {
             spell_index = 1;
 
-            foreach (int id in player.spellList.IdList())
+            foreach (var id in player.spellList.IdList())
             {
                 if (id == spell_id)
                 {
@@ -32,7 +32,10 @@ public class SpellCommand : IGameCommand
                 spell_index += 1;
             }
 
-            if (spell_found) break;
+            if (spell_found)
+            {
+                break;
+            }
 
             player_index++;
         }

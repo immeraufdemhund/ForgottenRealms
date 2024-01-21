@@ -17,6 +17,7 @@ public class ProtectionCommand : IGameCommand
         {
             ovr004.copy_protection();
         }
+
         ovr025.LoadPic();
     }
 }

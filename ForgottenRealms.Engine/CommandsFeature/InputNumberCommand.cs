@@ -8,9 +8,9 @@ public class InputNumberCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(2);
 
-        ushort loc = gbl.cmd_opps[2].Word;
+        var loc = gbl.cmd_opps[2].Word;
 
-        ushort var_4 = DisplayDriver.getUserInputShort(0, 0x0a, string.Empty);
+        var var_4 = DisplayDriver.getUserInputShort(0, 0x0a, string.Empty);
 
         ovr008.vm_SetMemoryValue(var_4, loc);
     }

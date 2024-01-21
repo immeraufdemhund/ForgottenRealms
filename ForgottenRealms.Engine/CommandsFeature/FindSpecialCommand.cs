@@ -6,13 +6,13 @@ public class FindSpecialCommand : IGameCommand
 {
     public void Execute()
     {
-        for (int i = 0; i < 6; i++)
+        for (var i = 0; i < 6; i++)
         {
             gbl.compare_flags[i] = false;
         }
 
         ovr008.vm_LoadCmdSets(1);
-        Affects affect_type = (Affects)ovr008.vm_GetCmdValue(1);
+        var affect_type = (Affects)ovr008.vm_GetCmdValue(1);
 
         if (gbl.SelectedPlayer.HasAffect(affect_type) == true)
         {

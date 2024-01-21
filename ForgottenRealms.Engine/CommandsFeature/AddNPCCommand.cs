@@ -11,7 +11,7 @@ public class AddNPCCommand : IGameCommand
 
         ovr017.load_npc(npc_id);
 
-        byte morale = (byte)ovr008.vm_GetCmdValue(2);
+        var morale = (byte)ovr008.vm_GetCmdValue(2);
 
         gbl.SelectedPlayer.control_morale = (byte)((morale >> 1) + Control.NPC_Base);
 

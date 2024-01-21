@@ -12,6 +12,7 @@ public class ApproachCommand : IGameCommand
 
             ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
         }
+
         gbl.ecl_offset++;
     }
 }

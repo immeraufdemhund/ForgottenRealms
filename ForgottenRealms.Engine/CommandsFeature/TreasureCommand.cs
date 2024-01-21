@@ -7,6 +7,7 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 public class TreasureCommand : IGameCommand
 {
     private readonly DaxFileDecoder _daxFileDecoder = new();
+
     public void Execute()
     {
         byte[] data;
@@ -15,16 +16,16 @@ public class TreasureCommand : IGameCommand
 
         ovr008.vm_LoadCmdSets(8);
 
-        for (int coin = 0; coin < 7; coin++)
+        for (var coin = 0; coin < 7; coin++)
         {
             gbl.pooled_money.SetCoins(coin, ovr008.vm_GetCmdValue(coin + 1));
         }
 
-        byte block_id = (byte)ovr008.vm_GetCmdValue(8);
+        var block_id = (byte)ovr008.vm_GetCmdValue(8);
 
         if (block_id < 0x80)
         {
-            string filename = string.Format("ITEM{0}.dax", gbl.game_area);
+            var filename = string.Format("ITEM{0}.dax", gbl.game_area);
             _daxFileDecoder.LoadDecodeDax(out data, out dataSize, block_id, filename);
 
             if (dataSize == 0)
@@ -32,7 +33,7 @@ public class TreasureCommand : IGameCommand
                 Logger.LogAndExit("Unable to find item file: {0}", filename);
             }
 
-            for (int offset = 0; offset < dataSize; offset += Item.StructSize)
+            for (var offset = 0; offset < dataSize; offset += Item.StructSize)
             {
                 gbl.items_pointer.Add(new Item(data, offset));
             }
@@ -41,7 +42,7 @@ public class TreasureCommand : IGameCommand
         }
         else if (block_id != 0xff)
         {
-            for (int count = 0; count < (block_id - 0x80); count++)
+            for (var count = 0; count < block_id - 0x80; count++)
             {
                 int var_63 = ovr024.roll_dice(100, 1);
 

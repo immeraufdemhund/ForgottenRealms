@@ -8,14 +8,14 @@ public class GetTableCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(3);
 
-        ushort var_2 = gbl.cmd_opps[1].Word;
-        byte var_9 = (byte)ovr008.vm_GetCmdValue(2);
+        var var_2 = gbl.cmd_opps[1].Word;
+        var var_9 = (byte)ovr008.vm_GetCmdValue(2);
 
-        ushort result_loc = gbl.cmd_opps[3].Word;
+        var result_loc = gbl.cmd_opps[3].Word;
 
-        ushort var_6 = (ushort)(var_9 + var_2);
+        var var_6 = (ushort)(var_9 + var_2);
 
-        ushort var_8 = ovr008.vm_GetMemoryValue(var_6);
+        var var_8 = ovr008.vm_GetMemoryValue(var_6);
         ovr008.vm_SetMemoryValue(var_8, result_loc);
     }
 }

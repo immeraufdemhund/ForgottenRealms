@@ -20,7 +20,7 @@ public class CheckPartyCommand : IGameCommand
             var_2 = ovr008.vm_GetCmdValue(1);
         }
 
-        Affects affect_id = (Affects)ovr008.vm_GetCmdValue(2);
+        var affect_id = (Affects)ovr008.vm_GetCmdValue(2);
 
         var loc_a = gbl.cmd_opps[3].Word;
         var loc_b = gbl.cmd_opps[4].Word;
@@ -36,15 +36,15 @@ public class CheckPartyCommand : IGameCommand
 
         if (var_2 == 8001)
         {
-            bool affect_found = gbl.TeamList.Exists(player => player.HasAffect(affect_id));
+            var affect_found = gbl.TeamList.Exists(player => player.HasAffect(affect_id));
 
             setMemoryFour(affect_found, 0, 0, 0, loc_a, loc_b, loc_c, loc_d);
         }
         else if (var_2 >= 0x00A5 && var_2 <= 0x00AC)
         {
-            int index = var_2 - 0xA4;
-            int count = 0;
-            foreach (Player player in gbl.TeamList)
+            var index = var_2 - 0xA4;
+            var count = 0;
+            foreach (var player in gbl.TeamList)
             {
                 count++;
 
@@ -67,8 +67,8 @@ public class CheckPartyCommand : IGameCommand
         }
         else if (var_2 == 0x9f)
         {
-            int count = 0;
-            foreach (Player player in gbl.TeamList)
+            var count = 0;
+            foreach (var player in gbl.TeamList)
             {
                 count++;
 

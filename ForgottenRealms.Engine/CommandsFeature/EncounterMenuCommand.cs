@@ -17,9 +17,9 @@ public class EncounterMenuCommand : IGameCommand
         byte var_40A;
         byte var_408;
         byte var_407;
-        string text = string.Empty; /* Simeon */
+        var text = string.Empty; /* Simeon */
         string[] strings = new string[3];
-        byte[] var_6 = new byte[5];
+        var var_6 = new byte[5];
         int menu_selected;
 
         gbl.byte_1EE95 = true;
@@ -36,12 +36,12 @@ public class EncounterMenuCommand : IGameCommand
 
         var_43D = gbl.cmd_opps[4].Word;
 
-        for (int i = 0; i < 5; i++)
+        for (var i = 0; i < 5; i++)
         {
             var_6[i] = (byte)ovr008.vm_GetCmdValue(i + 5);
         }
 
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
         {
             strings[i] = gbl.unk_1D972[i + 1];
         }
@@ -72,7 +72,7 @@ public class EncounterMenuCommand : IGameCommand
                 useOverlay = true;
             }
 
-            clearTextArea = (gbl.area_ptr.inDungeon != 0);
+            clearTextArea = gbl.area_ptr.inDungeon != 0;
 
             init_max = 0;
             gbl.textXCol = 1;
@@ -88,6 +88,7 @@ public class EncounterMenuCommand : IGameCommand
                         text = strings[var_43B];
                         var_43B++;
                     } while (text.Length == 0 && var_43B < 3);
+
                     break;
 
                 case 1:
@@ -103,6 +104,7 @@ public class EncounterMenuCommand : IGameCommand
                             var_43B = 0;
                         }
                     } while (text.Length == 0 && var_43B != 1);
+
                     break;
 
                 case 2:
@@ -117,8 +119,8 @@ public class EncounterMenuCommand : IGameCommand
                         {
                             var_43B = 0;
                         }
-
                     } while (text.Length == 0 && var_43B != 2);
+
                     break;
             }
 
@@ -170,6 +172,7 @@ public class EncounterMenuCommand : IGameCommand
                             ovr008.vm_SetMemoryValue(1, var_43D);
                         }
                     }
+
                     break;
 
                 case 1:
@@ -214,6 +217,7 @@ public class EncounterMenuCommand : IGameCommand
                             ovr008.vm_SetMemoryValue(3, var_43D);
                         }
                     }
+
                     break;
 
                 case 2:
@@ -240,6 +244,7 @@ public class EncounterMenuCommand : IGameCommand
                         gbl.textYCol = 0x11;
                         DisplayDriver.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
                     }
+
                     break;
 
                 case 3:
@@ -280,6 +285,7 @@ public class EncounterMenuCommand : IGameCommand
                             init_max = 1;
                         }
                     }
+
                     break;
 
                 case 4:
@@ -289,7 +295,6 @@ public class EncounterMenuCommand : IGameCommand
                     }
                     else if (menu_selected == 1 || menu_selected == 3 || menu_selected == 4)
                     {
-
                         if (gbl.area2_ptr.encounter_distance <= 0)
                         {
                             ovr008.vm_SetMemoryValue(3, var_43D);

@@ -17,8 +17,8 @@ public class CompareCommand : IGameCommand
         }
         else
         {
-            ushort value_a = ovr008.vm_GetCmdValue(1);
-            ushort value_b = ovr008.vm_GetCmdValue(2);
+            var value_a = ovr008.vm_GetCmdValue(1);
+            var value_b = ovr008.vm_GetCmdValue(2);
 
             VmLog.WriteLine("CMD_Compare: Values: {0} {1}", value_b, value_a);
             ovr008.compare_variables(value_b, value_a);

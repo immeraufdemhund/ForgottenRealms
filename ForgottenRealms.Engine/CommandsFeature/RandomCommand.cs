@@ -8,16 +8,16 @@ public class RandomCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(2);
 
-        byte rand_max = (byte)ovr008.vm_GetCmdValue(1);
+        var rand_max = (byte)ovr008.vm_GetCmdValue(1);
 
         if (rand_max < 0xff)
         {
             rand_max++;
         }
 
-        ushort loc = gbl.cmd_opps[2].Word;
+        var loc = gbl.cmd_opps[2].Word;
 
-        byte val = seg051.Random(rand_max);
+        var val = seg051.Random(rand_max);
 
         VmLog.WriteLine("CMD_Random: Max: {0} Loc: {1} Val: {2}", rand_max, new MemLoc(loc), val);
 

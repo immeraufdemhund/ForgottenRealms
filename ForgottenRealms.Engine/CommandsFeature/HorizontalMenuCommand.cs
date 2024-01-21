@@ -11,8 +11,8 @@ public class HorizontalMenuCommand : IGameCommand
 
         ovr008.vm_LoadCmdSets(2);
 
-        ushort loc = gbl.cmd_opps[1].Word;
-        byte string_count = (byte)ovr008.vm_GetCmdValue(2);
+        var loc = gbl.cmd_opps[1].Word;
+        var string_count = (byte)ovr008.vm_GetCmdValue(2);
 
         gbl.ecl_offset--;
 
@@ -46,15 +46,15 @@ public class HorizontalMenuCommand : IGameCommand
             useOverlay = true;
         }
 
-        string text = string.Empty;
-        for (int i = 1; i < string_count; i++)
+        var text = string.Empty;
+        for (var i = 1; i < string_count; i++)
         {
             text += "~" + gbl.unk_1D972[i] + " ";
         }
 
         text += "~" + gbl.unk_1D972[string_count];
 
-        byte menu_selected = (byte)ovr008.sub_317AA(useOverlay, var_3B, colors, text, "");
+        var menu_selected = (byte)ovr008.sub_317AA(useOverlay, var_3B, colors, text, "");
 
         ovr008.vm_SetMemoryValue(menu_selected, loc);
 

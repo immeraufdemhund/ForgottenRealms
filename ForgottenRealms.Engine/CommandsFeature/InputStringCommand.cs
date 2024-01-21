@@ -8,9 +8,9 @@ public class InputStringCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(2);
 
-        ushort loc = gbl.cmd_opps[2].Word;
+        var loc = gbl.cmd_opps[2].Word;
 
-        string str = DisplayDriver.getUserInputString(0x28, 0, 10, string.Empty);
+        var str = DisplayDriver.getUserInputString(0x28, 0, 10, string.Empty);
 
         if (str.Length == 0)
         {

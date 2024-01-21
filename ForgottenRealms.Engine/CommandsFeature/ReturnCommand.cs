@@ -9,7 +9,7 @@ public class ReturnCommand : IGameCommand
         gbl.ecl_offset++;
         if (gbl.vmCallStack.Count > 0)
         {
-            ushort newOffset = gbl.vmCallStack.Peek();
+            var newOffset = gbl.vmCallStack.Peek();
             VmLog.WriteLine("CMD_Return: was: {0:X} now: {1:X}", gbl.ecl_offset, newOffset);
             gbl.vmCallStack.Pop();
             gbl.ecl_offset = newOffset;

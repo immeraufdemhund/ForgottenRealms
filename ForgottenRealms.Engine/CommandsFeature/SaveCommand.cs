@@ -8,11 +8,11 @@ public class SaveCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(2);
 
-        ushort loc = gbl.cmd_opps[2].Word;
+        var loc = gbl.cmd_opps[2].Word;
 
         if (gbl.cmd_opps[1].Code < 0x80)
         {
-            ushort val = ovr008.vm_GetCmdValue(1);
+            var val = ovr008.vm_GetCmdValue(1);
 
             VmLog.WriteLine("CMD_Save: Value {0} Loc: {1}", val, new MemLoc(loc));
             ovr008.vm_SetMemoryValue(val, loc);

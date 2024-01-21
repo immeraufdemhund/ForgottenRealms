@@ -7,7 +7,7 @@ public class PictureCommand : IGameCommand
     public void Execute()
     {
         ovr008.vm_LoadCmdSets(1);
-        byte blockId = (byte)ovr008.vm_GetCmdValue(1);
+        var blockId = (byte)ovr008.vm_GetCmdValue(1);
 
         if (blockId != 0xff)
         {
@@ -46,6 +46,7 @@ public class PictureCommand : IGameCommand
                 gbl.displayPlayerSprite = false;
                 gbl.byte_1EE8D = true;
             }
+
             gbl.encounter_flags[0] = false;
             gbl.encounter_flags[1] = false;
         }

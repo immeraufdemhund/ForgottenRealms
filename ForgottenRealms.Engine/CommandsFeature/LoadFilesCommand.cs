@@ -10,9 +10,9 @@ public class LoadFilesCommand : IGameCommand
 
         gbl.byte_1AB0B = true;
 
-        byte var_3 = (byte)ovr008.vm_GetCmdValue(1);
-        byte var_2 = (byte)ovr008.vm_GetCmdValue(2);
-        byte var_1 = (byte)ovr008.vm_GetCmdValue(3);
+        var var_3 = (byte)ovr008.vm_GetCmdValue(1);
+        var var_2 = (byte)ovr008.vm_GetCmdValue(2);
+        var var_1 = (byte)ovr008.vm_GetCmdValue(3);
 
         VmLog.WriteLine("CMD_LoadFile: {0} A: {1} B: {2} C: {3}",
             gbl.command == 0x21 ? "Files" : "Pieces", var_1, var_2, var_3);
@@ -105,6 +105,7 @@ public class LoadFilesCommand : IGameCommand
                 ovr025.PartySummary(gbl.SelectedPlayer);
                 ovr025.display_map_position_time();
             }
+
             gbl.byte_1EE98 = false;
         }
     }

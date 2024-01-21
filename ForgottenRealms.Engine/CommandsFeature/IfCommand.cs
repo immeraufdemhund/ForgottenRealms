@@ -7,6 +7,7 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 public class IfCommand : IGameCommand
 {
     private readonly Dictionary<int, CmdItem> _commandTable;
+
     public IfCommand(Dictionary<int, CmdItem> commandTable)
     {
         _commandTable = commandTable;
@@ -16,7 +17,7 @@ public class IfCommand : IGameCommand
     {
         gbl.ecl_offset++;
 
-        int index = gbl.command - 0x16;
+        var index = gbl.command - 0x16;
         string[] types = { "==", "!=", "<", ">", "<=", ">=" };
 
         VmLog.WriteLine("CMD_if: {0} {1}", types[index], gbl.compare_flags[index]);

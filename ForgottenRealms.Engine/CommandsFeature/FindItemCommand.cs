@@ -8,18 +8,18 @@ public class FindItemCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(1);
 
-        ItemType item_type = (ItemType)ovr008.vm_GetCmdValue(1);
+        var item_type = (ItemType)ovr008.vm_GetCmdValue(1);
 
-        for (int i = 0; i < 6; i++)
+        for (var i = 0; i < 6; i++)
         {
             gbl.compare_flags[i] = false;
         }
 
         gbl.compare_flags[1] = true;
 
-        foreach (Player player in gbl.TeamList)
+        foreach (var player in gbl.TeamList)
         {
-            foreach (Item item in player.items)
+            foreach (var item in player.items)
             {
                 if (item_type == item.type)
                 {

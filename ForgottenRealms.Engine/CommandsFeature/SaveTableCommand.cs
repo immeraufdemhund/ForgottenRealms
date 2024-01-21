@@ -8,9 +8,9 @@ public class SaveTableCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(3);
 
-        ushort var_6 = ovr008.vm_GetCmdValue(1);
+        var var_6 = ovr008.vm_GetCmdValue(1);
 
-        ushort result_loc = gbl.cmd_opps[2].Word;
+        var result_loc = gbl.cmd_opps[2].Word;
         result_loc += ovr008.vm_GetCmdValue(3);
 
         ovr008.vm_SetMemoryValue(var_6, result_loc);

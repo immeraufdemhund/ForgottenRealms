@@ -7,7 +7,7 @@ public class GotoCommand : IGameCommand
     public void Execute()
     {
         ovr008.vm_LoadCmdSets(1);
-        ushort newOffset = gbl.cmd_opps[1].Word;
+        var newOffset = gbl.cmd_opps[1].Word;
 
         VmLog.WriteLine("CMD_Goto: was: 0x{0:X} now: 0x{1:X}", gbl.ecl_offset, newOffset);
 

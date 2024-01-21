@@ -8,7 +8,7 @@ public class NewECLCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(1);
 
-        byte block_id = (byte)ovr008.vm_GetCmdValue(1);
+        var block_id = (byte)ovr008.vm_GetCmdValue(1);
 
         VmLog.WriteLine("CMD_NewECL: block_id {0}", block_id);
 

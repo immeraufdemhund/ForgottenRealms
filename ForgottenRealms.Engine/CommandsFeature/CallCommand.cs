@@ -8,8 +8,8 @@ public class CallCommand : IGameCommand
     {
         ovr008.vm_LoadCmdSets(1);
 
-        ushort var_2 = gbl.cmd_opps[1].Word;
-        ushort var_4 = (ushort)(var_2 - 0x7fff);
+        var var_2 = gbl.cmd_opps[1].Word;
+        var var_4 = (ushort)(var_2 - 0x7fff);
 
         VmLog.WriteLine("CMD_Call: {0:X}", var_4);
 
@@ -38,6 +38,7 @@ public class CallCommand : IGameCommand
                         gbl.mapWallType = ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
                     }
                 }
+
                 break;
 
             case 1:
@@ -61,6 +62,7 @@ public class CallCommand : IGameCommand
                 {
                     new SoundDriver().PlaySound(Sound.sound_a);
                 }
+
                 break;
 
             case 0x401F:
@@ -72,6 +74,7 @@ public class CallCommand : IGameCommand
                 {
                     gbl.mapWallType = ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
                 }
+
                 break;
 
             case 0xE804:

@@ -7,7 +7,7 @@ public class WhoCommand : IGameCommand
     public void Execute()
     {
         ovr008.vm_LoadCmdSets(1);
-        string prompt = gbl.unk_1D972[1];
+        var prompt = gbl.unk_1D972[1];
 
         VmLog.WriteLine("CMD_Who: Prompt: '{0}'", prompt);
 

@@ -13,10 +13,10 @@ public class LoadCharacterCommand : IGameCommand
 
         gbl.restore_player_ptr = true;
 
-        bool high_bit_set = (player_index & 0x80) != 0;
+        var high_bit_set = (player_index & 0x80) != 0;
         player_index = player_index & 0x7f;
 
-        Player player = player_index > 0 && player_index < gbl.TeamList.Count ? gbl.TeamList[player_index] : null;
+        var player = player_index > 0 && player_index < gbl.TeamList.Count ? gbl.TeamList[player_index] : null;
 
         if (player != null)
         {
@@ -36,6 +36,7 @@ public class LoadCharacterCommand : IGameCommand
             {
                 gbl.restore_player_ptr = false;
             }
+
             gbl.SelectedPlayer = ovr018.FreeCurrentPlayer(gbl.SelectedPlayer, true, false);
 
             ovr025.PartySummary(gbl.SelectedPlayer);

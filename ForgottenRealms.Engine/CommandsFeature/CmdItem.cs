@@ -16,15 +16,9 @@ public class CmdItem
         _command = command;
     }
 
-    public void Run()
-    {
-        _command.Execute();
-    }
+    public void Run() => _command.Execute();
 
-    public string Name()
-    {
-        return _name;
-    }
+    public string Name() => _name;
 
     internal void Skip()
     {

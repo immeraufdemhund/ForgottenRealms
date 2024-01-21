@@ -7,7 +7,7 @@ public class ProgramCommand : IGameCommand
     public void Execute()
     {
         ovr008.vm_LoadCmdSets(1);
-        byte var_1 = (byte)ovr008.vm_GetCmdValue(1);
+        var var_1 = (byte)ovr008.vm_GetCmdValue(1);
 
         if (gbl.restore_player_ptr == true)
         {
@@ -32,16 +32,16 @@ public class ProgramCommand : IGameCommand
             gbl.area_ptr.field_3FA = 0xff;
             gbl.area2_ptr.training_class_mask = 0xff;
 
-            foreach (Player player in gbl.TeamList)
+            foreach (var player in gbl.TeamList)
             {
-                Player play_ptr = player;
+                var play_ptr = player;
                 play_ptr.hit_point_current = play_ptr.hit_point_max;
                 play_ptr.health_status = Status.okey;
                 play_ptr.in_combat = true;
             }
 
             ovr018.StartGameMenu();
-            char saveYes = ovr027.yes_no(gbl.defaultMenuColors, "You've won. Save before quitting? ");
+            var saveYes = ovr027.yes_no(gbl.defaultMenuColors, "You've won. Save before quitting? ");
 
             if (saveYes == 'Y')
             {
@@ -52,7 +52,7 @@ public class ProgramCommand : IGameCommand
         }
         else if (var_1 == 9)
         {
-            ushort ecl_bkup = gbl.ecl_offset;
+            var ecl_bkup = gbl.ecl_offset;
             ovr003.TryEncamp();
             gbl.ecl_offset = ecl_bkup;
             new ExitCommand().Execute();

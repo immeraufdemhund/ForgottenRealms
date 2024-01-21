@@ -6,16 +6,16 @@ public class DamageCommand : IGameCommand
 {
     public void Execute()
     {
-        Player currentPlayerBackup = gbl.SelectedPlayer;
+        var currentPlayerBackup = gbl.SelectedPlayer;
 
         ovr008.vm_LoadCmdSets(5);
-        byte var_1 = (byte)ovr008.vm_GetCmdValue(1);
+        var var_1 = (byte)ovr008.vm_GetCmdValue(1);
         int dice_count = ovr008.vm_GetCmdValue(2);
         int dice_size = ovr008.vm_GetCmdValue(3);
         int dam_plus = ovr008.vm_GetCmdValue(4);
-        byte var_6 = (byte)ovr008.vm_GetCmdValue(5);
+        var var_6 = (byte)ovr008.vm_GetCmdValue(5);
 
-        int damage = ovr024.roll_dice(dice_size, dice_count) + dam_plus;
+        var damage = ovr024.roll_dice(dice_size, dice_count) + dam_plus;
 
         byte rnd_player_id = 0;
         if ((var_1 & 0x40) == 0)
@@ -25,12 +25,12 @@ public class DamageCommand : IGameCommand
 
         if ((var_1 & 0x80) != 0)
         {
-            int saveBonus = var_1 & 0x1f;
-            int bonusType = var_6 & 7;
+            var saveBonus = var_1 & 0x1f;
+            var bonusType = var_6 & 7;
 
             if ((var_1 & 0x40) != 0)
             {
-                foreach (Player player03 in gbl.TeamList)
+                foreach (var player03 in gbl.TeamList)
                 {
                     if ((var_1 & 0x20) != 0)
                     {
@@ -62,7 +62,7 @@ public class DamageCommand : IGameCommand
                 }
                 else
                 {
-                    Player target = gbl.TeamList[rnd_player_id - 1];
+                    var target = gbl.TeamList[rnd_player_id - 1];
 
                     if (ovr024.RollSavingThrow(saveBonus, (SaveVerseType)bonusType, target) == false)
                     {
@@ -77,10 +77,10 @@ public class DamageCommand : IGameCommand
         }
         else
         {
-            for (int i = 0; i < var_1; i++)
+            for (var i = 0; i < var_1; i++)
             {
                 rnd_player_id = ovr024.roll_dice(gbl.area2_ptr.party_size, 1);
-                Player player03 = gbl.TeamList[rnd_player_id - 1];
+                var player03 = gbl.TeamList[rnd_player_id - 1];
 
                 if (ovr024.CanHitTarget(var_6, player03) == true)
                 {
@@ -93,7 +93,7 @@ public class DamageCommand : IGameCommand
 
         gbl.party_killed = true;
 
-        foreach (Player player in gbl.TeamList)
+        foreach (var player in gbl.TeamList)
         {
             if (player.in_combat == true)
             {

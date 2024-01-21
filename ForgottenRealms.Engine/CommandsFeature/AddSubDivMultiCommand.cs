@@ -10,10 +10,10 @@ public class AddSubDivMultiCommand : IGameCommand
 
         ovr008.vm_LoadCmdSets(3);
 
-        ushort val_a = ovr008.vm_GetCmdValue(1);
-        ushort val_b = ovr008.vm_GetCmdValue(2);
+        var val_a = ovr008.vm_GetCmdValue(1);
+        var val_b = ovr008.vm_GetCmdValue(2);
 
-        ushort location = gbl.cmd_opps[3].Word;
+        var location = gbl.cmd_opps[3].Word;
 
         switch (gbl.command)
         {
@@ -36,8 +36,9 @@ public class AddSubDivMultiCommand : IGameCommand
 
             default:
                 value = 0;
-                throw (new System.Exception("can't get here."));
+                throw new System.Exception("can't get here.");
         }
+
         string[] sym = { "", "", "", "", "A + B", "B - A", "A / B", "A * B" };
         VmLog.WriteLine("CMD_AdSubDivMulti: {0} A: {1} B: {2} Loc: {3} Res: {4}",
             sym[gbl.command], val_a, val_b, new MemLoc(location), value);

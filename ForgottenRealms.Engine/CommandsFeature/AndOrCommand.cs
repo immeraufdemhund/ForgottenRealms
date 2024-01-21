@@ -9,10 +9,10 @@ public class AndOrCommand : IGameCommand
         byte resultant;
 
         ovr008.vm_LoadCmdSets(3);
-        ushort val_a = ovr008.vm_GetCmdValue(1);
-        ushort val_b = ovr008.vm_GetCmdValue(2);
+        var val_a = ovr008.vm_GetCmdValue(1);
+        var val_b = ovr008.vm_GetCmdValue(2);
 
-        ushort loc = gbl.cmd_opps[3].Word;
+        var loc = gbl.cmd_opps[3].Word;
         string sym;
         if (gbl.command == 0x2F)
         {
