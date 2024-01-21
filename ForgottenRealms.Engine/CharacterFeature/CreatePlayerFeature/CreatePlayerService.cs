@@ -267,7 +267,7 @@ public class CreatePlayerService
                     player.thac0 = playerThac0;
                 }
 
-                player.classFlags += ovr018.unk_1A1B2[class_idx];
+                player.classFlags += ovr018.classFlagsTable[class_idx];
             }
         }
 

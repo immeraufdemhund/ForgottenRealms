@@ -217,7 +217,7 @@ internal class ovr026
             if (player.ClassLevel[skill] > 0 ||
                 (player.ClassLevelsOld[skill] > 0 && player.ClassLevelsOld[skill] < player.HitDice))
             {
-                player.classFlags += ovr018.unk_1A1B2[skill];
+                player.classFlags += ovr018.classFlagsTable[skill];
             }
         }
 

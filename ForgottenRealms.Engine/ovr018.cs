@@ -307,11 +307,7 @@ internal class ovr018
         }
     }
 
-    internal static byte[] /*seg600:3EA2 */ unk_1A1B2 = { 0x02, 0x10, 0x08, 0x40, 0x40, 0x01, 0x04, 0x20 };
-
-    //static byte[] /*seg600:45B3 */ unk_1A8C3 = { 3, 3, 5, 5, 5, 2, 2, 5 };
-    //static byte[] /*seg600:45B4 */ unk_1A8C4 = { 6, 6, 4, 4, 4, 4, 6, 4 };
-
+    internal static readonly byte[] classFlagsTable = { 0x02, 0x10, 0x08, 0x40, 0x40, 0x01, 0x04, 0x20 };
 
     internal static int con_bonus(ClassId classId)
     {
