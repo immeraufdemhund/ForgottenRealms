@@ -18,17 +18,6 @@ internal class ovr018
     private static Set unk_4C13D = new Set(71, 79);
     private static Set unk_4C15D = new Set(69, 83);
 
-    internal static void FreePlayer(Player player) // free_player
-    {
-        if (player.actions != null)
-        {
-            player.actions = null;
-        }
-
-        player.items.Clear();
-        player.affects.Clear();
-    }
-
     private static string[] menuStrings = {
         "Create New Character",
         "Drop Character",
@@ -549,7 +538,13 @@ internal class ovr018
                 gbl.area2_ptr.party_size--;
             }
 
-            FreePlayer(player);
+            if (player.actions != null)
+            {
+                player.actions = null;
+            }
+
+            player.items.Clear();
+            player.affects.Clear();
 
             index = index > 0 ? index - 1 : 0;
             if (gbl.TeamList.Count > 0)
