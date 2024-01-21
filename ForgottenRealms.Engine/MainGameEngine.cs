@@ -15,6 +15,7 @@ public struct MainGameEngineConfig
 public class MainGameEngine
 {
     private static MainGameEngineConfig _config;
+    private static readonly TitleScreenAction TitleScreenAction = new ();
 
     internal static void EngineStop()
     {
@@ -111,7 +112,7 @@ public class MainGameEngine
 
         if (Cheats.skip_title_screen == false)
         {
-            ovr002.title_screen();
+            TitleScreenAction.ShowTitleScreen();
         }
 
         gbl.displayInputSecondsToWait = 30;
@@ -156,7 +157,7 @@ public class MainGameEngine
 
             if (gbl.inDemo == true)
             {
-                ovr002.title_screen();
+                TitleScreenAction.ShowTitleScreen();
                 seg043.clear_keyboard();
 
                 gbl.displayInputSecondsToWait = 10;

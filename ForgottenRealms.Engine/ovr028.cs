@@ -1,4 +1,5 @@
 using ForgottenRealms.Engine.Classes;
+using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine;
 
@@ -18,6 +19,7 @@ internal class MapCursor // ovr028
 
     private static int loc_X; // word_1EF9C
     private static int loc_Y; // word_1EF9E
+    private static readonly DrawPictureAction DrawPictureAction = new ();
 
     internal static void SetPosition(int currentCity) //sub_6E005
     {
@@ -29,12 +31,12 @@ internal class MapCursor // ovr028
     internal static void Draw() /* sub_6E02E */
     {
         seg040.ega_backup(gbl.cursor_bkup, loc_Y, loc_X);
-        seg040.draw_picture(gbl.cursor, loc_Y, loc_X, 0);
+        DrawPictureAction.DrawPicture(gbl.cursor, loc_Y, loc_X, 0);
     }
 
 
     internal static void Restore() /* sub_6E05D */
     {
-        seg040.draw_picture(gbl.cursor_bkup, loc_Y, loc_X, 0);
+        DrawPictureAction.DrawPicture(gbl.cursor_bkup, loc_Y, loc_X, 0);
     }
 }

@@ -10,6 +10,7 @@ internal class ovr030
     private static byte[] fadeNewColors = { 12, 12, 12, 12, 4, 5, 6, 7, 12, 12, 10, 12, 12, 12, 14, 12 };
     private static byte[] transparentOldColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
     private static byte[] transparentNewColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 14, 15 };
+    private static readonly DrawPictureAction DrawPictureAction = new ();
 
     internal static void DrawMaybeOverlayed(DaxBlock dax_block, bool useOverlay, int rowY, int colX)// sub_7000A
     {
@@ -27,7 +28,7 @@ internal class ovr030
             }
             else
             {
-                seg040.draw_picture(dax_block, rowY, colX, 0);
+                DrawPictureAction.DrawPicture(dax_block, rowY, colX, 0);
             }
         }
     }
@@ -244,6 +245,6 @@ internal class ovr030
     internal static void draw_bigpic() /* sub_7087A */
     {
         seg037.DrawFrame_WildernessMap();
-        seg040.draw_picture(gbl.bigpic_dax, 1, 1, 0);
+        DrawPictureAction.DrawPicture(gbl.bigpic_dax, 1, 1, 0);
     }
 }

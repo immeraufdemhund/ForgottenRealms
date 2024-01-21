@@ -6,6 +6,8 @@ namespace ForgottenRealms.Engine;
 
 internal class ovr038
 {
+    private static readonly DrawPictureAction DrawPictureAction = new ();
+
     internal static void Load8x8D(int symbolSet, int block_id)
     {
         if (symbolSet >= 0 && symbolSet < 5)
@@ -67,7 +69,7 @@ internal class ovr038
                 int offset = symbol_id * var_6.bpp;
                 System.Array.Copy(var_6.data, offset, gbl.cursor_bkup.data, 0, var_6.bpp);
 
-                seg040.draw_picture(gbl.cursor_bkup, rowY, colX, 0);
+                DrawPictureAction.DrawPicture(gbl.cursor_bkup, rowY, colX, 0);
             }
         }
     }
