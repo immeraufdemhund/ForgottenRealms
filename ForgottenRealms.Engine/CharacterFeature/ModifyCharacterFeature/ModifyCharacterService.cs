@@ -4,6 +4,8 @@ namespace ForgottenRealms.Engine.CharacterFeature.ModifyCharacterFeature;
 
 public class ModifyCharacterService
 {
+    private readonly HitPointTable _hitPointTable = new ();
+
     internal void modifyPlayer()
     {
         bool controlkey;
@@ -71,6 +73,7 @@ public class ModifyCharacterService
 
             if (controlkey == true)
             {
+                var selectedPlayerMaxHp = _hitPointTable.calc_max_hp(gbl.SelectedPlayer);
                 switch (inputkey)
                 {
                     case 'S':
@@ -156,10 +159,9 @@ public class ModifyCharacterService
                                     player.stats2.Con.EnforceRaceSexLimits(race, sex);
                                     player.stats2.Con.EnforceClassLimits((int)player._class);
 
-                                    int max_hp = ovr018.calc_max_hp(gbl.SelectedPlayer);
-                                    if (max_hp < player.hit_point_max)
+                                    if (selectedPlayerMaxHp < player.hit_point_max)
                                     {
-                                        player.hit_point_max = (byte)max_hp;
+                                        player.hit_point_max = (byte)selectedPlayerMaxHp;
                                     }
 
                                     player.hit_point_current = player.hit_point_max;
@@ -265,9 +267,9 @@ public class ModifyCharacterService
                             {
                                 player.hit_point_max += 1;
 
-                                if (ovr018.calc_max_hp(gbl.SelectedPlayer) < player.hit_point_max)
+                                if (selectedPlayerMaxHp < player.hit_point_max)
                                 {
-                                    player.hit_point_max = (byte)ovr018.calc_max_hp(gbl.SelectedPlayer);
+                                    player.hit_point_max = (byte)selectedPlayerMaxHp;
                                 }
 
                                 player.hit_point_current = player.hit_point_max;

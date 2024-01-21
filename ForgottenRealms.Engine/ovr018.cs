@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ForgottenRealms.Engine.CharacterFeature;
 using ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
 using ForgottenRealms.Engine.CharacterFeature.DropCharacterFeature;
 using ForgottenRealms.Engine.CharacterFeature.ModifyCharacterFeature;
@@ -638,7 +639,7 @@ internal class ovr018
         {
             if (player.ClassLevel[class_index] > 0)
             {
-                levels_total += player.ClassLevel[class_index] + hp_calc_table[class_index].lvl_bonus;
+                levels_total += player.ClassLevel[class_index] + HitPointTable.GetLevelBonusForClass((ClassId)class_index);
                 class_count++;
             }
         }
@@ -664,62 +665,10 @@ internal class ovr018
         return levels_total;
     }
 
-    private class hp_calc
-    {
-        public hp_calc(int _dice, int _lvl, int _base, int _mult) { dice = _dice; lvl_bonus = _lvl; max_base = _base; max_mult = _mult; }
-
-        public int dice;
-        public int lvl_bonus;
-        public int max_base;
-        public int max_mult;
-    }
-
-    private static hp_calc[] hp_calc_table = {
-        new hp_calc(8, 0, 0x48, 2), // Cleric
-        new hp_calc(8, 0, 0x70, 0), // Druid
-        new hp_calc(10, 0, 0x5A, 3), // Fighter
-        new hp_calc(10, 0, 0x5A, 3), // Paladin
-        new hp_calc(8, 1, 0x58, 2), // Ranger
-        new hp_calc(4, 0, 0x2c, 1), // Magic User
-        new hp_calc(6, 0, 0x3c, 2), // Thief
-        new hp_calc(4, 1, 0x48, 0), // Monk
-    };
-
-    internal static int calc_max_hp(Player player) /* sub_50793 */
-    {
-        int class_count = 0;
-        int max_hp = 0;
-
-        for (int class_index = 0; class_index <= 7; class_index++)
-        {
-            if (player.ClassLevel[class_index] > 0)
-            {
-                hp_calc hpt = hp_calc_table[class_index];
-
-                int var_4 = con_bonus((ClassId)class_index);
-
-                if (player.ClassLevel[class_index] < gbl.max_class_hit_dice[class_index])
-                {
-                    class_count++;
-                    max_hp += (var_4 + hpt.dice) * (player.ClassLevel[class_index] + hpt.lvl_bonus);
-                }
-                else
-                {
-                    class_count++;
-                    int over_count = (player.ClassLevel[class_index] - gbl.max_class_hit_dice[class_index]) + 1;
-
-                    max_hp = hpt.max_base + (over_count * hpt.max_mult);
-                }
-            }
-        }
-
-        max_hp /= class_count;
-
-        return max_hp;
-    }
-
     private static byte[] /* seg600:081A */ unk_16B2A = { 1, 1, 1, 1, 2, 1, 1, 2 };
     private static byte[] /* seg600:0822 */ unk_16B32 = { 8, 8, 0xA, 0xA, 8, 4, 6, 4 };
+    private static readonly HitPointTable HitPointTable = new ();
+
     internal static byte sub_509E0(byte arg_0, Player player)
     {
         byte var_4 = 0;
