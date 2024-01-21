@@ -5,22 +5,6 @@ namespace ForgottenRealms.Engine;
 
 internal class seg040
 {
-    internal static DaxBlock LoadDax(byte mask_colour, byte masked, int block_id, string fileName) // load_dax
-    {
-        short pic_size;
-        byte[] pic_data;
-        seg042.load_decode_dax(out pic_data, out pic_size, block_id, fileName + ".dax");
-
-        if (pic_size != 0)
-        {
-            return new DaxBlock(pic_data, masked, mask_colour);
-        }
-
-        return null;
-    }
-
-
-
     internal static void OverlayUnbounded(DaxBlock source, int arg_8, int itemIdex, int rowY, int colX)
     {
         draw_combat_picture(source, rowY + 1, colX + 1, itemIdex);

@@ -3,6 +3,7 @@ using System.IO;
 using ForgottenRealms.Engine.CharacterFeature;
 using ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 using ForgottenRealms.Engine.Classes;
+using ForgottenRealms.Engine.Classes.DaxFiles;
 using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
@@ -828,7 +829,7 @@ internal class ovr017
 
         byte[] data;
         short decode_size;
-        seg042.load_decode_dax(out data, out decode_size, monster_id, "MON" + area_text + "CHA.dax");
+        DaxFileDecoder.LoadDecodeDax(out data, out decode_size, monster_id, "MON" + area_text + "CHA.dax");
 
         if (decode_size == 0)
         {
@@ -845,7 +846,7 @@ internal class ovr017
 
         Player player = new Player(data, 0);
 
-        seg042.load_decode_dax(out data, out decode_size, monster_id, "MON" + area_text + "SPC.dax");
+        DaxFileDecoder.LoadDecodeDax(out data, out decode_size, monster_id, "MON" + area_text + "SPC.dax");
 
         if (decode_size != 0)
         {
@@ -860,7 +861,7 @@ internal class ovr017
             } while (offset < decode_size);
         }
 
-        seg042.load_decode_dax(out data, out decode_size, monster_id, "MON" + area_text + "ITM.dax");
+        DaxFileDecoder.LoadDecodeDax(out data, out decode_size, monster_id, "MON" + area_text + "ITM.dax");
 
         if (decode_size != 0)
         {
@@ -1107,6 +1108,7 @@ internal class ovr017
     private static Set unk_4AEEF = new Set(0, 2, 18);
     private static readonly TrainCharacterService TrainCharacterService = new ();
     private static readonly ConstitutionHitPointsAdjustmentTable ConstitutionHitPointsAdjustmentTable = new ();
+    private static readonly DaxFileDecoder DaxFileDecoder = new ();
 
 
     internal static void SaveGame()

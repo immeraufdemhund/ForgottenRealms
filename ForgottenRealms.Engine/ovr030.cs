@@ -11,6 +11,8 @@ internal class ovr030
     private static byte[] transparentOldColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
     private static byte[] transparentNewColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 14, 15 };
     private static readonly DrawPictureAction DrawPictureAction = new ();
+    private static readonly DaxFileDecoder DaxFileDecoder = new ();
+    private static readonly DaxBlockReader DaxBlockReader = new ();
 
     internal static void DrawMaybeOverlayed(DaxBlock dax_block, bool useOverlay, int rowY, int colX)// sub_7000A
     {
@@ -57,7 +59,7 @@ internal class ovr030
                 short uncompressed_size;
                 byte[] uncompressed_data;
 
-                seg042.load_decode_dax(out uncompressed_data, out uncompressed_size, block_id, file_name + gbl.game_area.ToString() + ".dax");
+                DaxFileDecoder.LoadDecodeDax(out uncompressed_data, out uncompressed_size, block_id, file_name + gbl.game_area.ToString() + ".dax");
 
                 if (uncompressed_size == 0)
                 {
@@ -174,7 +176,7 @@ internal class ovr030
         if (head_id != 0xff &&
             (gbl.current_head_id == 0xff || gbl.current_head_id != head_id))
         {
-            gbl.headX_dax = seg040.LoadDax(0, 0, head_id, "HEAD" + text);
+            gbl.headX_dax = DaxBlockReader.LoadDax(0, 0, head_id, "HEAD" + text);
 
             if (gbl.headX_dax == null)
             {
@@ -187,7 +189,7 @@ internal class ovr030
         if (body_id != 0xff &&
             (gbl.current_body_id == 0xff || gbl.current_body_id != body_id))
         {
-            gbl.bodyX_dax = seg040.LoadDax(0, 0, body_id, "BODY" + text);
+            gbl.bodyX_dax = DaxBlockReader.LoadDax(0, 0, body_id, "BODY" + text);
             if (gbl.bodyX_dax == null)
             {
                 seg041.DisplayAndPause("body not found", 14);
@@ -236,7 +238,7 @@ internal class ovr030
 
         if (gbl.bigpic_block_id != block_id)
         {
-            gbl.bigpic_dax = seg040.LoadDax(0, 0, block_id, "bigpic" + gbl.game_area.ToString());
+            gbl.bigpic_dax = DaxBlockReader.LoadDax(0, 0, block_id, "bigpic" + gbl.game_area.ToString());
             gbl.bigpic_block_id = block_id;
         }
     }

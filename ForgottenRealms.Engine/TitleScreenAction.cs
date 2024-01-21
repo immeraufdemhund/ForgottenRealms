@@ -7,24 +7,25 @@ namespace ForgottenRealms.Engine;
 public class TitleScreenAction
 {
     private readonly DrawPictureAction _drawPictureAction = new ();
+    private readonly DaxBlockReader _daxBlockReader = new ();
 
     public void ShowTitleScreen()
     {
         DaxBlock dax_ptr;
 
-        dax_ptr = seg040.LoadDax(0, 0, 1, "Title");
+        dax_ptr = _daxBlockReader.LoadDax(0, 0, 1, "Title");
         _drawPictureAction.DrawPicture(dax_ptr, 0, 0, 0);
 
         delay_or_key(5);
 
-        dax_ptr = seg040.LoadDax(0, 0, 2, "Title");
+        dax_ptr = _daxBlockReader.LoadDax(0, 0, 2, "Title");
         _drawPictureAction.DrawPicture(dax_ptr, 0, 0, 0);
 
-        dax_ptr = seg040.LoadDax(0, 0, 3, "Title");
+        dax_ptr = _daxBlockReader.LoadDax(0, 0, 3, "Title");
         _drawPictureAction.DrawPicture(dax_ptr, 0x0b, 6, 0);
         delay_or_key(10);
 
-        dax_ptr = seg040.LoadDax(0, 0, 4, "Title");
+        dax_ptr = _daxBlockReader.LoadDax(0, 0, 4, "Title");
 
         seg044.PlaySound(Sound.sound_d);
 

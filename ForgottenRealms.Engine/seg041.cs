@@ -1,4 +1,5 @@
 using ForgottenRealms.Engine.Classes;
+using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine;
 
@@ -26,7 +27,7 @@ internal class seg041
         byte[] block_ptr;
         short block_size;
 
-        seg042.load_decode_dax(out block_ptr, out block_size, 201, "8X8d1.dax");
+        DaxFileDecoder.LoadDecodeDax(out block_ptr, out block_size, 201, "8X8d1.dax");
 
         if (block_size != 0)
         {
@@ -130,6 +131,7 @@ internal class seg041
 
     //static const char[] syms = { '!', ',', '-', '.', ':', ';', '?' };
     private static Set puncutation = new Set(33, 44, 45, 46, 58, 59, 63); // "!,-.:;?" // 33,44,45,46,58,59,63
+    private static readonly DaxFileDecoder DaxFileDecoder = new ();
 
     internal static void press_any_key(string text, bool clearArea, int fgColor,
         int yEnd, int xEnd, int yStart, int xStart)

@@ -16,6 +16,7 @@ public class MainGameEngine
 {
     private static MainGameEngineConfig _config;
     private static readonly TitleScreenAction TitleScreenAction = new ();
+    private static readonly DaxBlockReader DaxBlockReader = new ();
 
     internal static void EngineStop()
     {
@@ -320,9 +321,9 @@ public class MainGameEngine
 
         ovr034.chead_cbody_comspr_icon(0x19, 0x19, "COMSPR");
 
-        gbl.sky_dax_250 = seg040.LoadDax(13, 1, 250, "SKY");
-        gbl.sky_dax_251 = seg040.LoadDax(13, 1, 251, "SKY");
-        gbl.sky_dax_252 = seg040.LoadDax(13, 1, 252, "SKY");
+        gbl.sky_dax_250 = DaxBlockReader.LoadDax(13, 1, 250, "SKY");
+        gbl.sky_dax_251 = DaxBlockReader.LoadDax(13, 1, 251, "SKY");
+        gbl.sky_dax_252 = DaxBlockReader.LoadDax(13, 1, 252, "SKY");
 
         gbl.ItemDataTable = new ItemDataTable("ITEMS");
 

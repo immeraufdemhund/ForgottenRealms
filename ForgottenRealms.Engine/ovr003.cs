@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ForgottenRealms.Engine.Classes;
+using ForgottenRealms.Engine.Classes.DaxFiles;
 using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
@@ -1083,7 +1084,7 @@ internal class ovr003
         if (block_id < 0x80)
         {
             string filename = string.Format("ITEM{0}.dax", gbl.game_area);
-            seg042.load_decode_dax(out data, out dataSize, block_id, filename);
+            DaxFileDecoder.LoadDecodeDax(out data, out dataSize, block_id, filename);
 
             if (dataSize == 0)
             {
@@ -2056,6 +2057,7 @@ internal class ovr003
 
 
     private static Dictionary<int, CmdItem> CommandTable = new Dictionary<int, CmdItem>();
+    private static readonly DaxFileDecoder DaxFileDecoder = new ();
 
     public static void SetupCommandTable()
     {

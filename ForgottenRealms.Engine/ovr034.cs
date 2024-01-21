@@ -14,7 +14,7 @@ internal class ovr034
             Logger.LogAndExit("Start range error in Load24x24Set. {0}", destCellOffset);
         }
 
-        DaxBlock tmp_block = seg040.LoadDax(0, 0, block_id, fileName);
+        DaxBlock tmp_block = DaxBlockReader.LoadDax(0, 0, block_id, fileName);
 
         int dateLength = cellCount * tmp_block.bpp;
         int destByteOffset = destCellOffset * tmp_block.bpp;
@@ -49,6 +49,7 @@ internal class ovr034
     private static byte[] unk_16E30 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }; // seg600:0B20
     private static byte[] unk_16E40 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }; // seg600:0B30
     private static byte[] unk_16E50 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 14, 15 }; // seg600:0B40
+    private static readonly DaxBlockReader DaxBlockReader = new ();
 
     internal static void chead_cbody_comspr_icon(byte combat_icon_index, int block_id, string fileText)
     {

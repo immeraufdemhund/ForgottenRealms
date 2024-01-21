@@ -1,4 +1,5 @@
 using ForgottenRealms.Engine.Classes;
+using ForgottenRealms.Engine.Classes.DaxFiles;
 using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
@@ -140,6 +141,7 @@ internal class ovr031
     private static byte[] idxOffset = { 0, 2, 6, 10, 22, 38, 54, 110, 132, 154, 1 };   // seg600:0ADA
     private static int[] colCount = { 1, 1, 1, 3, 2, 2, 7, 2, 2, 1 };                 // seg600:0AE4
     private static int[] rowCount = { 2, 4, 4, 4, 8, 8, 8, 11, 11, 2 };               // seg600:0AEE
+    private static readonly DaxFileDecoder DaxFileDecoder = new ();
 
 
     internal static void draw_3D_8x8_titles(int offsetIndex, int arg_2, int rowStart, int colStart) /* sub_71434 */
@@ -647,7 +649,7 @@ internal class ovr031
             byte[] data;
 
             short decode_size;
-            seg042.load_decode_dax(out data, out decode_size, block_id, "WALLDEF" + area_text + ".dax");
+            DaxFileDecoder.LoadDecodeDax(out data, out decode_size, block_id, $"WALLDEF{area_text}.dax");
 
             if (decode_size == 0 ||
                 ((decode_size / 0x30C) + symbolSet) > 4)
@@ -692,7 +694,7 @@ internal class ovr031
         byte[] data;
         short bytesRead;
 
-        seg042.load_decode_dax(out data, out bytesRead, blockId, "GEO" + gbl.game_area.ToString() + ".dax");
+        DaxFileDecoder.LoadDecodeDax(out data, out bytesRead, blockId, $"GEO{gbl.game_area}.dax");
 
         if (bytesRead == 0 || bytesRead != 0x402)
         {

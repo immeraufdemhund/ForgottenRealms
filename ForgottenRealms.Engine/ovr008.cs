@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ForgottenRealms.Engine.Classes;
+using ForgottenRealms.Engine.Classes.DaxFiles;
 using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
@@ -145,7 +146,7 @@ internal class ovr008
             ovr027.ClearPromptArea();
             seg041.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
 
-            seg042.load_decode_dax(out block_mem, out block_size, block_id, string.Format("ECL{0}.dax", gbl.game_area));
+            DaxFileDecoder.LoadDecodeDax(out block_mem, out block_size, block_id, $"ECL{gbl.game_area}.dax");
         } while (block_size < 2);
 
         gbl.ecl_ptr.SetData(block_mem, 2, block_size - 2);
@@ -1165,6 +1166,7 @@ internal class ovr008
     }
 
     private static Set validkeys = new Set(48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90); // unk_3178A
+    private static readonly DaxFileDecoder DaxFileDecoder = new ();
 
 
     internal static int sub_317AA(bool useOverlay, bool acceptReturn, MenuColorSet colors, string displayString, string extraString)

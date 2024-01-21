@@ -7,13 +7,14 @@ namespace ForgottenRealms.Engine;
 internal class ovr038
 {
     private static readonly DrawPictureAction DrawPictureAction = new ();
+    private static readonly DaxBlockReader DaxBlockReader = new ();
 
     internal static void Load8x8D(int symbolSet, int block_id)
     {
         if (symbolSet >= 0 && symbolSet < 5)
         {
             string text = "8x8d" + gbl.game_area.ToString();
-            gbl.symbol_8x8_set[symbolSet] = seg040.LoadDax(13, 1, block_id, text);
+            gbl.symbol_8x8_set[symbolSet] = DaxBlockReader.LoadDax(13, 1, block_id, text);
 
             if (gbl.symbol_8x8_set[symbolSet] == null)
             {
