@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ForgottenRealms.Engine;
 using ForgottenRealms.Engine.Classes;
+using Microsoft.Extensions.Logging;
 
 namespace ForgottenRealms
 {
@@ -13,10 +14,12 @@ namespace ForgottenRealms
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly ILogger<MainWindow> _logger;
         private WriteableBitmap _displayAreaSource;
 
-        public MainWindow()
+        public MainWindow(ILogger<MainWindow> logger)
         {
+            _logger = logger;
             InitializeComponent();
             _displayAreaSource = new WriteableBitmap(320, 200, 96, 96, PixelFormats.Bgr24, null);
             displayArea.Source = _displayAreaSource;
