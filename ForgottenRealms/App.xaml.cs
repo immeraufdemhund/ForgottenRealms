@@ -21,7 +21,7 @@ namespace ForgottenRealms
             ConfigureDependencyInjection();
             _logger = _provider.GetRequiredService<ILogger<App>>();
             _logger.LogDebug("Setting up Config");
-            Config.Setup();
+            _provider.GetRequiredService<Config>().Setup();
             _logger.LogDebug("Setting up logger exit function");
             Logger.SetExitFunc(KeyboardService.print_and_exit);
             _logger.LogDebug("Starting DnD Engine");
@@ -40,6 +40,7 @@ namespace ForgottenRealms
                     logging.AddFilter("*", LogLevel.Trace);
                 })
                 .AddTransient<MainWindow>()
+                .RegisterEngineFeature()
                 .BuildServiceProvider();
         }
 
