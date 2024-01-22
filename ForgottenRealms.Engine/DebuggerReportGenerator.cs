@@ -32,7 +32,7 @@ public class DebuggerReportGenerator
 
         var bkupArea = gbl.game_area;
 
-        string filename = System.IO.Path.Combine(Logger.GetPath(), "Monster.html");
+        string filename = System.IO.Path.Combine(Config.GetLogPath(), "Monster.html");
         if (System.IO.File.Exists(filename))
         {
             System.IO.File.Delete(filename);
@@ -204,7 +204,7 @@ public class DebuggerReportGenerator
     {
         var bkupArea = gbl.game_area;
 
-        string filename = System.IO.Path.Combine(Logger.GetPath(), "MonsterFiltered.txt");
+        string filename = System.IO.Path.Combine(Config.GetLogPath(), "MonsterFiltered.txt");
         if (System.IO.File.Exists(filename))
         {
             System.IO.File.Delete(filename);

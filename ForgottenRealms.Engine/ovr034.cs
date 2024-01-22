@@ -11,7 +11,8 @@ internal class ovr034
     {
         if (destCellOffset > 0x30)
         {
-            Logger.LogAndExit("Start range error in Load24x24Set. {0}", destCellOffset);
+            Logger.Log("Start range error in Load24x24Set. {0}", destCellOffset);
+            MainGameEngine.EngineStop();
         }
 
         DaxBlock tmp_block = DaxBlockReader.LoadDax(0, 0, block_id, fileName);

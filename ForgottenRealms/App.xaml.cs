@@ -21,9 +21,9 @@ namespace ForgottenRealms
             ConfigureDependencyInjection();
             _logger = _provider.GetRequiredService<ILogger<App>>();
             _logger.LogDebug("Setting up Config");
-            _provider.GetRequiredService<Config>().Setup();
-            _logger.LogDebug("Setting up logger exit function");
-            Logger.SetExitFunc(KeyboardService.print_and_exit);
+            var config = _provider.GetRequiredService<Config>();
+            config.Setup();
+            Logger.Setup(Config.GetLogPath());
             _logger.LogDebug("Starting DnD Engine");
             StartEngine();
             var mainWindow = _provider.GetRequiredService<MainWindow>();
@@ -50,15 +50,21 @@ namespace ForgottenRealms
 
         private async void StartEngine()
         {
+            _logger.LogDebug("Starting Engine");
             cancellationTokenSource = new CancellationTokenSource();
             try
             {
-                await Task.Run(EngineThread);
+                await Task.Run(EngineThread, cancellationTokenSource.Token);
+                _logger.LogDebug("After thread");
             }
             catch (TaskCanceledException)
             {
+                _logger.LogInformation("Engine Thread Cancelled");
                 EngineStopped();
             }
+
+            _logger.LogInformation("Engine stopping");
+            KeyboardService.print_and_exit();
         }
 
         private void EngineThread()
@@ -85,7 +91,7 @@ namespace ForgottenRealms
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             _logger.LogCritical(e.Exception, "Unhandled Exception");
-            string logFile = Path.Combine(Logger.GetPath(), "Crash Log.txt");
+            string logFile = Path.Combine(Config.GetLogPath(), "Crash Log.txt");
 
             using (TextWriter tw = new StreamWriter(logFile, true))
             {

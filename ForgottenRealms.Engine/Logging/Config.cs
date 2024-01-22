@@ -41,8 +41,6 @@ public class Config
             _logger.LogInformation("save Path was missing. Creating path {Path}", savePath);
             Directory.CreateDirectory(savePath);
         }
-
-        Logger.Setup(logPath);
     }
 
     public static string GetLogPath() { return logPath; }

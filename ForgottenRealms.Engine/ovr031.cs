@@ -654,7 +654,8 @@ internal class ovr031
             if (decode_size == 0 ||
                 ((decode_size / 0x30C) + symbolSet) > 4)
             {
-                Logger.LogAndExit("Unable to load {0} from WALLDEF{1}.", block_id, area_text);
+                Logger.Log("Unable to load {0} from WALLDEF{1}.", block_id, area_text);
+                MainGameEngine.EngineStop();
             }
 
             int var_A = gbl.symbol_set_fix[symbolSet] - gbl.symbol_set_fix[1];
@@ -698,7 +699,8 @@ internal class ovr031
 
         if (bytesRead == 0 || bytesRead != 0x402)
         {
-            Logger.LogAndExit("Unable to load geo in Load3DMap.");
+            Logger.Log("Unable to load geo in Load3DMap.");
+            MainGameEngine.EngineStop();
         }
 
         gbl.geo_ptr.LoadData(data);

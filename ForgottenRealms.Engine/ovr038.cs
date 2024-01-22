@@ -18,7 +18,8 @@ internal class ovr038
 
             if (gbl.symbol_8x8_set[symbolSet] == null)
             {
-                Logger.LogAndExit("Unable to load {0} from 8x8D{1}", block_id, gbl.game_area);
+                Logger.Log("Unable to load {0} from 8x8D{1}", block_id, gbl.game_area);
+                MainGameEngine.EngineStop();
             }
 
             KeyboardService.clear_keyboard();

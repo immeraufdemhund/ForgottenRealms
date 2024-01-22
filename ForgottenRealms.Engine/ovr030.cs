@@ -220,7 +220,8 @@ internal class ovr030
     {
         if (sprite_index < 1 || sprite_index > 3)
         {
-            Logger.LogAndExit("Illegal range in Show3DSprite. {0}", sprite_index);
+            Logger.Log("Illegal range in Show3DSprite. {0}", sprite_index);
+            MainGameEngine.EngineStop();
         }
 
         if (arg_0.frames[sprite_index - 1].picture != null)

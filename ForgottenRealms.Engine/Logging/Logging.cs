@@ -1,40 +1,21 @@
+using System;
 using System.IO;
-
 namespace ForgottenRealms.Engine.Logging;
 
+[Obsolete]
 public class Logger
 {
-    static string logPath;
-    static DebugWriter debug;
+    private static DebugWriter debug;
 
     public static void Setup(string path)
     {
-        logPath = path;
-
-        debug = new DebugWriter(Path.Combine(logPath, "Debugging.txt"));
-    }
-
-    public static string GetPath() { return logPath; }
-
-    public delegate void VoidDelegate();
-    static VoidDelegate ExitFuncCallback;
-
-    public static void SetExitFunc(VoidDelegate ExitFunc)
-    {
-        ExitFuncCallback = ExitFunc;
+        debug = new DebugWriter(Path.Combine(path, "Debugging.txt"));
     }
 
     public static void Log(string fmt, params object[] args)
     {
         System.Console.WriteLine(fmt, args);
         debug.WriteLine(fmt, args);
-    }
-
-    public static void LogAndExit(string fmt, params object[] args)
-    {
-        System.Console.WriteLine(fmt, args);
-        debug.WriteLine(fmt, args);
-        ExitFuncCallback();
     }
 
     public static void Close()

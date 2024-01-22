@@ -30,7 +30,8 @@ public class TreasureCommand : IGameCommand
 
             if (dataSize == 0)
             {
-                Logger.LogAndExit("Unable to find item file: {0}", filename);
+                Logger.Log("Unable to find item file: {0}", filename);
+                MainGameEngine.EngineStop();
             }
 
             for (var offset = 0; offset < dataSize; offset += Item.StructSize)
