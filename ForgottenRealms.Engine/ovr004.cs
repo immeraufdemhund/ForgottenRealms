@@ -13,6 +13,8 @@ internal class ovr004
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
     };
 
+    private static readonly SoundDriver SoundDriver = new ();
+
     internal static void copy_protection()
     {
         string code_path_str;
@@ -101,8 +103,8 @@ internal class ovr004
 
         if (attempt >= 3)
         {
-            new SoundDriver().PlaySound(Sound.sound_1);
-            new SoundDriver().PlaySound(Sound.sound_5);
+            SoundDriver.PlaySound(Sound.sound_1);
+            SoundDriver.PlaySound(Sound.sound_5);
             gbl.game_speed_var = 9;
             DisplayDriver.DisplayStatusText(0, 14, "An unseen force hurls you into the abyss!");
             KeyboardDriver.SysDelay(0x3E8);
