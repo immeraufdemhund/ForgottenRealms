@@ -4,6 +4,8 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class CombatCommand : IGameCommand
 {
+    private readonly TempleShopService _templeShopService = new ();
+
     public void Execute()
     {
         gbl.ecl_offset++;
@@ -21,7 +23,7 @@ public class CombatCommand : IGameCommand
             {
                 gbl.area2_ptr.EnterTemple = 0;
 
-                ovr005.temple_shop();
+                _templeShopService.temple_shop();
             }
             else
             {
