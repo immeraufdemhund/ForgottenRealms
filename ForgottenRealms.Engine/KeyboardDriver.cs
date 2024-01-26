@@ -5,9 +5,9 @@ namespace ForgottenRealms.Engine;
 
 public class KeyboardDriver
 {
-    private static byte skipReadFlag;
+    private byte skipReadFlag;
 
-    internal static void SysDelay(int milliseconds)
+    internal void SysDelay(int milliseconds)
     {
         if (milliseconds != 0)
         {
@@ -16,10 +16,10 @@ public class KeyboardDriver
     }
 
 
-    private static Queue<ushort> keysPressed = new Queue<ushort>();
-    private static Semaphore WaitForKey = new Semaphore(0, 1);
+    private Queue<ushort> keysPressed = new Queue<ushort>();
+    private Semaphore WaitForKey = new Semaphore(0, 1);
 
-    public static void AddKey(ushort key)
+    public void AddKey(ushort key)
     {
         lock (keysPressed)
         {
@@ -33,7 +33,7 @@ public class KeyboardDriver
     }
 
 
-    private static ushort int_check_keyPressed()
+    private ushort int_check_keyPressed()
     {
         //INT 16 - KEYBOARD - CHECK FOR KEYSTROKE
         //AH = 01h
@@ -56,7 +56,7 @@ public class KeyboardDriver
         }
     }
 
-    private static ushort int_get_keyPressed()
+    private ushort int_get_keyPressed()
     {
         //INT 16 - KEYBOARD - GET KEYSTROKE
         //AH = 00h
@@ -83,7 +83,7 @@ public class KeyboardDriver
 
 
 
-    internal static bool KEYPRESSED()
+    internal bool KEYPRESSED()
     {
         if (skipReadFlag == 0)
         {
@@ -96,7 +96,7 @@ public class KeyboardDriver
     }
 
 
-    internal static byte READKEY()
+    internal byte READKEY()
     {
         byte lastCode = skipReadFlag;
 

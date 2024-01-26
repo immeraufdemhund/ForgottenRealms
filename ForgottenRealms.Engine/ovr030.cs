@@ -4,17 +4,37 @@ using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr030
+public class ovr030
 {
-    private static byte[] fadeOldColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-    private static byte[] fadeNewColors = { 12, 12, 12, 12, 4, 5, 6, 7, 12, 12, 10, 12, 12, 12, 14, 12 };
-    private static byte[] transparentOldColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-    private static byte[] transparentNewColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 14, 15 };
-    private static readonly DrawPictureAction DrawPictureAction = new ();
-    private static readonly DaxFileDecoder DaxFileDecoder = new ();
-    private static readonly DaxBlockReader DaxBlockReader = new ();
+    private byte[] fadeOldColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+    private byte[] fadeNewColors = { 12, 12, 12, 12, 4, 5, 6, 7, 12, 12, 10, 12, 12, 12, 14, 12 };
+    private byte[] transparentOldColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+    private byte[] transparentNewColors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 14, 15 };
 
-    internal static void DrawMaybeOverlayed(DaxBlock dax_block, bool useOverlay, int rowY, int colX)// sub_7000A
+    private readonly ovr027 _ovr027;
+    private readonly seg037 _seg037;
+    private readonly seg040 _seg040;
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly DrawPictureAction _drawPictureAction;
+    private readonly DaxFileDecoder _daxFileDecoder;
+    private readonly DaxBlockReader _daxBlockReader;
+    private readonly MainGameEngine _mainGameEngine;
+
+    public ovr030(ovr027 ovr027, seg037 seg037, seg040 seg040, DisplayDriver displayDriver, KeyboardService keyboardService, DrawPictureAction drawPictureAction, DaxFileDecoder daxFileDecoder, DaxBlockReader daxBlockReader, MainGameEngine mainGameEngine)
+    {
+        _ovr027 = ovr027;
+        _seg037 = seg037;
+        _seg040 = seg040;
+        _displayDriver = displayDriver;
+        _keyboardService = keyboardService;
+        _drawPictureAction = drawPictureAction;
+        _daxFileDecoder = daxFileDecoder;
+        _daxBlockReader = daxBlockReader;
+        _mainGameEngine = mainGameEngine;
+    }
+
+    internal void DrawMaybeOverlayed(DaxBlock dax_block, bool useOverlay, int rowY, int colX)// sub_7000A
     {
         if (dax_block != null)
         {
@@ -25,18 +45,18 @@ internal class ovr030
                     dax_block.Recolor(true, fadeNewColors, fadeOldColors);
                 }
 
-                seg040.OverlayBounded(dax_block, 0, 0, rowY - 1, colX - 1);
-                seg040.DrawOverlay();
+                _seg040.OverlayBounded(dax_block, 0, 0, rowY - 1, colX - 1);
+                _seg040.DrawOverlay();
             }
             else
             {
-                DrawPictureAction.DrawPicture(dax_block, rowY, colX, 0);
+                _drawPictureAction.DrawPicture(dax_block, rowY, colX, 0);
             }
         }
     }
 
 
-    internal static void load_pic_final(ref DaxArray daxArray, byte masked, byte block_id, string file_name)
+    internal void load_pic_final(ref DaxArray daxArray, byte masked, byte block_id, string file_name)
     {
         if (file_name != gbl.lastDaxFile ||
             block_id != gbl.lastDaxBlockId)
@@ -45,8 +65,8 @@ internal class ovr030
             {
                 if (gbl.AnimationsOn)
                 {
-                    ovr027.ClearPromptAreaNoUpdate();
-                    DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+                    _ovr027.ClearPromptAreaNoUpdate();
+                    _displayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
                 }
 
                 DaxArrayFreeDaxBlocks(daxArray);
@@ -59,11 +79,11 @@ internal class ovr030
                 short uncompressed_size;
                 byte[] uncompressed_data;
 
-                DaxFileDecoder.LoadDecodeDax(out uncompressed_data, out uncompressed_size, block_id, file_name + gbl.game_area.ToString() + ".dax");
+                _daxFileDecoder.LoadDecodeDax(out uncompressed_data, out uncompressed_size, block_id, file_name + gbl.game_area.ToString() + ".dax");
 
                 if (uncompressed_size == 0)
                 {
-                    DisplayDriver.DisplayAndPause("PIC not found", 14);
+                    _displayDriver.DisplayAndPause("PIC not found", 14);
                 }
                 else
                 {
@@ -141,11 +161,11 @@ internal class ovr030
                     daxArray.numFrames = frames_count; // also pointless
 
                     uncompressed_data = null;
-                    KeyboardService.clear_keyboard();
+                    _keyboardService.clear_keyboard();
 
                     if (gbl.AnimationsOn)
                     {
-                        ovr027.ClearPromptAreaNoUpdate();
+                        _ovr027.ClearPromptAreaNoUpdate();
                     }
                 }
             }
@@ -153,7 +173,7 @@ internal class ovr030
     }
 
 
-    internal static void DaxArrayFreeDaxBlocks(DaxArray animation)
+    internal void DaxArrayFreeDaxBlocks(DaxArray animation)
     {
         for (int index = 0; index < animation.numFrames; index++)
         {
@@ -169,18 +189,18 @@ internal class ovr030
     }
 
 
-    internal static void head_body(byte body_id, byte head_id)
+    internal void head_body(byte body_id, byte head_id)
     {
         string text = gbl.game_area.ToString();
 
         if (head_id != 0xff &&
             (gbl.current_head_id == 0xff || gbl.current_head_id != head_id))
         {
-            gbl.headX_dax = DaxBlockReader.LoadDax(0, 0, head_id, "HEAD" + text);
+            gbl.headX_dax = _daxBlockReader.LoadDax(0, 0, head_id, "HEAD" + text);
 
             if (gbl.headX_dax == null)
             {
-                DisplayDriver.DisplayAndPause("head not found", 14);
+                _displayDriver.DisplayAndPause("head not found", 14);
             }
 
             gbl.current_head_id = head_id;
@@ -189,20 +209,20 @@ internal class ovr030
         if (body_id != 0xff &&
             (gbl.current_body_id == 0xff || gbl.current_body_id != body_id))
         {
-            gbl.bodyX_dax = DaxBlockReader.LoadDax(0, 0, body_id, "BODY" + text);
+            gbl.bodyX_dax = _daxBlockReader.LoadDax(0, 0, body_id, "BODY" + text);
             if (gbl.bodyX_dax == null)
             {
-                DisplayDriver.DisplayAndPause("body not found", 14);
+                _displayDriver.DisplayAndPause("body not found", 14);
             }
 
             gbl.current_body_id = body_id;
         }
 
-        KeyboardService.clear_keyboard();
+        _keyboardService.clear_keyboard();
     }
 
 
-    internal static void draw_head_and_body(bool draw_body, byte rowY, byte colX) /* sub_706DC */
+    internal void draw_head_and_body(bool draw_body, byte rowY, byte colX) /* sub_706DC */
     {
         if (draw_body == true)
         {
@@ -216,38 +236,38 @@ internal class ovr030
     }
 
 
-    internal static void Show3DSprite(DaxArray arg_0, int sprite_index)
+    internal void Show3DSprite(DaxArray arg_0, int sprite_index)
     {
         if (sprite_index < 1 || sprite_index > 3)
         {
             Logger.Log("Illegal range in Show3DSprite. {0}", sprite_index);
-            MainGameEngine.EngineStop();
+            _mainGameEngine.EngineStop();
         }
 
         if (arg_0.frames[sprite_index - 1].picture != null)
         {
             DaxBlock block = arg_0.frames[sprite_index - 1].picture;
-            seg040.OverlayBounded(arg_0.frames[sprite_index - 1].picture, 1, 0, block.y_pos + 3 - 1, block.x_pos + 3 - 1);
-            seg040.DrawOverlay();
+            _seg040.OverlayBounded(arg_0.frames[sprite_index - 1].picture, 1, 0, block.y_pos + 3 - 1, block.x_pos + 3 - 1);
+            _seg040.DrawOverlay();
         }
     }
 
 
-    internal static void load_bigpic(byte block_id) /* bigpic */
+    internal void load_bigpic(byte block_id) /* bigpic */
     {
         DaxArrayFreeDaxBlocks(gbl.byte_1D556);
 
         if (gbl.bigpic_block_id != block_id)
         {
-            gbl.bigpic_dax = DaxBlockReader.LoadDax(0, 0, block_id, "bigpic" + gbl.game_area.ToString());
+            gbl.bigpic_dax = _daxBlockReader.LoadDax(0, 0, block_id, "bigpic" + gbl.game_area.ToString());
             gbl.bigpic_block_id = block_id;
         }
     }
 
 
-    internal static void draw_bigpic() /* sub_7087A */
+    internal void draw_bigpic() /* sub_7087A */
     {
-        seg037.DrawFrame_WildernessMap();
-        DrawPictureAction.DrawPicture(gbl.bigpic_dax, 1, 1, 0);
+        _seg037.DrawFrame_WildernessMap();
+        _drawPictureAction.DrawPicture(gbl.bigpic_dax, 1, 1, 0);
     }
 }

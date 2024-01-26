@@ -5,9 +5,44 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr016
+public class ovr016
 {
-    internal static int sub_44032(Player player)
+    private Set AlterSet = new Set(0, 69);
+
+    private readonly DropCharacterService _dropCharacterService;
+    private readonly IconBuilder _iconBuilder;
+    private readonly DisplayDriver _displayDriver;
+    private readonly MainGameEngine _mainGameEngine;
+    private readonly ovr017 _ovr017;
+    private readonly ovr020 _ovr020;
+    private readonly ovr021 _ovr021;
+    private readonly ovr023 _ovr023;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly ovr030 _ovr030;
+    private readonly seg037 _seg037;
+    private readonly seg051 _seg051;
+
+    public ovr016(DropCharacterService dropCharacterService, IconBuilder iconBuilder, DisplayDriver displayDriver, MainGameEngine mainGameEngine, ovr017 ovr017, ovr020 ovr020, ovr021 ovr021, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr030 ovr030, seg037 seg037, seg051 seg051)
+    {
+        _dropCharacterService = dropCharacterService;
+        _iconBuilder = iconBuilder;
+        _displayDriver = displayDriver;
+        _mainGameEngine = mainGameEngine;
+        _ovr017 = ovr017;
+        _ovr020 = ovr020;
+        _ovr021 = ovr021;
+        _ovr023 = ovr023;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _ovr030 = ovr030;
+        _seg037 = seg037;
+        _seg051 = seg051;
+    }
+
+    internal int sub_44032(Player player)
     {
         int max_spell_level = 0;
         int total_spell_level = 0;
@@ -66,7 +101,7 @@ internal class ovr016
     }
 
 
-    private static void cancel_memorize(Player player)
+    private void cancel_memorize(Player player)
     {
         player.spellList.CancelLearning();
 
@@ -74,7 +109,7 @@ internal class ovr016
     }
 
 
-    private static void cancel_scribes(Player player)
+    private void cancel_scribes(Player player)
     {
         foreach (Item item in player.items)
         {
@@ -88,7 +123,7 @@ internal class ovr016
     }
 
 
-    internal static void cancel_spells()
+    internal void cancel_spells()
     {
         foreach (Player player in gbl.TeamList)
         {
@@ -98,7 +133,7 @@ internal class ovr016
     }
 
 
-    internal static int HowManySpellsPlayerCanLearn(SpellClass spellClass, int spellLevel) //sub_4428E
+    internal int HowManySpellsPlayerCanLearn(SpellClass spellClass, int spellLevel) //sub_4428E
     {
         int alreadyLearning = 0;
 
@@ -115,7 +150,7 @@ internal class ovr016
     }
 
 
-    internal static bool sub_443A0(byte learn_type)
+    internal bool sub_443A0(byte learn_type)
     {
         string text = string.Empty;
 
@@ -149,7 +184,7 @@ internal class ovr016
 
         if (text.Length != 0)
         {
-            ovr025.DisplayPlayerStatusString(true, 10, text, gbl.SelectedPlayer);
+            _ovr025.DisplayPlayerStatusString(true, 10, text, gbl.SelectedPlayer);
 
             return false;
         }
@@ -158,7 +193,7 @@ internal class ovr016
     }
 
 
-    internal static void cast_spell()
+    internal void cast_spell()
     {
         bool redraw = false;
 
@@ -175,14 +210,14 @@ internal class ovr016
             {
                 bool var_3;
 
-                spell_id = ovr020.spell_menu2(out var_3, ref index, SpellSource.Cast, SpellLoc.memory);
+                spell_id = _ovr020.spell_menu2(out var_3, ref index, SpellSource.Cast, SpellLoc.memory);
 
                 if (spell_id != 0)
                 {
                     redraw = true;
-                    seg037.draw8x8_clear_area(TextRegion.NormalBottom);
+                    _seg037.draw8x8_clear_area(TextRegion.NormalBottom);
 
-                    ovr023.sub_5D2E1(true, QuickFight.False, spell_id);
+                    _ovr023.sub_5D2E1(true, QuickFight.False, spell_id);
                 }
                 else if (var_3 == true)
                 {
@@ -190,19 +225,19 @@ internal class ovr016
                 }
                 else
                 {
-                    ovr025.DisplayPlayerStatusString(true, 10, "has no spells memorized", gbl.SelectedPlayer);
+                    _ovr025.DisplayPlayerStatusString(true, 10, "has no spells memorized", gbl.SelectedPlayer);
                 }
             } while (spell_id != 0);
         }
 
         if (redraw == true)
         {
-            ovr025.LoadPic();
+            _ovr025.LoadPic();
         }
     }
 
 
-    private static bool BuildMemorizeSpellText() // sub_445D4
+    private bool BuildMemorizeSpellText() // sub_445D4
     {
         const int MaxSpellLevel = 5;
         const int MaxSpellClass = 3;
@@ -234,7 +269,7 @@ internal class ovr016
 
         if (found == true)
         {
-            ovr025.DisplayPlayerStatusString(false, 10, "can memorize:", gbl.SelectedPlayer);
+            _ovr025.DisplayPlayerStatusString(false, 10, "can memorize:", gbl.SelectedPlayer);
             int y_col = 3;
             for (int spellClass = 0; spellClass < MaxSpellClass; spellClass++)
             {
@@ -257,11 +292,11 @@ internal class ovr016
                             break;
                     }
 
-                    DisplayDriver.displayString(text, 0, 10, y_col + 17, 1);
+                    _displayDriver.displayString(text, 0, 10, y_col + 17, 1);
                     int x_col = 0x13;
                     for (int spellLevel = 0; spellLevel < MaxSpellLevel; spellLevel++)
                     {
-                        DisplayDriver.displayString(var_60[spellClass, spellLevel], 0, 10, y_col + 0x11, x_col + 1);
+                        _displayDriver.displayString(var_60[spellClass, spellLevel], 0, 10, y_col + 0x11, x_col + 1);
                         x_col += 3;
                     }
                     y_col++;
@@ -273,7 +308,7 @@ internal class ovr016
     }
 
 
-    internal static bool rest_menu()
+    internal bool rest_menu()
     {
         int max_rest_time = 0;
         foreach (Player player in gbl.TeamList)
@@ -290,17 +325,17 @@ internal class ovr016
         gbl.timeToRest.field_4 = (ushort)((max_rest_time - (gbl.timeToRest.field_6 * 60)) / 10);
         gbl.timeToRest.field_2 = (ushort)(max_rest_time % 10);
 
-        bool action_interrupted = ovr021.resting(true);
+        bool action_interrupted = _ovr021.resting(true);
 
         gbl.timeToRest.Clear();
 
-        ovr025.display_map_position_time();
+        _ovr025.display_map_position_time();
 
         return action_interrupted;
     }
 
 
-    internal static void memorize_spell()
+    internal void memorize_spell()
     {
         bool var_2;
 
@@ -310,12 +345,12 @@ internal class ovr016
             int index = -1;
             gbl.menuSelectedWord = 1;
 
-            byte spellId = ovr020.spell_menu2(out var_2, ref index, 0, SpellLoc.memorize);
+            byte spellId = _ovr020.spell_menu2(out var_2, ref index, 0, SpellLoc.memorize);
             bool redraw = true;
 
             if (var_2 == true)
             {
-                if (ovr027.yes_no(gbl.alertMenuColors, "Memorize These Spells? ") == 'N')
+                if (_ovr027.yes_no(gbl.alertMenuColors, "Memorize These Spells? ") == 'N')
                 {
                     cancel_memorize(gbl.SelectedPlayer);
                 }
@@ -337,11 +372,11 @@ internal class ovr016
 
                 if (var_1 == true)
                 {
-                    ovr025.DisplayPlayerStatusString(true, 10, "cannot memorize any spells", gbl.SelectedPlayer);
+                    _ovr025.DisplayPlayerStatusString(true, 10, "cannot memorize any spells", gbl.SelectedPlayer);
                 }
                 else
                 {
-                    spellId = ovr020.spell_menu2(out var_2, ref index, SpellSource.Memorize, SpellLoc.grimoire);
+                    spellId = _ovr020.spell_menu2(out var_2, ref index, SpellSource.Memorize, SpellLoc.grimoire);
                     redraw = true;
 
                     if (spellId == 0)
@@ -359,10 +394,10 @@ internal class ovr016
             {
                 index = -1;
 
-                spellId = ovr020.spell_menu2(out var_2, ref index, 0, SpellLoc.memorize);
+                spellId = _ovr020.spell_menu2(out var_2, ref index, 0, SpellLoc.memorize);
 
                 if (var_2 == true &&
-                    ovr027.yes_no(gbl.alertMenuColors, "Memorize these spells? ") == 'N')
+                    _ovr027.yes_no(gbl.alertMenuColors, "Memorize these spells? ") == 'N')
                 {
                     cancel_memorize(gbl.SelectedPlayer);
                 }
@@ -370,13 +405,13 @@ internal class ovr016
 
             if (redraw == true)
             {
-                ovr025.LoadPic();
+                _ovr025.LoadPic();
             }
         }
     }
 
 
-    internal static void scribe_spell()
+    internal void scribe_spell()
     {
         bool redraw;
         bool var_2;
@@ -387,12 +422,12 @@ internal class ovr016
             var_1 = 0;
             int var_8 = -1;
 
-            ovr020.spell_menu2(out var_2, ref var_8, 0, SpellLoc.scribe);
+            _ovr020.spell_menu2(out var_2, ref var_8, 0, SpellLoc.scribe);
             redraw = true;
 
             if (var_2 == true)
             {
-                if (ovr027.yes_no(gbl.alertMenuColors, "Scribe These Spells? ") == 'N')
+                if (_ovr027.yes_no(gbl.alertMenuColors, "Scribe These Spells? ") == 'N')
                 {
                     cancel_scribes(gbl.SelectedPlayer);
                 }
@@ -410,7 +445,7 @@ internal class ovr016
 
             while (var_1 == 0)
             {
-                int var_4 = ovr020.spell_menu2(out var_2, ref var_8, SpellSource.Scribe, SpellLoc.scrolls);
+                int var_4 = _ovr020.spell_menu2(out var_2, ref var_8, SpellSource.Scribe, SpellLoc.scrolls);
 
                 if (var_4 == 0)
                 {
@@ -418,7 +453,7 @@ internal class ovr016
 
                     if (var_2 == false)
                     {
-                        ovr025.DisplayPlayerStatusString(true, 10, "has no copyable scrolls", gbl.SelectedPlayer);
+                        _ovr025.DisplayPlayerStatusString(true, 10, "has no copyable scrolls", gbl.SelectedPlayer);
                     }
                     else
                     {
@@ -430,7 +465,7 @@ internal class ovr016
                     redraw = true;
                     if (gbl.SelectedPlayer.KnowsSpell((Spells)var_4))
                     {
-                        ovr025.string_print01("You already know that spell");
+                        _ovr025.string_print01("You already know that spell");
                     }
                     else
                     {
@@ -445,7 +480,7 @@ internal class ovr016
 
                         if (var_D == true)
                         {
-                            ovr025.string_print01("You are already scibing that spell");
+                            _ovr025.string_print01("You are already scibing that spell");
                         }
                         else
                         {
@@ -473,7 +508,7 @@ internal class ovr016
                             }
                             else
                             {
-                                ovr025.string_print01("You can not scribe that spell.");
+                                _ovr025.string_print01("You can not scribe that spell.");
                             }
                         }
                     }
@@ -484,10 +519,10 @@ internal class ovr016
             {
                 var_8 = -1;
 
-                ovr020.spell_menu2(out var_2, ref var_8, 0, SpellLoc.scribe);
+                _ovr020.spell_menu2(out var_2, ref var_8, 0, SpellLoc.scribe);
 
                 if (var_2 == true &&
-                    ovr027.yes_no(gbl.alertMenuColors, "Scribe these spells? ") == 'N')
+                    _ovr027.yes_no(gbl.alertMenuColors, "Scribe these spells? ") == 'N')
                 {
                     cancel_scribes(gbl.SelectedPlayer);
                 }
@@ -495,14 +530,14 @@ internal class ovr016
 
             if (redraw)
             {
-                ovr025.LoadPic();
+                _ovr025.LoadPic();
             }
         }
     }
 
-    private static Dictionary<Affects, string> EffectNameMap = new Dictionary<Affects, string>();
+    private Dictionary<Affects, string> EffectNameMap = new Dictionary<Affects, string>();
 
-    internal static void BuildEffectNameMap()
+    internal void BuildEffectNameMap()
     {
         Affects[] affects = { Affects.bless, Affects.cursed, Affects.detect_magic, Affects.protection_from_evil,
             Affects.protection_from_good, Affects.resist_cold, Affects.charm_person, Affects.enlarge,
@@ -521,7 +556,7 @@ internal class ovr016
             {
                 if (gbl.spellCastingTable[spId].affect_id == aff)
                 {
-                    EffectNameMap.Add(aff, ovr023.SpellNames[spId]);
+                    EffectNameMap.Add(aff, _ovr023.SpellNames[spId]);
                     found = true;
                 }
             }
@@ -555,7 +590,7 @@ internal class ovr016
     }
 
 
-    private static void DisplayMagicEffects()
+    private void DisplayMagicEffects()
     {
         List<MenuItem> var_C = new List<MenuItem>();
 
@@ -586,20 +621,20 @@ internal class ovr016
             var_C.Add(new MenuItem(" "));
         }
 
-        seg037.DrawFrame_Outer();
+        _seg037.DrawFrame_Outer();
 
         bool dummyRedraw = true;
         int dummyIndex = 0;
         MenuItem dummyResult;
-        ovr027.sl_select_item(out dummyResult, ref dummyIndex, ref dummyRedraw, true, var_C,
+        _ovr027.sl_select_item(out dummyResult, ref dummyIndex, ref dummyRedraw, true, var_C,
             0x16, 0x26, 4, 1, new MenuColorSet(15, 10, 11), string.Empty, string.Empty);
 
         var_C.Clear();
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
     }
 
 
-    internal static bool magic_menu()
+    internal bool magic_menu()
     {
         char inputKey = ' ';
         bool actionInterrupted = false;
@@ -607,12 +642,12 @@ internal class ovr016
         while (actionInterrupted == false && AlterSet.MemberOf(inputKey) == false)
         {
             bool controlKey;
-            inputKey = ovr027.displayInput(out controlKey, true, 1, gbl.defaultMenuColors, "Cast Memorize Scribe Display Rest Exit", string.Empty);
+            inputKey = _ovr027.displayInput(out controlKey, true, 1, gbl.defaultMenuColors, "Cast Memorize Scribe Display Rest Exit", string.Empty);
 
             if (controlKey == true)
             {
-                ovr020.scroll_team_list(inputKey);
-                ovr025.PartySummary(gbl.SelectedPlayer);
+                _ovr020.scroll_team_list(inputKey);
+                _ovr025.PartySummary(gbl.SelectedPlayer);
             }
             else
             {
@@ -645,7 +680,7 @@ internal class ovr016
     }
 
 
-    private static void MoveCurrentPlayerUp() // sub_4558D
+    private void MoveCurrentPlayerUp() // sub_4558D
     {
         // move gbl.player_ptr up the list by one, if at head, move to tail.
 
@@ -666,7 +701,7 @@ internal class ovr016
     }
 
 
-    private static void MoveCurrentPlayerDown() // sub_456E5
+    private void MoveCurrentPlayerDown() // sub_456E5
     {
         int index = gbl.TeamList.IndexOf(gbl.SelectedPlayer);
         if (index >= 0)
@@ -684,10 +719,10 @@ internal class ovr016
         }
     }
 
-    private static string[] reorderStrings = { "Select Exit", "Place Exit" }; //seg600_04A6
-    private static Set reorderSet = new Set(13,80,83);
+    private string[] reorderStrings = { "Select Exit", "Place Exit" }; //seg600_04A6
+    private Set reorderSet = new Set(13,80,83);
 
-    private static void reorder_party()
+    private void reorder_party()
     {
         int reorderState = 0;
         char inputKey = ' ';
@@ -695,14 +730,14 @@ internal class ovr016
         while (AlterSet.MemberOf(inputKey) == false)
         {
             bool controlKey;
-            inputKey = ovr027.displayInput(out controlKey, true, 1, gbl.defaultMenuColors, reorderStrings[reorderState], "Party Order: ");
+            inputKey = _ovr027.displayInput(out controlKey, true, 1, gbl.defaultMenuColors, reorderStrings[reorderState], "Party Order: ");
 
             if (controlKey == true)
             {
                 if (reorderState == 0)
                 {
-                    ovr020.scroll_team_list(inputKey);
-                    ovr025.PartySummary(gbl.SelectedPlayer);
+                    _ovr020.scroll_team_list(inputKey);
+                    _ovr025.PartySummary(gbl.SelectedPlayer);
                 }
                 else
                 {
@@ -714,7 +749,7 @@ internal class ovr016
                     {
                         MoveCurrentPlayerDown();
                     }
-                    ovr025.PartySummary(gbl.SelectedPlayer);
+                    _ovr025.PartySummary(gbl.SelectedPlayer);
                 }
             }
             else if (reorderSet.MemberOf(inputKey) == true)
@@ -723,23 +758,23 @@ internal class ovr016
 
                 if (reorderState != 0)
                 {
-                    ovr025.DisplayPlayerStatusString(false, 10, "has been selected", gbl.SelectedPlayer);
+                    _ovr025.DisplayPlayerStatusString(false, 10, "has been selected", gbl.SelectedPlayer);
                 }
                 else
                 {
-                    ovr025.ClearPlayerTextArea();
+                    _ovr025.ClearPlayerTextArea();
                 }
             }
         }
     }
 
-    internal static void game_speed()
+    internal void game_speed()
     {
         char inputKey;
 
         do
         {
-            DisplayDriver.displayString(string.Format("Game Speed = {0} (0=fastest 9=slowest)", gbl.game_speed_var), 0, 10, 18, 1);
+            _displayDriver.displayString(string.Format("Game Speed = {0} (0=fastest 9=slowest)", gbl.game_speed_var), 0, 10, 18, 1);
 
             string text = string.Empty;
 
@@ -756,7 +791,7 @@ internal class ovr016
             text += " Exit";
 
             bool controlKey;
-            inputKey = ovr027.displayInput(out controlKey, true, 1, gbl.defaultMenuColors, text, "Game Speed:");
+            inputKey = _ovr027.displayInput(out controlKey, true, 1, gbl.defaultMenuColors, text, "Game Speed:");
 
             if (controlKey == true)
             {
@@ -789,26 +824,22 @@ internal class ovr016
 
         } while (AlterSet.MemberOf(inputKey) == false);
 
-        ovr025.ClearPlayerTextArea();
+        _ovr025.ClearPlayerTextArea();
     }
 
-    private static Set AlterSet = new Set(0, 69);
-    private static readonly DropCharacterService _dropCharacterService = new ();
-    private static readonly IconBuilder _iconBuilder = new ();
-
-    internal static void alter_menu()
+    internal void alter_menu()
     {
         char inputKey = ' ';
 
         while (AlterSet.MemberOf(inputKey) == false)
         {
             bool controlKey;
-            inputKey = ovr027.displayInput(out controlKey, true, 1, gbl.defaultMenuColors, "Order Drop Speed Icon Exit", "Alter: ");
+            inputKey = _ovr027.displayInput(out controlKey, true, 1, gbl.defaultMenuColors, "Order Drop Speed Icon Exit", "Alter: ");
 
             if (controlKey == true)
             {
-                ovr020.scroll_team_list(inputKey);
-                ovr025.PartySummary(gbl.SelectedPlayer);
+                _ovr020.scroll_team_list(inputKey);
+                _ovr025.PartySummary(gbl.SelectedPlayer);
             }
             else
             {
@@ -828,7 +859,7 @@ internal class ovr016
 
                     case 'I':
                         _iconBuilder.Show();
-                        ovr025.LoadPic();
+                        _ovr025.LoadPic();
                         break;
                 }
             }
@@ -836,7 +867,7 @@ internal class ovr016
     }
 
 
-    private static int CalculateInitialHealing() // sub_45F22
+    private int CalculateInitialHealing() // sub_45F22
     {
         int HealingAvailable = 0;
 
@@ -849,15 +880,15 @@ internal class ovr016
                     switch (id)
                     {
                         case 3:
-                            HealingAvailable += ovr024.roll_dice(8, 1);
+                            HealingAvailable += _ovr024.roll_dice(8, 1);
                             break;
 
                         case 0x3A:
-                            HealingAvailable += ovr024.roll_dice(8, 2) + 1;
+                            HealingAvailable += _ovr024.roll_dice(8, 2) + 1;
                             break;
 
                         case 0x47:
-                            HealingAvailable += ovr024.roll_dice(8, 3) + 3;
+                            HealingAvailable += _ovr024.roll_dice(8, 3) + 3;
                             break;
                     }
                 }
@@ -868,26 +899,26 @@ internal class ovr016
     }
 
 
-    private static void CalculateHealing(ref int healingAvailable, int numCureLight, int numCureSerious, int numCureCritical) // sub_45FDD
+    private void CalculateHealing(ref int healingAvailable, int numCureLight, int numCureSerious, int numCureCritical) // sub_45FDD
     {
         for (int i = 0; i < numCureLight; i++)
         {
-            healingAvailable += ovr024.roll_dice(8, 1);
+            healingAvailable += _ovr024.roll_dice(8, 1);
         }
 
         for (int i = 0; i < numCureSerious; i++)
         {
-            healingAvailable += ovr024.roll_dice(8, 2) + 1;
+            healingAvailable += _ovr024.roll_dice(8, 2) + 1;
         }
 
         for (int i = 0; i < numCureCritical; i++)
         {
-            healingAvailable += ovr024.roll_dice(8, 3) + 3;
+            healingAvailable += _ovr024.roll_dice(8, 3) + 3;
         }
     }
 
 
-    private static int TotalHitpointsLost() /* sub_4608F */
+    private int TotalHitpointsLost() /* sub_4608F */
     {
         int lost_points = 0;
         foreach (Player player in gbl.TeamList)
@@ -899,7 +930,7 @@ internal class ovr016
     }
 
 
-    internal static void CalculateTimeAndSpellNumbers(out int numCureCritical, out int numCureSerious, out int numCureLight) //sub_460ED
+    internal void CalculateTimeAndSpellNumbers(out int numCureCritical, out int numCureSerious, out int numCureLight) //sub_460ED
     {
         numCureLight = 0;
         numCureSerious = 0;
@@ -968,7 +999,7 @@ internal class ovr016
     }
 
 
-    private static void DoTeamHealing(ref int healingAvailable) //sub_46280
+    private void DoTeamHealing(ref int healingAvailable) //sub_46280
     {
         foreach (Player player in gbl.TeamList)
         {
@@ -987,7 +1018,7 @@ internal class ovr016
                 }
 
                 if (damge_taken > 0 &&
-                    ovr024.heal_player(0, damge_taken, player) == true &&
+                    _ovr024.heal_player(0, damge_taken, player) == true &&
                     damge_taken <= healingAvailable)
                 {
                     healingAvailable -= damge_taken;
@@ -997,7 +1028,7 @@ internal class ovr016
     }
 
 
-    private static bool FixTeam() // fix_menu
+    private bool FixTeam() // fix_menu
     {
         bool action_interrupted = false;
 
@@ -1007,8 +1038,8 @@ internal class ovr016
 
             if (TotalHitpointsLost() == 0)
             {
-                ovr025.PartySummary(gbl.SelectedPlayer);
-                ovr025.display_map_position_time();
+                _ovr025.PartySummary(gbl.SelectedPlayer);
+                _ovr025.display_map_position_time();
             }
             else
             {
@@ -1019,15 +1050,15 @@ internal class ovr016
                 int numCureLight;
                 CalculateTimeAndSpellNumbers(out numCureCritical, out numCureSerious, out numCureLight);
 
-                action_interrupted = ovr021.resting(false);
+                action_interrupted = _ovr021.resting(false);
 
                 if (action_interrupted == false)
                 {
                     CalculateHealing(ref healingAvailable, numCureLight, numCureSerious, numCureCritical);
                     DoTeamHealing(ref healingAvailable);
 
-                    ovr025.PartySummary(gbl.SelectedPlayer);
-                    ovr025.display_map_position_time();
+                    _ovr025.PartySummary(gbl.SelectedPlayer);
+                    _ovr025.display_map_position_time();
 
                     gbl.timeToRest = new RestTime(timeBackup);
                 }
@@ -1037,12 +1068,12 @@ internal class ovr016
         return action_interrupted;
     }
 
-    private static Set unk_463F4 = new Set(0, 69);
+    private Set unk_463F4 = new Set(0, 69);
 
     /// <summary>
     /// Does Camp menu, returns if interrupted
     /// </summary>
-    internal static bool MakeCamp() // make_camp
+    internal bool MakeCamp() // make_camp
     {
         var game_state_bkup = gbl.game_state;
         gbl.game_state = GameState.Camping;
@@ -1053,10 +1084,10 @@ internal class ovr016
         gbl.byte_1D5AB = gbl.lastDaxFile;
         gbl.byte_1D5B5 = gbl.lastDaxBlockId;
 
-        ovr025.LoadPic();
-        seg037.draw8x8_clear_area(TextRegion.NormalBottom);
+        _ovr025.LoadPic();
+        _seg037.draw8x8_clear_area(TextRegion.NormalBottom);
 
-        DisplayDriver.displayString("The party makes camp...", 0, 10, 18, 1);
+        _displayDriver.displayString("The party makes camp...", 0, 10, 18, 1);
         cancel_spells();
         bool actionInterrupted = false;
         char input_key = ' ';
@@ -1065,28 +1096,28 @@ internal class ovr016
                unk_463F4.MemberOf(input_key) == false)
         {
             bool special_key;
-            input_key = ovr027.displayInput(out special_key, true, 1, gbl.defaultMenuColors, "Save View Magic Rest Alter Fix Exit", "Camp:");
+            input_key = _ovr027.displayInput(out special_key, true, 1, gbl.defaultMenuColors, "Save View Magic Rest Alter Fix Exit", "Camp:");
 
             if (special_key == true)
             {
-                ovr020.scroll_team_list(input_key);
-                ovr025.PartySummary(gbl.SelectedPlayer);
+                _ovr020.scroll_team_list(input_key);
+                _ovr025.PartySummary(gbl.SelectedPlayer);
             }
             else
             {
                 switch (input_key)
                 {
                     case 'S':
-                        ovr017.SaveGame();
-                        if (ovr027.yes_no(gbl.alertMenuColors, "Quit TO DOS ") == 'Y')
+                        _ovr017.SaveGame();
+                        if (_ovr027.yes_no(gbl.alertMenuColors, "Quit TO DOS ") == 'Y')
                         {
-                            KeyboardService.print_and_exit();
+                            _mainGameEngine.EngineStop();
                         }
                         break;
 
                     case 'V':
                         gbl.menuSelectedWord = 1;
-                        ovr020.viewPlayer();
+                        _ovr020.viewPlayer();
                         break;
 
                     case 'M':
@@ -1111,17 +1142,17 @@ internal class ovr016
             }
         }
 
-        if (seg051.Copy(3, 1, gbl.byte_1D5AB) == "PIC")
+        if (_seg051.Copy(3, 1, gbl.byte_1D5AB) == "PIC")
         {
-            ovr030.load_pic_final(ref gbl.byte_1D556, 0, gbl.byte_1D5B5, gbl.byte_1D5AB);
+            _ovr030.load_pic_final(ref gbl.byte_1D556, 0, gbl.byte_1D5B5, gbl.byte_1D5AB);
         }
 
         cancel_spells();
         gbl.lastSelectetSpellTarget = null;
         gbl.game_state = game_state_bkup;
-        ovr025.display_map_position_time();
-        ovr025.ClearPlayerTextArea();
-        ovr027.ClearPromptArea();
+        _ovr025.display_map_position_time();
+        _ovr025.ClearPlayerTextArea();
+        _ovr027.ClearPromptArea();
 
         return actionInterrupted;
     }

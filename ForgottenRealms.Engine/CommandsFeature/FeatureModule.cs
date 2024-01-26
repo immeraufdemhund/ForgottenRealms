@@ -1,0 +1,63 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace ForgottenRealms.Engine.CommandsFeature;
+
+public static class FeatureModule
+{
+    public static IServiceCollection RegisterCommandsFeature(this IServiceCollection services)
+    {
+        return services
+            .AddTransient<AddNPCCommand>()
+            .AddTransient<AddSubDivMultiCommand>()
+            .AddTransient<AndOrCommand>()
+            .AddTransient<ApproachCommand>()
+            .AddTransient<CallCommand>()
+            .AddTransient<CheckPartyCommand>()
+            .AddTransient<ClearBoxCommand>()
+            .AddTransient<ClearMonstersCommand>()
+            .AddTransient<CombatCommand>()
+            .AddTransient<CompareAndCommand>()
+            .AddTransient<CompareCommand>()
+            .AddTransient<DamageCommand>()
+            .AddTransient<DelayCommand>()
+            .AddTransient<DestroyItemsCommand>()
+            .AddTransient<DumpCommand>()
+            .AddTransient<EclClockCommand>()
+            .AddTransient<EncounterMenuCommand>()
+            .AddTransient<ExitCommand>()
+            .AddTransient<FindItemCommand>()
+            .AddTransient<FindSpecialCommand>()
+            .AddTransient<GetTableCommand>()
+            .AddTransient<GotoCommand>()
+            .AddTransient<GotoSubCommand>()
+            .AddTransient<HorizontalMenuCommand>()
+            .AddTransient<IfCommand>()
+            .AddTransient<InputNumberCommand>()
+            .AddTransient<InputStringCommand>()
+            .AddTransient<LoadCharacterCommand>()
+            .AddTransient<LoadFilesCommand>()
+            .AddTransient<LoadMonsterCommand>()
+            .AddTransient<NewECLCommand>()
+            .AddTransient<OnGotoGoSubCommand>()
+            .AddTransient<ParlayCommand>()
+            .AddTransient<PartyStrengthCommand>()
+            .AddTransient<PartySurpriseCommand>()
+            .AddTransient<PictureCommand>()
+            .AddTransient<PrintCommand>()
+            .AddTransient<PrintReturnCommand>()
+            .AddTransient<ProgramCommand>()
+            .AddTransient<ProtectionCommand>()
+            .AddTransient<RandomCommand>()
+            .AddTransient<ReturnCommand>()
+            .AddTransient<RobCommand>()
+            .AddTransient<SaveCommand>()
+            .AddTransient<SaveTableCommand>()
+            .AddTransient<SetupMonsterCommand>()
+            .AddTransient<SpellCommand>()
+            .AddTransient<SpriteOffCommand>()
+            .AddTransient<SurpriseCommand>()
+            .AddTransient<TreasureCommand>()
+            .AddTransient<VerticalMenuCommand>()
+            .AddTransient<WhoCommand>();
+    }
+}

@@ -4,6 +4,13 @@ namespace ForgottenRealms.Engine.CharacterFeature;
 
 public class HitPointTable
 {
+    private readonly ovr018 _ovr018;
+
+    public HitPointTable(ovr018 ovr018)
+    {
+        _ovr018 = ovr018;
+    }
+
     internal int calc_max_hp(Player player) /* sub_50793 */
     {
         int class_count = 0;
@@ -15,7 +22,7 @@ public class HitPointTable
             {
                 hp_calc hpt = hp_calc_table[class_index];
 
-                int var_4 = ovr018.con_bonus((ClassId)class_index);
+                int var_4 = _ovr018.con_bonus((ClassId)class_index);
 
                 if (player.ClassLevel[class_index] < gbl.max_class_hit_dice[class_index])
                 {

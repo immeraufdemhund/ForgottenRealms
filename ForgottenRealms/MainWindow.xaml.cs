@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -15,11 +14,13 @@ namespace ForgottenRealms
     public partial class MainWindow : Window
     {
         private readonly ILogger<MainWindow> _logger;
-        private WriteableBitmap _displayAreaSource;
+        private readonly KeyboardDriver _keyboardDriver;
+        private readonly WriteableBitmap _displayAreaSource;
 
-        public MainWindow(ILogger<MainWindow> logger)
+        public MainWindow(ILogger<MainWindow> logger, KeyboardDriver keyboardDriver)
         {
             _logger = logger;
+            _keyboardDriver = keyboardDriver;
             InitializeComponent();
             _displayAreaSource = new WriteableBitmap(320, 200, 96, 96, PixelFormats.Bgr24, null);
             displayArea.Source = _displayAreaSource;
@@ -55,14 +56,10 @@ namespace ForgottenRealms
             if (e.Key == Key.F5)
             {
                 Display.ForceUpdate();
+                return;
             }
 
-            KeyboardDriver.AddKey(IbmKeyboard.KeyToIBMKey(e.Key));
-        }
-
-        private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
-        {
-            KeyboardService.print_and_exit();
+            _keyboardDriver.AddKey(IbmKeyboard.KeyToIBMKey(e.Key));
         }
     }
 }

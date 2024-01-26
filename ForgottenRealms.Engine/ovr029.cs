@@ -2,12 +2,21 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr029
+public class ovr029
 {
-    private static int[] sky_colours = new int[]{ /* seg600:0A8A unk_16D9A*/
+    private int[] sky_colours = new int[]{ /* seg600:0A8A unk_16D9A*/
         0x00, 0x0F, 0x04, 0x0B, 0x0D, 0x02, 0x09, 0x0E, 0x00, 0x0F, 0x04, 0x0B, 0x0D, 0x02 , 0x09, 0x0E};
 
-    internal static void RedrawView() /* sub_6F0BA */
+    private readonly ovr030 _ovr030;
+    private readonly ovr031 _ovr031;
+
+    public ovr029(ovr030 ovr030, ovr031 ovr031)
+    {
+        _ovr030 = ovr030;
+        _ovr031 = ovr031;
+    }
+
+    internal void RedrawView() /* sub_6F0BA */
     {
         if (gbl.lastDaxBlockId == 0x50)
         {
@@ -18,7 +27,7 @@ internal class ovr029
         {
             if (gbl.area_ptr.inDungeon != 0)
             {
-                gbl.mapWallRoof = ovr031.get_wall_x2(gbl.mapPosY, gbl.mapPosX);
+                gbl.mapWallRoof = _ovr031.get_wall_x2(gbl.mapPosY, gbl.mapPosX);
 
                 if (gbl.mapWallRoof > 0x7F)
                 {
@@ -37,11 +46,11 @@ internal class ovr029
                     gbl.mapAreaDisplay = false;
                 }
 
-                ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                _ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
             }
             else if (gbl.can_draw_bigpic == true)
             {
-                ovr030.draw_bigpic();
+                _ovr030.draw_bigpic();
             }
 
             gbl.can_draw_bigpic = false;

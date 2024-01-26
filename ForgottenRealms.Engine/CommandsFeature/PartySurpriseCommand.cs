@@ -4,9 +4,15 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class PartySurpriseCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    public PartySurpriseCommand(ovr008 ovr008)
+    {
+        _ovr008 = ovr008;
+    }
+
     public void Execute()
     {
-        ovr008.vm_LoadCmdSets(2);
+        _ovr008.vm_LoadCmdSets(2);
 
         byte val_a = 0;
         byte val_b = 0;
@@ -23,7 +29,7 @@ public class PartySurpriseCommand : IGameCommand
         var loc_a = gbl.cmd_opps[1].Word;
         var loc_b = gbl.cmd_opps[2].Word;
 
-        ovr008.vm_SetMemoryValue(val_a, loc_a);
-        ovr008.vm_SetMemoryValue(val_b, loc_b);
+        _ovr008.vm_SetMemoryValue(val_a, loc_a);
+        _ovr008.vm_SetMemoryValue(val_b, loc_b);
     }
 }

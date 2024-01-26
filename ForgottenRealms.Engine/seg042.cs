@@ -2,16 +2,24 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class seg042
+public class seg042
 {
-    private static void debug_display(string text)
+    private readonly KeyboardService _keyboardService;
+    private readonly seg051 _seg051;
+    public seg042(KeyboardService keyboardService, seg051 seg051)
+    {
+        _keyboardService = keyboardService;
+        _seg051 = seg051;
+    }
+
+    private void debug_display(string text)
     {
         Logging.Logger.Log(text);
-        KeyboardService.GetInputKey();
+        _keyboardService.GetInputKey();
     }
 
 
-    internal static void delete_file(string fileString)
+    internal void delete_file(string fileString)
     {
         if (System.IO.File.Exists(fileString))
         {
@@ -21,7 +29,7 @@ internal class seg042
 
 
 
-    internal static bool find_and_open_file(out File file_ptr, bool noError, string full_file_name)
+    internal bool find_and_open_file(out File file_ptr, bool noError, string full_file_name)
     {
         string file_name = System.IO.Path.GetFileName(full_file_name);
         string dir_path = System.IO.Path.GetDirectoryName(full_file_name);
@@ -45,7 +53,7 @@ internal class seg042
             file_ptr = new File();
             file_ptr.Assign(System.IO.Path.Combine(dir_path, file_name));
 
-            seg051.Reset(file_ptr);
+            _seg051.Reset(file_ptr);
         }
         else
         {
@@ -56,15 +64,15 @@ internal class seg042
     }
 
 
-    internal static bool file_find(string filePath)
+    internal bool file_find(string filePath)
     {
         return System.IO.File.Exists(filePath);
     }
 
 
-    private static char[] unk_16FA9 = { ' ', '.', '*', ',', '?', '/', '\\', ':', ';', '|' };
+    private char[] unk_16FA9 = { ' ', '.', '*', ',', '?', '/', '\\', ':', ';', '|' };
 
-    internal static string clean_string(string s)
+    internal string clean_string(string s)
     {
         string cleanStr = s.Trim(unk_16FA9).ToLower();
 
@@ -77,7 +85,7 @@ internal class seg042
     }
 
 
-    private static bool setupDaxFiles(out System.IO.BinaryReader fileA, out System.IO.BinaryReader fileB, out short arg_8, string file_name)
+    private bool setupDaxFiles(out System.IO.BinaryReader fileA, out System.IO.BinaryReader fileB, out short arg_8, string file_name)
     {
         fileA = null;
         fileB = null;
@@ -110,14 +118,14 @@ internal class seg042
         return true;
     }
 
-    internal static void set_game_area(byte arg_0)
+    internal void set_game_area(byte arg_0)
     {
         gbl.game_area_backup = gbl.game_area;
         gbl.game_area = arg_0;
     }
 
 
-    internal static void restore_game_area()
+    internal void restore_game_area()
     {
         gbl.game_area = gbl.game_area_backup;
     }

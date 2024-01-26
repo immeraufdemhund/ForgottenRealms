@@ -6,10 +6,24 @@ namespace ForgottenRealms.Engine;
 
 public class TitleScreenAction
 {
-    private readonly DrawPictureAction _drawPictureAction = new ();
-    private readonly DaxBlockReader _daxBlockReader = new ();
-    private readonly SoundDriver _soundDriver = new ();
-    private readonly DisplayDriver _displayDriver = new ();
+    private readonly DrawPictureAction _drawPictureAction;
+    private readonly DaxBlockReader _daxBlockReader;
+    private readonly SoundDriver _soundDriver;
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardDriver _keyboardDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly seg037 _seg037;
+
+    public TitleScreenAction(DrawPictureAction drawPictureAction, DaxBlockReader daxBlockReader, SoundDriver soundDriver, DisplayDriver displayDriver, KeyboardDriver keyboardDriver, KeyboardService keyboardService, seg037 seg037)
+    {
+        _drawPictureAction = drawPictureAction;
+        _daxBlockReader = daxBlockReader;
+        _soundDriver = soundDriver;
+        _displayDriver = displayDriver;
+        _keyboardDriver = keyboardDriver;
+        _keyboardService = keyboardService;
+        _seg037 = seg037;
+    }
 
     public void ShowTitleScreen()
     {
@@ -41,26 +55,26 @@ public class TitleScreenAction
         _displayDriver.ClearScreen();
     }
 
-    private static void delay_or_key(int seconds)
+    private void delay_or_key(int seconds)
     {
-        KeyboardService.clear_keyboard();
+        _keyboardService.clear_keyboard();
 
         var timeEnd = DateTime.Now.AddSeconds(seconds);
 
-        while (KeyboardDriver.KEYPRESSED() == false &&
+        while (_keyboardDriver.KEYPRESSED() == false &&
                DateTime.Now < timeEnd)
         {
             System.Threading.Thread.Sleep(100);
         }
 
-        KeyboardService.clear_keyboard();
+        _keyboardService.clear_keyboard();
     }
 
     private void ShowCredits()
     {
         Display.UpdateStop();
 
-        seg037.draw8x8_02();
+        _seg037.draw8x8_02();
 
         _displayDriver.DisplayString("based on the tsr novel 'azure bonds'", 0, 10, 1, 2);
         _displayDriver.DisplayString("by:", 0, 10, 2, 6);

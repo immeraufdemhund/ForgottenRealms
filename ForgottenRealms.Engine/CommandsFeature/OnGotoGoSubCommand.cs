@@ -4,13 +4,19 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class OnGotoGoSubCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    public OnGotoGoSubCommand(ovr008 ovr008)
+    {
+        _ovr008 = ovr008;
+    }
+
     public void Execute()
     {
-        ovr008.vm_LoadCmdSets(2);
-        var var_1 = (byte)ovr008.vm_GetCmdValue(1);
-        var var_2 = (byte)ovr008.vm_GetCmdValue(2);
+        _ovr008.vm_LoadCmdSets(2);
+        var var_1 = (byte)_ovr008.vm_GetCmdValue(1);
+        var var_2 = (byte)_ovr008.vm_GetCmdValue(2);
         gbl.ecl_offset--;
-        ovr008.vm_LoadCmdSets(var_2);
+        _ovr008.vm_LoadCmdSets(var_2);
 
         if (var_1 < var_2)
         {

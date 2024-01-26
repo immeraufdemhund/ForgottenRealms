@@ -4,11 +4,21 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class LoadCharacterCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    private readonly ovr018 _ovr018;
+    private readonly ovr025 _ovr025;
+    public LoadCharacterCommand(ovr008 ovr008, ovr018 ovr018, ovr025 ovr025)
+    {
+        _ovr008 = ovr008;
+        _ovr018 = ovr018;
+        _ovr025 = ovr025;
+    }
+
     public void Execute()
     {
-        ovr008.vm_LoadCmdSets(1);
+        _ovr008.vm_LoadCmdSets(1);
 
-        int player_index = (byte)ovr008.vm_GetCmdValue(1);
+        int player_index = (byte)_ovr008.vm_GetCmdValue(1);
         VmLog.WriteLine("CMD_LoadCharacter: 0x{0:X}", player_index);
 
         gbl.restore_player_ptr = true;
@@ -37,9 +47,9 @@ public class LoadCharacterCommand : IGameCommand
                 gbl.restore_player_ptr = false;
             }
 
-            gbl.SelectedPlayer = ovr018.FreeCurrentPlayer(gbl.SelectedPlayer, true, false);
+            gbl.SelectedPlayer = _ovr018.FreeCurrentPlayer(gbl.SelectedPlayer, true, false);
 
-            ovr025.PartySummary(gbl.SelectedPlayer);
+            _ovr025.PartySummary(gbl.SelectedPlayer);
             gbl.redrawPartySummary1 = false;
             gbl.redrawPartySummary2 = false;
         }

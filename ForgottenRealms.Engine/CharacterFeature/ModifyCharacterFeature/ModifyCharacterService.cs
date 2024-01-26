@@ -4,7 +4,28 @@ namespace ForgottenRealms.Engine.CharacterFeature.ModifyCharacterFeature;
 
 public class ModifyCharacterService
 {
-    private readonly HitPointTable _hitPointTable = new ();
+    private readonly HitPointTable _hitPointTable;
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardDriver _keyboardDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly ovr018 _ovr018;
+    private readonly ovr020 _ovr020;
+    private readonly ovr025 _ovr025;
+    private readonly ovr026 _ovr026;
+    private readonly ovr027 _ovr027;
+
+    public ModifyCharacterService(HitPointTable hitPointTable, DisplayDriver displayDriver, KeyboardDriver keyboardDriver, KeyboardService keyboardService, ovr018 ovr018, ovr020 ovr020, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027)
+    {
+        _hitPointTable = hitPointTable;
+        _displayDriver = displayDriver;
+        _keyboardDriver = keyboardDriver;
+        _keyboardService = keyboardService;
+        _ovr018 = ovr018;
+        _ovr020 = ovr020;
+        _ovr025 = ovr025;
+        _ovr026 = ovr026;
+        _ovr027 = ovr027;
+    }
 
     internal void modifyPlayer()
     {
@@ -18,11 +39,11 @@ public class ModifyCharacterService
              gbl.SelectedPlayer.exp != 25000) ||
             gbl.SelectedPlayer.multiclassLevel != 0)
         {
-            DisplayDriver.DisplayStatusText(0, 14, gbl.SelectedPlayer.name + " can't be modified.");
+            _displayDriver.DisplayStatusText(0, 14, gbl.SelectedPlayer.name + " can't be modified.");
             return;
         }
 
-        ovr020.playerDisplayFull(gbl.SelectedPlayer);
+        _ovr020.playerDisplayFull(gbl.SelectedPlayer);
 
         PlayerStats stats_bkup = new PlayerStats();
         stats_bkup.Assign(gbl.SelectedPlayer.stats2);
@@ -33,25 +54,25 @@ public class ModifyCharacterService
 
         int name_cursor_pos = 1;
         byte edited_stat = 7;
-        ovr018.draw_highlight_stat(false, edited_stat, name_cursor_pos);
+        _ovr018.draw_highlight_stat(false, edited_stat, name_cursor_pos);
         edited_stat = 0;
-        ovr018.draw_highlight_stat(true, edited_stat, name_cursor_pos);
+        _ovr018.draw_highlight_stat(true, edited_stat, name_cursor_pos);
         Player player = gbl.SelectedPlayer;
 
         do
         {
             if (edited_stat == 7)
             {
-                while (KeyboardDriver.KEYPRESSED() == false)
+                while (_keyboardDriver.KEYPRESSED() == false)
                 {
                     /* empty */
                 }
 
-                inputkey = (char)KeyboardService.GetInputKey();
+                inputkey = (char)_keyboardService.GetInputKey();
 
                 if (inputkey == 0)
                 {
-                    inputkey = (char)KeyboardService.GetInputKey();
+                    inputkey = (char)_keyboardService.GetInputKey();
                     controlkey = true;
                 }
                 else
@@ -66,10 +87,10 @@ public class ModifyCharacterService
             }
             else
             {
-                inputkey = ovr027.displayInput(out controlkey, false, 1, gbl.defaultMenuColors, "Keep Exit", "Modify: ");
+                inputkey = _ovr027.displayInput(out controlkey, false, 1, gbl.defaultMenuColors, "Keep Exit", "Modify: ");
             }
 
-            ovr018.draw_highlight_stat(false, edited_stat, name_cursor_pos);
+            _ovr018.draw_highlight_stat(false, edited_stat, name_cursor_pos);
 
             if (controlkey == true)
             {
@@ -166,7 +187,7 @@ public class ModifyCharacterService
 
                                     player.hit_point_current = player.hit_point_max;
                                     edited_stat = 6;
-                                    ovr018.draw_highlight_stat(false, edited_stat, name_cursor_pos);
+                                    _ovr018.draw_highlight_stat(false, edited_stat, name_cursor_pos);
                                     edited_stat = 4;
                                     break;
 
@@ -180,9 +201,9 @@ public class ModifyCharacterService
                         {
                             player.hit_point_max -= 1;
 
-                            if (ovr018.sub_506BA(gbl.SelectedPlayer) > player.hit_point_max)
+                            if (_ovr018.sub_506BA(gbl.SelectedPlayer) > player.hit_point_max)
                             {
-                                player.hit_point_max = (byte)ovr018.sub_506BA(player);
+                                player.hit_point_max = (byte)_ovr018.sub_506BA(player);
                             }
 
                             player.hit_point_current = player.hit_point_max; ;
@@ -245,14 +266,14 @@ public class ModifyCharacterService
                                 case Stat.CON:
                                     player.stats2.Con.EnforceRaceSexLimits(race, sex);
 
-                                    if (ovr018.sub_506BA(gbl.SelectedPlayer) > player.hit_point_max)
+                                    if (_ovr018.sub_506BA(gbl.SelectedPlayer) > player.hit_point_max)
                                     {
-                                        player.hit_point_max = (byte)ovr018.sub_506BA(player);
+                                        player.hit_point_max = (byte)_ovr018.sub_506BA(player);
                                     }
 
                                     player.hit_point_current = player.hit_point_max;
                                     edited_stat = 6;
-                                    ovr018.draw_highlight_stat(false, edited_stat, name_cursor_pos);
+                                    _ovr018.draw_highlight_stat(false, edited_stat, name_cursor_pos);
                                     edited_stat = 4;
                                     break;
 
@@ -371,7 +392,7 @@ public class ModifyCharacterService
 
                         gbl.SelectedPlayer.name = nameBackup;
 
-                        ovr025.reclac_player_values(gbl.SelectedPlayer);
+                        _ovr025.reclac_player_values(gbl.SelectedPlayer);
                         return;
                     }
                 }
@@ -383,18 +404,18 @@ public class ModifyCharacterService
                     gbl.SelectedPlayer.name = nameBackup;
 
                     gbl.SelectedPlayer.hit_point_current = gbl.SelectedPlayer.hit_point_max;
-                    ovr025.reclac_player_values(gbl.SelectedPlayer);
+                    _ovr025.reclac_player_values(gbl.SelectedPlayer);
                     return;
                 }
             }
 
-            ovr025.reclac_player_values(gbl.SelectedPlayer);
-            ovr020.display_player_stats01();
+            _ovr025.reclac_player_values(gbl.SelectedPlayer);
+            _ovr020.display_player_stats01();
 
-            ovr018.draw_highlight_stat(true, edited_stat, name_cursor_pos);
+            _ovr018.draw_highlight_stat(true, edited_stat, name_cursor_pos);
         } while (controlkey == true || inputkey != 0x4B);
 
-        ovr026.calc_cleric_spells(true, gbl.SelectedPlayer);
+        _ovr026.calc_cleric_spells(true, gbl.SelectedPlayer);
 
         gbl.SelectedPlayer.npcTreasureShareCount = 1;
 
@@ -410,16 +431,16 @@ public class ModifyCharacterService
                 {
                     if ((ClassId)var_33 == ClassId.ranger)
                     {
-                        orig_hp_max += (byte)((player.ClassLevel[var_33] + 1) * (ovr018.con_bonus((ClassId)var_33)));
+                        orig_hp_max += (byte)((player.ClassLevel[var_33] + 1) * (_ovr018.con_bonus((ClassId)var_33)));
                     }
                     else
                     {
-                        orig_hp_max += (byte)(player.ClassLevel[var_33] * (ovr018.con_bonus((ClassId)var_33)));
+                        orig_hp_max += (byte)(player.ClassLevel[var_33] * (_ovr018.con_bonus((ClassId)var_33)));
                     }
                 }
                 else
                 {
-                    orig_hp_max += (byte)((gbl.max_class_hit_dice[var_33] - 1) * ovr018.con_bonus((ClassId)var_33));
+                    orig_hp_max += (byte)((gbl.max_class_hit_dice[var_33] - 1) * _ovr018.con_bonus((ClassId)var_33));
                 }
                 hp_count++;
             }

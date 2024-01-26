@@ -4,9 +4,29 @@ namespace ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 
 public class TrainCharacterService
 {
-    private static readonly ExperienceTable ExperienceTable = new();
-    private readonly ConstitutionHitPointsAdjustmentTable _constitutionHitPointsAdjustmentTable = new ();
     private static byte[] classMasks = { 2, 2, 8, 0x10, 0x20, 1, 4, 4 };
+    private readonly ExperienceTable _experienceTable;
+    private readonly ConstitutionHitPointsAdjustmentTable _constitutionHitPointsAdjustmentTable;
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr018 _ovr018;
+    private readonly ovr020 _ovr020;
+    private readonly ovr025 _ovr025;
+    private readonly ovr026 _ovr026;
+    private readonly ovr027 _ovr027;
+    private readonly seg037 _seg037;
+
+    public TrainCharacterService(ExperienceTable experienceTable, ConstitutionHitPointsAdjustmentTable constitutionHitPointsAdjustmentTable, DisplayDriver displayDriver, ovr018 ovr018, ovr020 ovr020, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, seg037 seg037)
+    {
+        _experienceTable = experienceTable;
+        _constitutionHitPointsAdjustmentTable = constitutionHitPointsAdjustmentTable;
+        _displayDriver = displayDriver;
+        _ovr018 = ovr018;
+        _ovr020 = ovr020;
+        _ovr025 = ovr025;
+        _ovr026 = ovr026;
+        _ovr027 = ovr027;
+        _seg037 = seg037;
+    }
 
     public bool IsAllowedToTrainClass(byte arg_0, ClassId classId)
     {
@@ -18,7 +38,7 @@ public class TrainCharacterService
         if (gbl.SelectedPlayer.health_status != Status.okey &&
             Cheats.free_training == false)
         {
-            DisplayDriver.DisplayStatusText(0, 14, "we only train conscious people");
+            _displayDriver.DisplayStatusText(0, 14, "we only train conscious people");
             return;
         }
 
@@ -27,7 +47,7 @@ public class TrainCharacterService
             gbl.silent_training == false &&
             gbl.gameWon == false)
         {
-            DisplayDriver.DisplayStatusText(0, 14, "Training costs 1000 gp.");
+            _displayDriver.DisplayStatusText(0, 14, "Training costs 1000 gp.");
             return;
         }
 
@@ -50,13 +70,13 @@ public class TrainCharacterService
 
                 if (Limits.RaceClassLimit(class_lvl, player, (ClassId)_class) == false)
                 {
-                    if (ExperienceTable.IsTrainingAllowed((ClassId)_class, class_lvl) &&
-                        (ExperienceTable.HasEnoughExperienceToTrain((ClassId)_class, class_lvl, player) ||
+                    if (_experienceTable.IsTrainingAllowed((ClassId)_class, class_lvl) &&
+                        (_experienceTable.HasEnoughExperienceToTrain((ClassId)_class, class_lvl, player) ||
                          Cheats.free_training == true))
                     {
                         if (Cheats.free_training == true)
                         {
-                            var tmpExp = ExperienceTable.GetMinimumExperience((ClassId)_class, class_lvl);
+                            var tmpExp = _experienceTable.GetMinimumExperience((ClassId)_class, class_lvl);
                             if (tmpExp > 0)
                             {
                                 if (tmpExp > player.exp)
@@ -68,7 +88,7 @@ public class TrainCharacterService
 
                         classesExpTrainMask += classMasks[_class];
 
-                        int next_lvl_exp = ExperienceTable.GetMinimumExperience((ClassId)_class, class_lvl + 1);
+                        int next_lvl_exp = _experienceTable.GetMinimumExperience((ClassId)_class, class_lvl + 1);
 
                         if (next_lvl_exp > 0)
                         {
@@ -92,7 +112,7 @@ public class TrainCharacterService
             {
                 if ((classMasks[_class] & classesExpTrainMask) != 0)
                 {
-                    var currentMaximumExperience = ExperienceTable.GetMinimumExperience((ClassId)_class, class_lvl);
+                    var currentMaximumExperience = _experienceTable.GetMinimumExperience((ClassId)_class, class_lvl);
                     if (currentMaximumExperience > max_exp)
                     {
                         max_exp = currentMaximumExperience;
@@ -105,7 +125,7 @@ public class TrainCharacterService
             if (max_exp > 0)
             {
                 classesExpTrainMask = classMasks[max_class];
-                int var_9 = ExperienceTable.GetMinimumExperience((ClassId)max_class, class_lvl + 1);
+                int var_9 = _experienceTable.GetMinimumExperience((ClassId)max_class, class_lvl + 1);
 
                 if (var_9 > 0 &&
                     player.exp >= var_9 &&
@@ -125,7 +145,7 @@ public class TrainCharacterService
             gbl.silent_training == false &&
             Cheats.free_training == false)
         {
-            DisplayDriver.DisplayStatusText(0, 14, "We don't train that class here");
+            _displayDriver.DisplayStatusText(0, 14, "We don't train that class here");
             return;
         }
 
@@ -139,7 +159,7 @@ public class TrainCharacterService
             if (gbl.silent_training == false &&
                 Cheats.free_training == false)
             {
-                DisplayDriver.DisplayStatusText(0, 14, "Not Enough Experience");
+                _displayDriver.DisplayStatusText(0, 14, "Not Enough Experience");
                 return;
             }
         }
@@ -163,13 +183,13 @@ public class TrainCharacterService
 
         if (skipBits == false)
         {
-            seg037.draw8x8_clear_area(0x16, 0x26, 1, 1);
+            _seg037.draw8x8_clear_area(0x16, 0x26, 1, 1);
 
             int y_offset = 4;
 
-            ovr025.displayPlayerName(false, y_offset, 4, gbl.SelectedPlayer);
+            _ovr025.displayPlayerName(false, y_offset, 4, gbl.SelectedPlayer);
 
-            DisplayDriver.displayString(" will become:", 0, 10, y_offset, player.name.Length + 4);
+            _displayDriver.displayString(" will become:", 0, 10, y_offset, player.name.Length + 4);
 
             for (int _class = 0; _class <= 7; _class++)
             {
@@ -181,26 +201,26 @@ public class TrainCharacterService
                     if (y_offset == 5)
                     {
                         string text = System.String.Format("    a level {0} {1}",
-                            player.ClassLevel[_class] + 1, ovr020.classString[_class]);
+                            player.ClassLevel[_class] + 1, _ovr020.classString[_class]);
 
-                        DisplayDriver.displayString(text, 0, 10, y_offset, 6);
+                        _displayDriver.displayString(text, 0, 10, y_offset, 6);
                     }
                     else
                     {
                         string text = System.String.Format("and a level {0} {1}",
-                            player.ClassLevel[_class] + 1, ovr020.classString[_class]);
+                            player.ClassLevel[_class] + 1, _ovr020.classString[_class]);
 
-                        DisplayDriver.displayString(text, 0, 10, y_offset, 6);
+                        _displayDriver.displayString(text, 0, 10, y_offset, 6);
                     }
                 }
             }
         }
 
-        if (skipBits || ovr027.yes_no(gbl.defaultMenuColors, "Do you wish to train? ") == 'Y')
+        if (skipBits || _ovr027.yes_no(gbl.defaultMenuColors, "Do you wish to train? ") == 'Y')
         {
             if (skipBits == false)
             {
-                ovr025.string_print01("Congratulations...");
+                _ovr025.string_print01("Congratulations...");
 
                 if (Cheats.free_training == false &&
                     gbl.gameWon == false)
@@ -232,7 +252,7 @@ public class TrainCharacterService
                 }
             }
 
-            ovr026.ReclacClassBonuses(gbl.SelectedPlayer);
+            _ovr026.ReclacClassBonuses(gbl.SelectedPlayer);
 
             if (gbl.silent_training == false)
             {
@@ -245,7 +265,7 @@ public class TrainCharacterService
 
                     do
                     {
-                        newSpellId = ovr020.spell_menu2(out var_1D, ref index, SpellSource.Learn, SpellLoc.choose);
+                        newSpellId = _ovr020.spell_menu2(out var_1D, ref index, SpellSource.Learn, SpellLoc.choose);
                     } while (newSpellId <= 0 && var_1D == true);
 
                     if (newSpellId > 0)
@@ -283,7 +303,7 @@ public class TrainCharacterService
                 return;
             }
 
-            short var_F = ovr018.sub_509E0(actualTrainingClassesMask, gbl.SelectedPlayer);
+            short var_F = _ovr018.sub_509E0(actualTrainingClassesMask, gbl.SelectedPlayer);
 
             int max_hp_increase = var_F / class_count;
 

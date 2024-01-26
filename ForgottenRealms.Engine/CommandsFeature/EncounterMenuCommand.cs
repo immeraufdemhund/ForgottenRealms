@@ -4,6 +4,17 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class EncounterMenuCommand : IGameCommand
 {
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr008 _ovr008;
+    private readonly ovr027 _ovr027;
+
+    public EncounterMenuCommand(DisplayDriver displayDriver, ovr008 ovr008, ovr027 ovr027)
+    {
+        _displayDriver = displayDriver;
+        _ovr008 = ovr008;
+        _ovr027 = ovr027;
+    }
+
     public void Execute()
     {
         ushort var_43D;
@@ -26,19 +37,19 @@ public class EncounterMenuCommand : IGameCommand
         gbl.bottomTextHasBeenCleared = false;
         gbl.DelayBetweenCharacters = true;
 
-        ovr008.calc_group_movement(out init_min, out var_40A);
+        _ovr008.calc_group_movement(out init_min, out var_40A);
 
-        ovr008.vm_LoadCmdSets(0x0e);
+        _ovr008.vm_LoadCmdSets(0x0e);
 
-        gbl.sprite_block_id = (byte)ovr008.vm_GetCmdValue(1);
-        gbl.area2_ptr.max_encounter_distance = ovr008.vm_GetCmdValue(2);
-        gbl.pic_block_id = (byte)ovr008.vm_GetCmdValue(3);
+        gbl.sprite_block_id = (byte)_ovr008.vm_GetCmdValue(1);
+        gbl.area2_ptr.max_encounter_distance = _ovr008.vm_GetCmdValue(2);
+        gbl.pic_block_id = (byte)_ovr008.vm_GetCmdValue(3);
 
         var_43D = gbl.cmd_opps[4].Word;
 
         for (var i = 0; i < 5; i++)
         {
-            var_6[i] = (byte)ovr008.vm_GetCmdValue(i + 5);
+            var_6[i] = (byte)_ovr008.vm_GetCmdValue(i + 5);
         }
 
         for (var i = 0; i < 3; i++)
@@ -46,17 +57,17 @@ public class EncounterMenuCommand : IGameCommand
             strings[i] = gbl.unk_1D972[i + 1];
         }
 
-        var_407 = (byte)ovr008.vm_GetCmdValue(0x0d);
-        var_408 = (byte)ovr008.vm_GetCmdValue(0x0e);
+        var_407 = (byte)_ovr008.vm_GetCmdValue(0x0d);
+        var_408 = (byte)_ovr008.vm_GetCmdValue(0x0e);
 
-        gbl.area2_ptr.encounter_distance = ovr008.sub_304B4(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+        gbl.area2_ptr.encounter_distance = _ovr008.sub_304B4(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
 
         if (gbl.area2_ptr.max_encounter_distance < gbl.area2_ptr.encounter_distance)
         {
             gbl.area2_ptr.encounter_distance = gbl.area2_ptr.max_encounter_distance;
         }
 
-        ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
+        _ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
 
         do
         {
@@ -129,7 +140,7 @@ public class EncounterMenuCommand : IGameCommand
                 clearTextArea = false;
             }
 
-            DisplayDriver.press_any_key(text, clearTextArea, 10, TextRegion.NormalBottom);
+            _displayDriver.press_any_key(text, clearTextArea, 10, TextRegion.NormalBottom);
 
             if (gbl.area2_ptr.encounter_distance == 0 ||
                 gbl.area_ptr.inDungeon == 0)
@@ -141,7 +152,7 @@ public class EncounterMenuCommand : IGameCommand
                 displayText = "~COMBAT ~WAIT ~FLEE ~ADVANCE";
             }
 
-            menu_selected = ovr008.sub_317AA(useOverlay, false, gbl.defaultMenuColors, displayText, "");
+            menu_selected = _ovr008.sub_317AA(useOverlay, false, gbl.defaultMenuColors, displayText, "");
 
             if (gbl.area2_ptr.encounter_distance == 0 ||
                 gbl.area_ptr.inDungeon == 0)
@@ -159,17 +170,17 @@ public class EncounterMenuCommand : IGameCommand
                 case 0:
                     if (menu_selected != 2)
                     {
-                        ovr008.vm_SetMemoryValue(1, var_43D);
+                        _ovr008.vm_SetMemoryValue(1, var_43D);
                     }
                     else
                     {
                         if (init_min >= var_407)
                         {
-                            ovr008.vm_SetMemoryValue(2, var_43D);
+                            _ovr008.vm_SetMemoryValue(2, var_43D);
                         }
                         else
                         {
-                            ovr008.vm_SetMemoryValue(1, var_43D);
+                            _ovr008.vm_SetMemoryValue(1, var_43D);
                         }
                     }
 
@@ -178,16 +189,16 @@ public class EncounterMenuCommand : IGameCommand
                 case 1:
                     if (menu_selected == 0)
                     {
-                        ovr008.vm_SetMemoryValue(1, var_43D);
+                        _ovr008.vm_SetMemoryValue(1, var_43D);
                     }
                     else if (menu_selected == 1)
                     {
                         init_max = 1;
-                        DisplayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
+                        _displayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
                     }
                     else if (menu_selected == 2)
                     {
-                        ovr008.vm_SetMemoryValue(2, var_43D);
+                        _ovr008.vm_SetMemoryValue(2, var_43D);
                     }
                     else if (menu_selected == 3)
                     {
@@ -195,11 +206,11 @@ public class EncounterMenuCommand : IGameCommand
                         {
                             gbl.area2_ptr.encounter_distance--;
 
-                            ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
+                            _ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
                         }
                         else
                         {
-                            DisplayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
+                            _displayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
                         }
 
                         init_max = 1;
@@ -209,12 +220,12 @@ public class EncounterMenuCommand : IGameCommand
                         if (gbl.area2_ptr.encounter_distance > 0)
                         {
                             gbl.area2_ptr.encounter_distance--;
-                            ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
+                            _ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
                             init_max = 1;
                         }
                         else
                         {
-                            ovr008.vm_SetMemoryValue(3, var_43D);
+                            _ovr008.vm_SetMemoryValue(3, var_43D);
                         }
                     }
 
@@ -225,24 +236,24 @@ public class EncounterMenuCommand : IGameCommand
                     {
                         if (var_408 > var_40A)
                         {
-                            ovr008.vm_SetMemoryValue(0, var_43D);
+                            _ovr008.vm_SetMemoryValue(0, var_43D);
 
                             gbl.textXCol = 1;
                             gbl.textYCol = 0x11;
-                            DisplayDriver.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
+                            _displayDriver.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
                         }
                         else
                         {
-                            ovr008.vm_SetMemoryValue(1, var_43D);
+                            _ovr008.vm_SetMemoryValue(1, var_43D);
                         }
                     }
                     else if (menu_selected >= 1 && menu_selected <= 4)
                     {
-                        ovr008.vm_SetMemoryValue(0, var_43D);
+                        _ovr008.vm_SetMemoryValue(0, var_43D);
 
                         gbl.textXCol = 1;
                         gbl.textYCol = 0x11;
-                        DisplayDriver.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
+                        _displayDriver.press_any_key("The monsters flee.", true, 10, TextRegion.NormalBottom);
                     }
 
                     break;
@@ -250,7 +261,7 @@ public class EncounterMenuCommand : IGameCommand
                 case 3:
                     if (menu_selected == 0)
                     {
-                        ovr008.vm_SetMemoryValue(1, var_43D);
+                        _ovr008.vm_SetMemoryValue(1, var_43D);
                     }
                     else if (menu_selected == 1 || menu_selected == 3)
                     {
@@ -258,30 +269,30 @@ public class EncounterMenuCommand : IGameCommand
                         {
                             gbl.area2_ptr.encounter_distance--;
 
-                            ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
+                            _ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
                         }
                         else
                         {
-                            DisplayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
+                            _displayDriver.press_any_key("Both sides wait.", true, 10, TextRegion.NormalBottom);
                         }
 
                         init_max = 1;
                     }
                     else if (menu_selected == 2)
                     {
-                        ovr008.vm_SetMemoryValue(2, var_43D);
+                        _ovr008.vm_SetMemoryValue(2, var_43D);
                     }
                     else if (menu_selected == 4)
                     {
                         if (gbl.area2_ptr.encounter_distance <= 0)
                         {
-                            ovr008.vm_SetMemoryValue(3, var_43D);
+                            _ovr008.vm_SetMemoryValue(3, var_43D);
                         }
                         else
                         {
                             gbl.area2_ptr.encounter_distance--;
 
-                            ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
+                            _ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
                             init_max = 1;
                         }
                     }
@@ -291,32 +302,32 @@ public class EncounterMenuCommand : IGameCommand
                 case 4:
                     if (menu_selected == 0)
                     {
-                        ovr008.vm_SetMemoryValue(1, var_43D);
+                        _ovr008.vm_SetMemoryValue(1, var_43D);
                     }
                     else if (menu_selected == 1 || menu_selected == 3 || menu_selected == 4)
                     {
                         if (gbl.area2_ptr.encounter_distance <= 0)
                         {
-                            ovr008.vm_SetMemoryValue(3, var_43D);
+                            _ovr008.vm_SetMemoryValue(3, var_43D);
                         }
                         else
                         {
                             gbl.area2_ptr.encounter_distance -= 1;
 
-                            ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
+                            _ovr008.sub_30580(gbl.encounter_flags, gbl.area2_ptr.encounter_distance, gbl.pic_block_id, gbl.sprite_block_id);
                             init_max = 1;
                         }
                     }
                     else if (menu_selected == 2)
                     {
-                        ovr008.vm_SetMemoryValue(2, var_43D);
+                        _ovr008.vm_SetMemoryValue(2, var_43D);
                     }
 
                     break;
             }
         } while (init_max != 0);
 
-        ovr027.ClearPromptArea();
+        _ovr027.ClearPromptArea();
         gbl.DelayBetweenCharacters = false;
         gbl.byte_1EE95 = false;
     }

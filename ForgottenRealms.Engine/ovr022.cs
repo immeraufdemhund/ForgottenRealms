@@ -3,21 +3,40 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr022
+public class ovr022
 {
-    internal static int get_max_load(Player player)
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly seg037 _seg037;
+    private readonly seg051 _seg051;
+
+    public ovr022(DisplayDriver displayDriver, KeyboardService keyboardService, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, seg037 seg037, seg051 seg051)
     {
-        return 1500 + ovr025.max_encumberance(player);
+        _displayDriver = displayDriver;
+        _keyboardService = keyboardService;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _seg037 = seg037;
+        _seg051 = seg051;
     }
 
-    internal static bool willOverload(int item_weight, Player player)
+    internal int get_max_load(Player player)
+    {
+        return 1500 + _ovr025.max_encumberance(player);
+    }
+
+    internal bool willOverload(int item_weight, Player player)
     {
         int dummyInt;
         return willOverload(out dummyInt, item_weight, player);
     }
 
 
-    internal static bool willOverload(out int weight, int item_weight, Player player)
+    internal bool willOverload(out int weight, int item_weight, Player player)
     {
         bool ret_val;
 
@@ -35,13 +54,13 @@ internal class ovr022
         return ret_val;
     }
 
-    internal static void addPlayerGold(int item_weight)
+    internal void addPlayerGold(int item_weight)
     {
         int capasity;
 
         if (willOverload(out capasity, item_weight, gbl.SelectedPlayer) == true)
         {
-            ovr025.string_print01("Overloaded. Money will be put in Pool.");
+            _ovr025.string_print01("Overloaded. Money will be put in Pool.");
             gbl.SelectedPlayer.Money.AddCoins(Money.Platinum, capasity);
             gbl.SelectedPlayer.AddWeight(capasity);
 
@@ -55,10 +74,10 @@ internal class ovr022
     }
 
 
-    internal static short AskNumberValue(byte fgColor, string prompt, int maxValue) // sub_592AD
+    internal short AskNumberValue(byte fgColor, string prompt, int maxValue) // sub_592AD
     {
-        ovr027.ClearPromptAreaNoUpdate();
-        DisplayDriver.displayString(prompt, 0, fgColor, 0x18, 0);
+        _ovr027.ClearPromptAreaNoUpdate();
+        _displayDriver.displayString(prompt, 0, fgColor, 0x18, 0);
 
         int prompt_width = prompt.Length;
         int xCol = prompt_width;
@@ -69,7 +88,7 @@ internal class ovr022
 
         do
         {
-            inputKey = (char)KeyboardService.GetInputKey();
+            inputKey = (char)_keyboardService.GetInputKey();
 
             if (inputKey >= 0x30 &&
                 inputKey <= 0x39)
@@ -89,19 +108,19 @@ internal class ovr022
                     xCol = maxValueStr.Length + prompt_width;
                 }
 
-                DisplayDriver.displayString(currentValueStr, 0, 15, 0x18, prompt_width);
+                _displayDriver.displayString(currentValueStr, 0, 15, 0x18, prompt_width);
             }
             else if (inputKey == 8 && currentValueStr.Length > 0)
             {
                 int i = currentValueStr.Length - 1;
-                currentValueStr = seg051.Copy(i, 0, currentValueStr);
+                currentValueStr = _seg051.Copy(i, 0, currentValueStr);
 
-                DisplayDriver.displaySpaceChar(0x18, xCol-1);
+                _displayDriver.displaySpaceChar(0x18, xCol-1);
                 xCol--;
             }
         } while (inputKey != 0x0D && inputKey != 0x1B);
 
-        ovr027.ClearPromptAreaNoUpdate();
+        _ovr027.ClearPromptAreaNoUpdate();
 
         int var_44;
         if (inputKey == 0x1B ||
@@ -118,7 +137,7 @@ internal class ovr022
     }
 
 
-    internal static void trade_money(int money_slot, short num_coins, Player dest, Player source) /* add_object */
+    internal void trade_money(int money_slot, short num_coins, Player dest, Player source) /* add_object */
     {
         if ((dest.weight + num_coins) <= get_max_load(dest))
         {
@@ -130,12 +149,12 @@ internal class ovr022
         }
         else
         {
-            ovr025.string_print01("Overloaded");
+            _ovr025.string_print01("Overloaded");
         }
     }
 
 
-    internal static void poolMoney()
+    internal void poolMoney()
     {
         foreach (Player player in gbl.TeamList)
         {
@@ -153,7 +172,7 @@ internal class ovr022
     }
 
 
-    internal static int GetPartyCount() /* sub_595FF */
+    internal int GetPartyCount() /* sub_595FF */
     {
         int count = 0;
 
@@ -170,7 +189,7 @@ internal class ovr022
     }
 
 
-    internal static void share_pooled()
+    internal void share_pooled()
     {
         int[] money_remander = new int[7];
         int[] money_each = new int[7];
@@ -257,7 +276,7 @@ internal class ovr022
     }
 
 
-    internal static void DropCoins(int money_slot, int num_coins, Player player) /* sub_59A19 */
+    internal void DropCoins(int money_slot, int num_coins, Player player) /* sub_59A19 */
     {
         player.Money.AddCoins(money_slot, -num_coins);
         player.RemoveWeight(num_coins);
@@ -270,11 +289,11 @@ internal class ovr022
     }
 
 
-    internal static void PickupCoins(int money_slot, int num_coins, Player player) /* sub_59AA0 */
+    internal void PickupCoins(int money_slot, int num_coins, Player player) /* sub_59AA0 */
     {
         if (willOverload(num_coins, player) == true)
         {
-            ovr025.string_print01("Overloaded");
+            _ovr025.string_print01("Overloaded");
         }
         else
         {
@@ -291,7 +310,7 @@ internal class ovr022
     }
 
 
-    internal static int GetMoneyIndexFromString(out string displayText, string input) // sub_59BAB
+    internal int GetMoneyIndexFromString(out string displayText, string input) // sub_59BAB
     {
         int offset = 0;
         int index = 7; // this is outofbounds.
@@ -347,13 +366,13 @@ internal class ovr022
     }
 
 
-    internal static void TakePoolMoney() // takeItems
+    internal void TakePoolMoney() // takeItems
     {
         bool noMoneyLeft;
 
         List<MenuItem> money = new List<MenuItem>();
 
-        seg037.DrawFrame_Outer();
+        _seg037.DrawFrame_Outer();
 
         do
         {
@@ -372,7 +391,7 @@ internal class ovr022
             int dummyIndex = 0;
 
             MenuItem var_C;
-            char input_key = ovr027.sl_select_item(out var_C, ref dummyIndex, ref var_118, true, money,
+            char input_key = _ovr027.sl_select_item(out var_C, ref dummyIndex, ref var_118, true, money,
                 8, 15, 2, 2, gbl.defaultMenuColors, "Select", "Select type of coin ");
 
             if (var_C == null || input_key == 0)
@@ -406,18 +425,18 @@ internal class ovr022
     }
 
 
-    internal static void treasureOnGround(out bool items, out bool money)
+    internal void treasureOnGround(out bool items, out bool money)
     {
         money = gbl.pooled_money.AnyMoney();
         items = gbl.items_pointer.Count > 0;
     }
 
 
-    internal static sbyte randomBonus() // sub_59FCF
+    internal sbyte randomBonus() // sub_59FCF
     {
         sbyte bonus = 0;
 
-        int roll = ovr024.roll_dice(20, 1);
+        int roll = _ovr024.roll_dice(20, 1);
 
         if (roll >= 1 && roll <= 14)
         {
@@ -431,7 +450,7 @@ internal class ovr022
         return bonus;
     }
 
-    private static short[,] /*seg600:082E unk_16B3E */	preconfiiguredItems = {
+    private short[,] /*seg600:082E unk_16B3E */	preconfiiguredItems = {
         {0x00B9, 0x00BB, 0x0040, 0x0001, 0x0320, 0x0003, 0x0063, 0x0000},
         {0x00EF, 0x00A7, 0x0040, 0x0001, 0x044C, 0x0001, 0x003b, 0x0000},
         {0x00b9, 0x00a7, 0x0040, 0x0001, 0x0190, 0x0001, 0x0003, 0x0000},
@@ -440,7 +459,7 @@ internal class ovr022
         {0x00E2, 0x00A7, 0x0064, 0x000A, 0x3A98, 0x0000, 0x0026, 0x0083},
         {0x009d, 0x00a7, 0x0015, 0x0014, 0x0bb8, 0x0001, 0x0033, 0x0000} };
 
-    internal static Item create_item(ItemType item_type) /* sub_5A007 */
+    internal Item create_item(ItemType item_type) /* sub_5A007 */
     {
         byte var_5 = 0; /* Simeon */
         int var_4 = -1;
@@ -458,7 +477,7 @@ internal class ovr022
 
             if (item.type == ItemType.Javelin)
             {
-                int var_1 = ovr024.roll_dice(5, 1);
+                int var_1 = _ovr024.roll_dice(5, 1);
                 if (var_1 == 5)
                 {
                     var_4 = 6;
@@ -700,7 +719,7 @@ internal class ovr022
         }
         else if (type == ItemType.MUScroll || type == ItemType.ClrcScroll)
         {
-            byte spellsCount = ovr024.roll_dice(3, 1);
+            byte spellsCount = _ovr024.roll_dice(3, 1);
 
             if (item.type == ItemType.MUScroll)
             {
@@ -720,30 +739,30 @@ internal class ovr022
 
             for (int var_3 = 1; var_3 <= spellsCount; var_3++)
             {
-                int var_1 = ovr024.roll_dice(5, 1);
+                int var_1 = _ovr024.roll_dice(5, 1);
 
                 if (item.type == ItemType.MUScroll)
                 {
                     switch (var_1)
                     {
                         case 1:
-                            var_5 = (byte)(ovr024.roll_dice(13, 1) + 8);
+                            var_5 = (byte)(_ovr024.roll_dice(13, 1) + 8);
                             break;
 
                         case 2:
-                            var_5 = (byte)(ovr024.roll_dice(7, 1) + 28);
+                            var_5 = (byte)(_ovr024.roll_dice(7, 1) + 28);
                             break;
 
                         case 3:
-                            var_5 = (byte)(ovr024.roll_dice(0x0B, 1) + 44);
+                            var_5 = (byte)(_ovr024.roll_dice(0x0B, 1) + 44);
                             break;
 
                         case 4:
-                            var_5 = (byte)(ovr024.roll_dice(9, 1) + 80);
+                            var_5 = (byte)(_ovr024.roll_dice(9, 1) + 80);
                             break;
 
                         case 5:
-                            var_5 = (byte)(ovr024.roll_dice(4, 1) + 90);
+                            var_5 = (byte)(_ovr024.roll_dice(4, 1) + 90);
                             break;
                     }
                 }
@@ -752,23 +771,23 @@ internal class ovr022
                     switch (var_1)
                     {
                         case 1:
-                            var_5 = ovr024.roll_dice(8, 1);
+                            var_5 = _ovr024.roll_dice(8, 1);
                             break;
 
                         case 2:
-                            var_5 = (byte)(ovr024.roll_dice(7, 1) + 0x15);
+                            var_5 = (byte)(_ovr024.roll_dice(7, 1) + 0x15);
                             break;
 
                         case 3:
-                            var_5 = (byte)(ovr024.roll_dice(8, 1) + 0x24);
+                            var_5 = (byte)(_ovr024.roll_dice(8, 1) + 0x24);
                             break;
 
                         case 4:
-                            var_5 = (byte)(ovr024.roll_dice(5, 1) + 0x41);
+                            var_5 = (byte)(_ovr024.roll_dice(5, 1) + 0x41);
                             break;
 
                         case 5:
-                            var_5 = (byte)(ovr024.roll_dice(6, 1) + 0x46);
+                            var_5 = (byte)(_ovr024.roll_dice(6, 1) + 0x46);
                             break;
                     }
                 }
@@ -791,7 +810,7 @@ internal class ovr022
         }
         else if (type == ItemType.Potion)
         {
-            int var_1 = ovr024.roll_dice(8, 1);
+            int var_1 = _ovr024.roll_dice(8, 1);
 
             if (var_1 >= 1 && var_1 <= 5)
             {
@@ -831,7 +850,7 @@ internal class ovr022
     /// <summary>
     /// Turns if pictures need re-loading
     /// </summary>
-    internal static bool appraiseGemsJewels()
+    internal bool appraiseGemsJewels()
     {
         bool special_key;
         short value;
@@ -839,7 +858,7 @@ internal class ovr022
 
         if (gbl.SelectedPlayer.Money.Gems == 0 && gbl.SelectedPlayer.Money.Jewels == 0)
         {
-            ovr025.string_print01("No Gems or Jewelry");
+            _ovr025.string_print01("No Gems or Jewelry");
             return false;
         }
 
@@ -884,12 +903,12 @@ internal class ovr022
                     jewel_text += " pieces of Jewelry";
                 }
 
-                seg037.draw8x8_clear_area(0x16, 0x26, 1, 1);
-                ovr025.displayPlayerName(false, 1, 1, gbl.SelectedPlayer);
+                _seg037.draw8x8_clear_area(0x16, 0x26, 1, 1);
+                _ovr025.displayPlayerName(false, 1, 1, gbl.SelectedPlayer);
 
-                DisplayDriver.displayString("You have a fine collection of:", 0, 0xf, 7, 1);
-                DisplayDriver.displayString(gem_text, 0, 0x0f, 9, 1);
-                DisplayDriver.displayString(jewel_text, 0, 0x0f, 0x0a, 1);
+                _displayDriver.displayString("You have a fine collection of:", 0, 0xf, 7, 1);
+                _displayDriver.displayString(gem_text, 0, 0x0f, 9, 1);
+                _displayDriver.displayString(jewel_text, 0, 0x0f, 0x0a, 1);
                 string prompt = string.Empty;
 
                 if (gbl.SelectedPlayer.Money.Gems != 0)
@@ -904,7 +923,7 @@ internal class ovr022
 
                 prompt += " Exit";
 
-                char input_key = ovr027.displayInput(out special_key, false, 1, gbl.defaultMenuColors, prompt, "Appraise : ");
+                char input_key = _ovr027.displayInput(out special_key, false, 1, gbl.defaultMenuColors, prompt, "Appraise : ");
 
                 if (input_key == 'G')
                 {
@@ -912,7 +931,7 @@ internal class ovr022
                     {
                         gbl.SelectedPlayer.Money.AddCoins(Money.Gems, -1);
 
-                        int roll = ovr024.roll_dice(100, 1);
+                        int roll = _ovr024.roll_dice(100, 1);
 
                         if (roll >= 1 && roll <= 25)
                         {
@@ -945,7 +964,7 @@ internal class ovr022
 
                         string value_text = "The Gem is Valued at " + value.ToString() + " gp.";
 
-                        DisplayDriver.displayString(value_text, 0, 15, 12, 1);
+                        _displayDriver.displayString(value_text, 0, 15, 12, 1);
 
                         bool must_sell;
 
@@ -961,7 +980,7 @@ internal class ovr022
                             must_sell = false;
                         }
 
-                        input_key = ovr027.displayInput(out special_key, false, 1, gbl.defaultMenuColors, sell_text, "You can : ");
+                        input_key = _ovr027.displayInput(out special_key, false, 1, gbl.defaultMenuColors, sell_text, "You can : ");
 
                         if (input_key == 'K' && must_sell == false)
                         {
@@ -982,35 +1001,35 @@ internal class ovr022
                     {
                         gbl.SelectedPlayer.Money.AddCoins(Money.Jewelry, -1);
 
-                        int roll = ovr024.roll_dice(100, 1);
+                        int roll = _ovr024.roll_dice(100, 1);
 
                         if (roll >= 1 && roll <= 10)
                         {
-                            value = (short)(seg051.Random(900) + 100);
+                            value = (short)(_seg051.Random(900) + 100);
                         }
                         else if (roll >= 11 && roll <= 20)
                         {
-                            value = (short)(seg051.Random(1000) + 200);
+                            value = (short)(_seg051.Random(1000) + 200);
                         }
                         else if (roll >= 21 && roll <= 40)
                         {
-                            value = (short)(seg051.Random(1500) + 300);
+                            value = (short)(_seg051.Random(1500) + 300);
                         }
                         else if (roll >= 41 && roll <= 50)
                         {
-                            value = (short)(seg051.Random(2500) + 500);
+                            value = (short)(_seg051.Random(2500) + 500);
                         }
                         else if (roll >= 51 && roll <= 70)
                         {
-                            value = (short)(seg051.Random(5000) + 1000);
+                            value = (short)(_seg051.Random(5000) + 1000);
                         }
                         else if (roll >= 0x47 && roll <= 0x5A)
                         {
-                            value = (short)(seg051.Random(6000) + 2000);
+                            value = (short)(_seg051.Random(6000) + 2000);
                         }
                         else if (roll >= 0x5B && roll <= 0x64)
                         {
-                            value = (short)(seg051.Random(10000) + 2000);
+                            value = (short)(_seg051.Random(10000) + 2000);
                         }
                         else
                         {
@@ -1018,7 +1037,7 @@ internal class ovr022
                         }
 
                         string value_text = string.Format("The Jewel is Valued at {0} gp.", value);
-                        DisplayDriver.displayString(value_text, 0, 15, 12, 1);
+                        _displayDriver.displayString(value_text, 0, 15, 12, 1);
 
                         bool must_sell;
                         if (willOverload(1, gbl.SelectedPlayer) == true ||
@@ -1033,7 +1052,7 @@ internal class ovr022
                             must_sell = false;
                         }
 
-                        input_key = ovr027.displayInput(out special_key, false, 1, gbl.defaultMenuColors, sell_text, "You can : ");
+                        input_key = _ovr027.displayInput(out special_key, false, 1, gbl.defaultMenuColors, sell_text, "You can : ");
 
                         if (input_key == 'K' && must_sell == false)
                         {
@@ -1053,7 +1072,7 @@ internal class ovr022
                     stop_loop = true;
                 }
 
-                ovr025.reclac_player_values(gbl.SelectedPlayer);
+                _ovr025.reclac_player_values(gbl.SelectedPlayer);
             }
 
         } while (stop_loop == false);

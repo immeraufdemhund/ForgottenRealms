@@ -3,12 +3,30 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr021
+public class ovr021
 {
-    private static int[] timeScales = { 10, 10, 6, 24, 30, 12, 0x100 }; //word_1A13C
+    private int[] timeScales = { 10, 10, 6, 24, 30, 12, 0x100 }; //word_1A13C
 
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardDriver _keyboardDriver;
+    private readonly ovr023 _ovr023;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly seg037 _seg037;
 
-    private static void CheckAffectsTimingOut(int timeSlot, int timeSteps) // sub_5801E
+    public ovr021(DisplayDriver displayDriver, KeyboardDriver keyboardDriver, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, seg037 seg037)
+    {
+        _displayDriver = displayDriver;
+        _keyboardDriver = keyboardDriver;
+        _ovr023 = ovr023;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _seg037 = seg037;
+    }
+
+    private void CheckAffectsTimingOut(int timeSlot, int timeSteps) // sub_5801E
     {
         if (gbl.game_state != GameState.Camping)
         {
@@ -79,7 +97,7 @@ internal class ovr021
 
                     foreach (Affect remove in removeList)
                     {
-                        ovr024.remove_affect(remove, remove.type, player);
+                        _ovr024.remove_affect(remove, remove.type, player);
                     }
 
                     // Not sure why we are doing this again, but this is what the orig code did...
@@ -107,7 +125,7 @@ internal class ovr021
     }
 
 
-    private static void NormalizeClock(RestTime arg_0) /* sub_58317 */
+    private void NormalizeClock(RestTime arg_0) /* sub_58317 */
     {
         for (int i = 0; i <= 6; i++)
         {
@@ -130,7 +148,7 @@ internal class ovr021
     }
 
 
-    private static void clock_583C8() /* sub_583C8 */
+    private void clock_583C8() /* sub_583C8 */
     {
         NormalizeClock(gbl.timeToRest);
 
@@ -147,7 +165,7 @@ internal class ovr021
         }
     }
 
-    internal static void step_game_time(int time_slot, int amount) /* sub_583FA */
+    internal void step_game_time(int time_slot, int amount) /* sub_583FA */
     {
         RestTime rest_time = new RestTime();
 
@@ -172,7 +190,7 @@ internal class ovr021
     }
 
 
-    internal static void rest_time_5849F(int time_index, byte arg_2) /* sub_5849F */
+    internal void rest_time_5849F(int time_index, byte arg_2) /* sub_5849F */
     {
         if (gbl.timeToRest.field_8 != 0 ||
             gbl.timeToRest.field_6 != 0 ||
@@ -211,13 +229,13 @@ internal class ovr021
     }
 
 
-    private static string format_time(int value) /* sub_5858A */
+    private string format_time(int value) /* sub_5858A */
     {
         return string.Format("{0:00}", value);
     }
 
 
-    private static void display_resting_time(int highlight_time) /* sub_58615 */
+    private void display_resting_time(int highlight_time) /* sub_58615 */
     {
         int[] colors = new int[6];
 
@@ -228,28 +246,28 @@ internal class ovr021
 
         colors[highlight_time] = 15;
 
-        DisplayDriver.displayString("Rest Time:", 0, 10, 17, 1);
+        _displayDriver.displayString("Rest Time:", 0, 10, 17, 1);
         int col_x = 11;
 
         string text = format_time(gbl.timeToRest.field_8);
-        DisplayDriver.displayString(text, 0, colors[4], 0x11, col_x + 1);
-        DisplayDriver.displayString(":", 0, 10, 17, col_x + 3);
+        _displayDriver.displayString(text, 0, colors[4], 0x11, col_x + 1);
+        _displayDriver.displayString(":", 0, 10, 17, col_x + 3);
         col_x += 3;
 
         text = format_time(gbl.timeToRest.field_6);
-        DisplayDriver.displayString(text, 0, colors[3], 0x11, col_x + 1);
-        DisplayDriver.displayString(":", 0, 10, 17, col_x + 3);
+        _displayDriver.displayString(text, 0, colors[3], 0x11, col_x + 1);
+        _displayDriver.displayString(":", 0, 10, 17, col_x + 3);
         col_x += 3;
 
         text = format_time((gbl.timeToRest.field_4 * 10) + gbl.timeToRest.field_2);
 
-        DisplayDriver.displayString(text, 0, colors[2], 0x11, col_x + 1);
+        _displayDriver.displayString(text, 0, colors[2], 0x11, col_x + 1);
     }
 
 
-    private static Set unk_58731 = new Set(0, 69, 82 );
+    private Set unk_58731 = new Set(0, 69, 82 );
 
-    private static bool resting_time_menu() /* sub_58751 */
+    private bool resting_time_menu() /* sub_58751 */
     {
         char input_key;
 
@@ -261,7 +279,7 @@ internal class ovr021
             display_resting_time(time_index);
             bool control_key;
 
-            input_key = ovr027.displayInput(out control_key, false, 1, gbl.defaultMenuColors, "Rest Days Hours Mins Add Subtract Exit", string.Empty);
+            input_key = _ovr027.displayInput(out control_key, false, 1, gbl.defaultMenuColors, "Rest Days Hours Mins Add Subtract Exit", string.Empty);
 
             if (control_key == true)
             {
@@ -355,7 +373,7 @@ internal class ovr021
     }
 
 
-    private static void rest_heal(bool show_text) /* reset_heal */
+    private void rest_heal(bool show_text) /* reset_heal */
     {
         gbl.rest_10_seconds++;
 
@@ -365,7 +383,7 @@ internal class ovr021
 
             foreach (Player player in gbl.TeamList)
             {
-                if (ovr024.heal_player(0, 1, player) == true)
+                if (_ovr024.heal_player(0, 1, player) == true)
                 {
                     update_ui = true;
                 }
@@ -376,21 +394,21 @@ internal class ovr021
                 display_resting_time(0);
             }
 
-            DisplayDriver.displayString("The Whole Party Is Healed", 0, 10, 19, 1);
+            _displayDriver.displayString("The Whole Party Is Healed", 0, 10, 19, 1);
 
             if (update_ui)
             {
-                ovr025.PartySummary(gbl.SelectedPlayer);
+                _ovr025.PartySummary(gbl.SelectedPlayer);
             }
 
-            DisplayDriver.GameDelay();
-            ovr025.ClearPlayerTextArea();
+            _displayDriver.GameDelay();
+            _ovr025.ClearPlayerTextArea();
             gbl.rest_10_seconds = 0;
         }
     }
 
 
-    private static int rest_memorize(ref bool findNext, Player player)
+    private int rest_memorize(ref bool findNext, Player player)
     {
         foreach (int id in player.spellList.LearningList())
         {
@@ -404,7 +422,7 @@ internal class ovr021
 
                 display_resting_time(0);
 
-                ovr023.DisplayCaseSpellText(id, "has memorized", player);
+                _ovr023.DisplayCaseSpellText(id, "has memorized", player);
                 findNext = true;
             }
         }
@@ -413,7 +431,7 @@ internal class ovr021
     }
 
 
-    private static int rest_scribe(ref bool findNext, Player player)
+    private int rest_scribe(ref bool findNext, Player player)
     {
         int next_scribe_lvl = 0;
         foreach (Item item in player.items.ToArray())
@@ -432,11 +450,11 @@ internal class ovr021
                         {
                             byte spellId = (byte)((int)item.getAffect(spellIdx) & 0x7F);
                             player.LearnSpell((Spells)spellId);
-                            ovr023.remove_spell_from_scroll(spellId, item, player);
+                            _ovr023.remove_spell_from_scroll(spellId, item, player);
 
                             display_resting_time(0);
 
-                            ovr023.DisplayCaseSpellText(spellId, "has scribed", player);
+                            _ovr023.DisplayCaseSpellText(spellId, "has scribed", player);
                             findNext = true;
                         }
                     }
@@ -449,9 +467,9 @@ internal class ovr021
         return next_scribe_lvl;
     }
 
-    private static int[] spellLaernTimeout = new int[9]; // seg600:758D
+    private int[] spellLaernTimeout = new int[9]; // seg600:758D
 
-    private static void CheckForSpellLearning() // sub_58B4D
+    private void CheckForSpellLearning() // sub_58B4D
     {
         int index = 1;
         foreach (Player player in gbl.TeamList)
@@ -480,7 +498,7 @@ internal class ovr021
     }
 
 
-    private static void sub_58C03(ref int arg_0)
+    private void sub_58C03(ref int arg_0)
     {
         arg_0 += 1;
 
@@ -513,7 +531,7 @@ internal class ovr021
     /// <summary>
     /// returns if the party is interrupted
     /// </summary>
-    internal static bool resting(bool interactive_resting) /* reseting */
+    internal bool resting(bool interactive_resting) /* reseting */
     {
         bool stop_resting;
         bool resting_intetrupted = false;
@@ -530,7 +548,7 @@ internal class ovr021
 
         if (interactive_resting == true)
         {
-            seg037.draw8x8_clear_area(TextRegion.NormalBottom);
+            _seg037.draw8x8_clear_area(TextRegion.NormalBottom);
             display_resting_time(0);
         }
 
@@ -552,17 +570,17 @@ internal class ovr021
                 gbl.timeToRest.field_2 > 0))
         {
             if (interactive_resting == true &&
-                KeyboardDriver.KEYPRESSED() == true)
+                _keyboardDriver.KEYPRESSED() == true)
             {
                 display_resting_time(0);
 
-                if (ovr027.yes_no(gbl.defaultMenuColors, "Stop Resting? ") == 'Y')
+                if (_ovr027.yes_no(gbl.defaultMenuColors, "Stop Resting? ") == 'Y')
                 {
                     stop_resting = true;
                 }
                 else
                 {
-                    ovr027.ClearPromptArea();
+                    _ovr027.ClearPromptArea();
                 }
             }
 
@@ -591,21 +609,21 @@ internal class ovr021
                     {
                         gbl.rest_incounter_count = 0;
 
-                        if (ovr024.roll_dice(100, 1) <= gbl.area2_ptr.rest_incounter_percentage)
+                        if (_ovr024.roll_dice(100, 1) <= gbl.area2_ptr.rest_incounter_percentage)
                         {
-                            ovr025.ClearPlayerTextArea();
+                            _ovr025.ClearPlayerTextArea();
                             display_resting_time(0);
-                            DisplayDriver.displayString("Your repose is suddenly interrupted!", 0, 15, 0x13, 1);
+                            _displayDriver.displayString("Your repose is suddenly interrupted!", 0, 15, 0x13, 1);
                             stop_resting = true;
                             resting_intetrupted = true;
-                            DisplayDriver.GameDelay();
+                            _displayDriver.GameDelay();
                         }
                     }
                 }
             }
         }
 
-        seg037.draw8x8_clear_area(TextRegion.NormalBottom);
+        _seg037.draw8x8_clear_area(TextRegion.NormalBottom);
         gbl.displayPlayerStatusLine18 = false;
 
         return resting_intetrupted;

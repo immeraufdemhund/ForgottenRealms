@@ -33,9 +33,28 @@ internal enum CheckType
 
 public class ovr024
 {
-    internal static void KillPlayer(string text, Status new_health_status, Player player) // sub_63014
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr013 _ovr013;
+    private readonly ovr025 _ovr025;
+    private readonly ovr032 _ovr032;
+    private readonly ovr033 _ovr033;
+    private readonly seg040 _seg040;
+    private readonly seg051 _seg051;
+
+    public ovr024(DisplayDriver displayDriver, ovr013 ovr013, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, seg040 seg040, seg051 seg051)
     {
-        ovr025.DisplayPlayerStatusString(false, 10, text, player);
+        _displayDriver = displayDriver;
+        _ovr013 = ovr013;
+        _ovr025 = ovr025;
+        _ovr032 = ovr032;
+        _ovr033 = ovr033;
+        _seg040 = seg040;
+        _seg051 = seg051;
+    }
+
+    internal void KillPlayer(string text, Status new_health_status, Player player) // sub_63014
+    {
+        _ovr025.DisplayPlayerStatusString(false, 10, text, player);
 
         if (player.health_status != Status.stoned &&
             player.health_status != Status.dead &&
@@ -50,21 +69,21 @@ public class ovr024
 
             if (player.in_combat == false)
             {
-                ovr033.CombatantKilled(player);
+                _ovr033.CombatantKilled(player);
             }
 
-            DisplayDriver.GameDelay();
-            ovr025.ClearPlayerTextArea();
+            _displayDriver.GameDelay();
+            _ovr025.ClearPlayerTextArea();
 
             if (gbl.game_state != GameState.Combat)
             {
-                ovr025.PartySummary(gbl.SelectedPlayer);
+                _ovr025.PartySummary(gbl.SelectedPlayer);
             }
         }
     }
 
 
-    internal static void remove_affect(Affect affect, Affects affect_id, Player player)
+    internal void remove_affect(Affect affect, Affects affect_id, Player player)
     {
         if (affect == null)
         {
@@ -75,7 +94,7 @@ public class ovr024
         {
             if (affect.callAffectTable == true)
             {
-                ovr013.CallAffectTable(Effect.Remove, affect, player, affect_id);
+                _ovr013.CallAffectTable(Effect.Remove, affect, player, affect_id);
             }
 
             player.affects.Remove(affect);
@@ -94,14 +113,14 @@ public class ovr024
         }
     }
 
-    private static Affects[] unk_6325A = { Affects.silence_15_radius, Affects.prot_from_evil_10_radius, Affects.prot_from_good_10_radius, Affects.prayer };
+    private Affects[] unk_6325A = { Affects.silence_15_radius, Affects.prot_from_evil_10_radius, Affects.prot_from_good_10_radius, Affects.prayer };
 
-    internal static void calc_affect_effect(Affects affect_type, Player player)
+    internal void calc_affect_effect(Affects affect_type, Player player)
     {
         bool found = false;
 
         Affect affect;
-        if (ovr025.FindAffect(out affect, affect_type, player) == true)
+        if (_ovr025.FindAffect(out affect, affect_type, player) == true)
         {
             found = true;
         }
@@ -111,13 +130,13 @@ public class ovr024
             {
                 if (found) break;
 
-                if (ovr025.FindAffect(out affect, affect_type, team_member) == true)
+                if (_ovr025.FindAffect(out affect, affect_type, team_member) == true)
                 {
                     if (gbl.game_state == GameState.Combat)
                     {
                         int max_range = (affect_type == Affects.prayer) ? 6 : 1;
 
-                        var scl = ovr032.Rebuild_SortedCombatantList(team_member, max_range, p => p == player);
+                        var scl = _ovr032.Rebuild_SortedCombatantList(team_member, max_range, p => p == player);
 
                         found = scl.Count > 0;
                     }
@@ -131,11 +150,11 @@ public class ovr024
 
         if (found == true)
         {
-            ovr013.CallAffectTable(Effect.Add, affect, player, affect_type);
+            _ovr013.CallAffectTable(Effect.Add, affect, player, affect_type);
         }
     }
 
-    static internal void CheckAffectsEffect(Player player, CheckType type) // work_on_00
+    internal void CheckAffectsEffect(Player player, CheckType type) // work_on_00
     {
         switch (type)
         {
@@ -375,7 +394,7 @@ public class ovr024
     }
 
 
-    private static Player sub_63D03(byte[] directions, int arraySize, List<GasCloud> list, Point mapPos) // sub_63D03
+    private Player sub_63D03(byte[] directions, int arraySize, List<GasCloud> list, Point mapPos) // sub_63D03
     {
         var arg_6 = list.Find(cell =>
         {
@@ -397,7 +416,7 @@ public class ovr024
     }
 
 
-    internal static void in_poison_cloud(byte arg_0, Player player)
+    internal void in_poison_cloud(byte arg_0, Player player)
     {
         if (player.in_combat == true)
         {
@@ -405,15 +424,15 @@ public class ovr024
             bool isNoxiouxCloud;
             int dummyGroundTile;
             int dummyPlayerIndex;
-            ovr033.getGroundInformation(out isPoisonousCloud, out isNoxiouxCloud, out dummyGroundTile, out dummyPlayerIndex, 8, player);
+            _ovr033.getGroundInformation(out isPoisonousCloud, out isNoxiouxCloud, out dummyGroundTile, out dummyPlayerIndex, 8, player);
 
             Affect affect;
 
             if (isNoxiouxCloud && arg_0 != 0 &&
-                ovr025.FindAffect(out affect, Affects.helpless, player) == false &&
-                ovr025.FindAffect(out affect, Affects.animate_dead, player) == false &&
-                ovr025.FindAffect(out affect, Affects.affect_6f, player) == false &&
-                ovr025.FindAffect(out affect, Affects.affect_7d, player) == false)
+                _ovr025.FindAffect(out affect, Affects.helpless, player) == false &&
+                _ovr025.FindAffect(out affect, Affects.animate_dead, player) == false &&
+                _ovr025.FindAffect(out affect, Affects.affect_6f, player) == false &&
+                _ovr025.FindAffect(out affect, Affects.affect_7d, player) == false)
             {
                 bool save_passed = RollSavingThrow(0, 0, player);
 
@@ -421,13 +440,13 @@ public class ovr024
                 {
                     Player tmp_player_ptr = gbl.SelectedPlayer;
 
-                    gbl.SelectedPlayer = sub_63D03(gbl.unk_18AEA, 4, gbl.StinkingCloud, ovr033.PlayerMapPos(player));
+                    gbl.SelectedPlayer = sub_63D03(gbl.unk_18AEA, 4, gbl.StinkingCloud, _ovr033.PlayerMapPos(player));
 
                     ApplyAttackSpellAffect("starts to cough", save_passed, 0, false, 0xff, 1, Affects.stinking_cloud, player);
 
                     if (player.HasAffect(Affects.stinking_cloud) == true)
                     {
-                        ovr013.CallAffectTable(Effect.Add, affect, player, Affects.stinking_cloud);
+                        _ovr013.CallAffectTable(Effect.Add, affect, player, Affects.stinking_cloud);
                     }
 
                     gbl.SelectedPlayer = tmp_player_ptr;
@@ -436,13 +455,13 @@ public class ovr024
                 {
                     Player tmp_player_ptr = gbl.SelectedPlayer;
 
-                    gbl.SelectedPlayer = sub_63D03(gbl.unk_18AEA, 4, gbl.StinkingCloud, ovr033.PlayerMapPos(player));
+                    gbl.SelectedPlayer = sub_63D03(gbl.unk_18AEA, 4, gbl.StinkingCloud, _ovr033.PlayerMapPos(player));
 
                     ApplyAttackSpellAffect("chokes and gags from nausea", save_passed, 0, false, 0xff, (ushort)(roll_dice(4, 1) + 1), Affects.helpless, player);
 
-                    if (ovr025.FindAffect(out affect, Affects.helpless, player) == true)
+                    if (_ovr025.FindAffect(out affect, Affects.helpless, player) == true)
                     {
-                        ovr013.CallAffectTable(Effect.Add, affect, player, Affects.helpless);
+                        _ovr013.CallAffectTable(Effect.Add, affect, player, Affects.helpless);
                     }
 
                     gbl.SelectedPlayer = tmp_player_ptr;
@@ -454,8 +473,8 @@ public class ovr024
             {
                 if (player.HitDice >= 0 && player.HitDice <= 4)
                 {
-                    ovr025.DisplayPlayerStatusString(false, 10, "is Poisoned", player);
-                    DisplayDriver.GameDelay();
+                    _ovr025.DisplayPlayerStatusString(false, 10, "is Poisoned", player);
+                    _displayDriver.GameDelay();
                     add_affect(false, 0xff, 0, Affects.minor_globe_of_invulnerability, player);
                     KillPlayer("is killed", Status.dead, player);
                 }
@@ -463,8 +482,8 @@ public class ovr024
                 {
                     if (RollSavingThrow(-4, 0, player) == false)
                     {
-                        ovr025.DisplayPlayerStatusString(false, 10, "is Poisoned", player);
-                        DisplayDriver.GameDelay();
+                        _ovr025.DisplayPlayerStatusString(false, 10, "is Poisoned", player);
+                        _displayDriver.GameDelay();
                         add_affect(false, 0xff, 0, Affects.poisoned, player);
                         KillPlayer("is killed", Status.dead, player);
                     }
@@ -473,8 +492,8 @@ public class ovr024
                 {
                     if (RollSavingThrow(0, 0, player) == false)
                     {
-                        ovr025.DisplayPlayerStatusString(false, 10, "is Poisoned", player);
-                        DisplayDriver.GameDelay();
+                        _ovr025.DisplayPlayerStatusString(false, 10, "is Poisoned", player);
+                        _displayDriver.GameDelay();
                         add_affect(false, 0xff, 0, Affects.poisoned, player);
                         KillPlayer("is killed", Status.dead, player);
                     }
@@ -484,7 +503,7 @@ public class ovr024
     }
 
 
-    internal static bool CanHitTarget(int bonus, Player target) // sub_641DD
+    internal bool CanHitTarget(int bonus, Player target) // sub_641DD
     {
         bool hit = false;
         gbl.attack_roll = roll_dice(20, 1);
@@ -512,7 +531,7 @@ public class ovr024
     }
 
 
-    internal static bool PC_CanHitTarget(int target_ac, Player target, Player attacker) /* sub_64245 */
+    internal bool PC_CanHitTarget(int target_ac, Player target, Player attacker) /* sub_64245 */
     {
         bool hit = false;
 
@@ -551,7 +570,7 @@ public class ovr024
     }
 
 
-    internal static bool RollSavingThrow(int saveBonus, SaveVerseType saveType, Player player) // do_saving_throw
+    internal bool RollSavingThrow(int saveBonus, SaveVerseType saveType, Player player) // do_saving_throw
     {
         gbl.savingThrowMade = true;
         gbl.savingThrowRoll = roll_dice(20, 1);
@@ -583,13 +602,13 @@ public class ovr024
     }
 
 
-    internal static byte roll_dice(int dice_size, int dice_count)
+    internal byte roll_dice(int dice_size, int dice_count)
     {
         int roll_total = 0;
 
         for (int i = 0; i < dice_count; i++)
         {
-            roll_total += seg051.Random(dice_size) + 1;
+            roll_total += _seg051.Random(dice_size) + 1;
         }
 
         byte byte_total = (byte)roll_total;
@@ -598,7 +617,7 @@ public class ovr024
     }
 
 
-    internal static int roll_dice_save(int dice_size, int dice_count)
+    internal int roll_dice_save(int dice_size, int dice_count)
     {
         gbl.dice_count = dice_count;
 
@@ -606,7 +625,7 @@ public class ovr024
     }
 
 
-    internal static void add_affect(bool call_spell_jump_list, int data, ushort minutes, Affects type, Player player)
+    internal void add_affect(bool call_spell_jump_list, int data, ushort minutes, Affects type, Player player)
     {
         Affect affect = new Affect(type, minutes, (byte)data, call_spell_jump_list);
 
@@ -615,15 +634,15 @@ public class ovr024
     }
 
 
-    internal static void RemoveFromCombat(string msg, Status health_status, Player player) // sub_644A7
+    internal void RemoveFromCombat(string msg, Status health_status, Player player) // sub_644A7
     {
         if (player.in_combat == true)
         {
-            int player_index = ovr033.GetPlayerIndex(player);
+            int player_index = _ovr033.GetPlayerIndex(player);
 
-            ovr033.RedrawCombatIfFocusOn(false, 3, player);
+            _ovr033.RedrawCombatIfFocusOn(false, 3, player);
 
-            ovr025.DisplayPlayerStatusString(true, 10, msg, player);
+            _ovr025.DisplayPlayerStatusString(true, 10, msg, player);
 
             player.in_combat = false;
 
@@ -634,31 +653,31 @@ public class ovr024
                 player.hit_point_current = 0;
             }
 
-            ovr033.RedrawPlayerBackground(player_index);
-            seg040.DrawOverlay();
+            _ovr033.RedrawPlayerBackground(player_index);
+            _seg040.DrawOverlay();
 
             gbl.CombatMap[player_index].size = 0;
 
-            ovr033.setup_mapToPlayerIndex_and_playerScreen();
+            _ovr033.setup_mapToPlayerIndex_and_playerScreen();
 
-            ovr025.clear_actions(player);
+            _ovr025.clear_actions(player);
             RemoveCombatAffects(player);
         }
     }
 
 
-    internal static void remove_invisibility(Player player)
+    internal void remove_invisibility(Player player)
     {
         Affect affect;
 
-        while (ovr025.FindAffect(out affect, Affects.invisibility, player) == true)
+        while (_ovr025.FindAffect(out affect, Affects.invisibility, player) == true)
         {
             remove_affect(affect, Affects.invisibility, player);
         }
     }
 
 
-    internal static void RemoveCombatAffects(Player player) // sub_645AB
+    internal void RemoveCombatAffects(Player player) // sub_645AB
     {
         Affects[] table = {
             Affects.faerie_fire,
@@ -691,7 +710,7 @@ public class ovr024
     }
 
 
-    internal static void RemoveAttackersAffects(Player player) // sub_6460D
+    internal void RemoveAttackersAffects(Player player) // sub_6460D
     {
         Affects[] table = {   Affects.reduce,
             Affects.clear_movement,
@@ -702,12 +721,12 @@ public class ovr024
     }
 
 
-    internal static bool cure_affect(Affects affectId, Player player) /* is_cured */
+    internal bool cure_affect(Affects affectId, Player player) /* is_cured */
     {
         Affect affect = player.GetAffect(affectId);
         if (affect != null)
         {
-            ovr025.DisplayPlayerStatusString(true, 10, "is Cured", player);
+            _ovr025.DisplayPlayerStatusString(true, 10, "is Cured", player);
 
             remove_affect(affect, affectId, player);
 
@@ -718,7 +737,7 @@ public class ovr024
     }
 
 
-    internal static int encode_strength(int str_00, int str) /* odd_math */
+    internal int encode_strength(int str_00, int str) /* odd_math */
     {
         int ret_val = str + 100;
 
@@ -731,7 +750,7 @@ public class ovr024
     }
 
 
-    internal static void decode_strength(out int str_00, out int str, Affect arg_8) /* sub_646D9 */
+    internal void decode_strength(out int str_00, out int str, Affect arg_8) /* sub_646D9 */
     {
         str_00 = 0;
         str = (byte)(arg_8.affect_data & 0x7F);
@@ -748,7 +767,7 @@ public class ovr024
     }
 
 
-    internal static bool TryEncodeStrength(out int encoded_str, int str_100, int str, Player player) // sub_64728
+    internal bool TryEncodeStrength(out int encoded_str, int str_100, int str, Player player) // sub_64728
     {
         bool encoded;
 
@@ -768,7 +787,7 @@ public class ovr024
     }
 
 
-    internal static void max_strength(ref int str_a, int str_b, ref int str_00_a, int str_00_b) /* sub_64771 */
+    internal void max_strength(ref int str_a, int str_b, ref int str_00_a, int str_00_b) /* sub_64771 */
     {
         if (str_b > str_a ||
             (str_b == 18 && str_00_b > str_00_a))
@@ -779,7 +798,7 @@ public class ovr024
     }
 
 
-    internal static int ConHitPointBonus(int classLvl, SkillType class_index, int cons, Player player) // sub_647BE
+    internal int ConHitPointBonus(int classLvl, SkillType class_index, int cons, Player player) // sub_647BE
     {
         int returnVal = 0;
 
@@ -831,7 +850,7 @@ public class ovr024
     }
 
 
-    internal static void CalcStatBonuses(Stat stat_index, Player player) // sub_648D9
+    internal void CalcStatBonuses(Stat stat_index, Player player) // sub_648D9
     {
         int stat_b = 0;
         int str_00_b = 0;
@@ -989,7 +1008,7 @@ public class ovr024
         {
             Affect affect_ptr;
 
-            if (ovr025.FindAffect(out affect_ptr, Affects.strength, player) == true)
+            if (_ovr025.FindAffect(out affect_ptr, Affects.strength, player) == true)
             {
                 decode_strength(out str_00_b, out stat_b, affect_ptr);
 
@@ -1027,13 +1046,13 @@ public class ovr024
                 max_strength(ref stat_a, stat_b, ref str_00_a, str_00_b);
             }
 
-            if (ovr025.FindAffect(out affect_ptr, Affects.strength_spell, player) == true)
+            if (_ovr025.FindAffect(out affect_ptr, Affects.strength_spell, player) == true)
             {
                 decode_strength(out str_00_b, out stat_b, affect_ptr);
                 max_strength(ref stat_a, stat_b, ref str_00_a, str_00_b);
             }
 
-            if (ovr025.FindAffect(out affect_ptr, Affects.enlarge, player) == true)
+            if (_ovr025.FindAffect(out affect_ptr, Affects.enlarge, player) == true)
             {
                 decode_strength(out str_00_b, out stat_b, affect_ptr);
                 max_strength(ref stat_a, stat_b, ref str_00_a, str_00_b);
@@ -1166,7 +1185,7 @@ public class ovr024
         else if (stat_index == Stat.CHA)
         {
             Affect affect;
-            if (ovr025.FindAffect(out affect, Affects.friends, player) == true)
+            if (_ovr025.FindAffect(out affect, Affects.friends, player) == true)
             {
                 stat_a = affect.affect_data;
             }
@@ -1175,7 +1194,7 @@ public class ovr024
         }
     }
 
-    internal static void damage_person(bool change_damage, DamageOnSave arg_2, int damage, Player player)
+    internal void damage_person(bool change_damage, DamageOnSave arg_2, int damage, Player player)
     {
         string text;
 
@@ -1233,8 +1252,8 @@ public class ovr024
                 text += "from Magic";
             }
 
-            ovr025.MagicAttackDisplay(text, false, player);
-            ovr025.damage_player(gbl.damage, player);
+            _ovr025.MagicAttackDisplay(text, false, player);
+            _ovr025.damage_player(gbl.damage, player);
 
             if (gbl.game_state == GameState.Combat)
             {
@@ -1257,11 +1276,11 @@ public class ovr024
                     text = "is killed";
                 }
 
-                ovr025.DisplayPlayerStatusString(false, gbl.textYCol + 1, text, player);
+                _ovr025.DisplayPlayerStatusString(false, gbl.textYCol + 1, text, player);
 
                 if (gbl.game_state != GameState.Combat)
                 {
-                    DisplayDriver.GameDelay();
+                    _displayDriver.GameDelay();
                 }
                 else
                 {
@@ -1271,26 +1290,26 @@ public class ovr024
 
                     if (player.in_combat == false)
                     {
-                        ovr033.CombatantKilled(player);
+                        _ovr033.CombatantKilled(player);
                     }
                     else
                     {
-                        DisplayDriver.GameDelay();
+                        _displayDriver.GameDelay();
                     }
                 }
             }
 
-            ovr025.ClearPlayerTextArea();
+            _ovr025.ClearPlayerTextArea();
         }
     }
 
-    internal static void TryLooseSpell(Player player)
+    internal void TryLooseSpell(Player player)
     {
         player.actions.can_cast = false;
 
         if (player.actions.spell_id > 0)
         {
-            ovr025.DisplayPlayerStatusString(true, 12, "lost a spell", player);
+            _ovr025.DisplayPlayerStatusString(true, 12, "lost a spell", player);
 
             player.spellList.ClearSpell(player.actions.spell_id);
             player.actions.spell_id = 0;
@@ -1298,7 +1317,7 @@ public class ovr024
     }
 
 
-    internal static void ApplyAttackSpellAffect(string text, bool saved, DamageOnSave can_save, bool call_affect_table, int data, ushort time, Affects affect_id, Player target) // is_unaffected
+    internal void ApplyAttackSpellAffect(string text, bool saved, DamageOnSave can_save, bool call_affect_table, int data, ushort time, Affects affect_id, Player target) // is_unaffected
     {
         gbl.current_affect = affect_id;
 
@@ -1307,13 +1326,13 @@ public class ovr024
         if (gbl.current_affect == 0 ||
             (saved == true && can_save == DamageOnSave.Zero))
         {
-            ovr025.DisplayPlayerStatusString(true, 10, "is Unaffected", target);
+            _ovr025.DisplayPlayerStatusString(true, 10, "is Unaffected", target);
         }
         else
         {
             Affect found_affect;
 
-            if (ovr025.FindAffect(out found_affect, affect_id, target) == true &&
+            if (_ovr025.FindAffect(out found_affect, affect_id, target) == true &&
                 found_affect.minutes > 0)
             {
                 remove_affect(found_affect, affect_id, target);
@@ -1323,14 +1342,14 @@ public class ovr024
 
             if (text.Length != 0)
             {
-                ovr025.MagicAttackDisplay(text, true, target);
-                ovr025.ClearPlayerTextArea();
+                _ovr025.MagicAttackDisplay(text, true, target);
+                _ovr025.ClearPlayerTextArea();
             }
         }
     }
 
 
-    internal static bool heal_player(byte arg_0, int amount_healed, Player player)
+    internal bool heal_player(byte arg_0, int amount_healed, Player player)
     {
         if (player.health_status == Status.okey ||
             player.health_status == Status.animated ||
@@ -1358,7 +1377,7 @@ public class ovr024
                     if (player.health_status == Status.unconscious &&
                         gbl.game_state != GameState.Combat)
                     {
-                        ovr013.CallAffectTable(Effect.Remove, null, player, Affects.affect_4e);
+                        _ovr013.CallAffectTable(Effect.Remove, null, player, Affects.affect_4e);
                     }
                 }
 
@@ -1370,9 +1389,9 @@ public class ovr024
     }
 
 
-    internal static bool combat_heal(byte arg_0, Player player)
+    internal bool combat_heal(byte arg_0, Player player)
     {
-        if (ovr033.sub_7515A(true, ovr033.PlayerMapPos(player), player) == true)
+        if (_ovr033.sub_7515A(true, _ovr033.PlayerMapPos(player), player) == true)
         {
             player.health_status = Status.okey;
             player.in_combat = true;
@@ -1380,7 +1399,7 @@ public class ovr024
 
             if (gbl.game_state == GameState.Combat)
             {
-                ovr033.RedrawCombatIfFocusOn(false, 3, player);
+                _ovr033.RedrawCombatIfFocusOn(false, 3, player);
             }
 
             string text;
@@ -1393,9 +1412,9 @@ public class ovr024
                 text = "gets back up";
             }
 
-            ovr025.DisplayPlayerStatusString(true, 10, text, player);
+            _ovr025.DisplayPlayerStatusString(true, 10, text, player);
 
-            ovr025.CountCombatTeamMembers();
+            _ovr025.CountCombatTeamMembers();
 
             return true;
         }

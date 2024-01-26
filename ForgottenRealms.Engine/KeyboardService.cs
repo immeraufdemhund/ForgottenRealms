@@ -1,39 +1,27 @@
 using ForgottenRealms.Engine.Classes;
-using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
 
 public class KeyboardService
 {
-    private static bool in_print_and_exit = false;
-    private static readonly SoundDriver SoundDriver = new ();
+    private readonly SoundDriver _soundDriver;
+    private readonly KeyboardDriver _keyboardDriver;
 
-    public static void print_and_exit()
+    public KeyboardService(SoundDriver soundDriver, KeyboardDriver keyboardDriver)
     {
-        if (in_print_and_exit == false)
-        {
-            in_print_and_exit = true;
-
-            SoundDriver.PlaySound(Sound.sound_FF);
-
-            Logger.Close();
-
-            ItemLibrary.Write();
-
-            MainGameEngine.EngineStop();
-        }
+        _soundDriver = soundDriver;
+        _keyboardDriver = keyboardDriver;
     }
 
-
-    internal static byte GetInputKey()
+    internal byte GetInputKey()
     {
         byte key;
 
         if (gbl.inDemo == true)
         {
-            if (KeyboardDriver.KEYPRESSED() == true)
+            if (_keyboardDriver.KEYPRESSED() == true)
             {
-                key = KeyboardDriver.READKEY();
+                key = _keyboardDriver.READKEY();
             }
             else
             {
@@ -42,42 +30,42 @@ public class KeyboardService
         }
         else
         {
-            key = KeyboardDriver.READKEY();
+            key = _keyboardDriver.READKEY();
         }
 
         if (key == 0x13)
         {
-            SoundDriver.PlaySound(Sound.sound_0);
+            _soundDriver.PlaySound(Sound.sound_0);
         }
 
         if (Cheats.allow_keyboard_exit && key == 3)
         {
-            print_and_exit();
+            // this causes a circular reference
+            //_mainGameEngine.EngineStop();
         }
 
         if (key != 0)
         {
-            while (KeyboardDriver.KEYPRESSED() == true)
+            while (_keyboardDriver.KEYPRESSED() == true)
             {
-                key = KeyboardDriver.READKEY();
+                key = _keyboardDriver.READKEY();
             }
         }
 
         return key;
     }
 
-    internal static void clear_keyboard()
+    internal void clear_keyboard()
     {
-        while (KeyboardDriver.KEYPRESSED() == true)
+        while (_keyboardDriver.KEYPRESSED() == true)
         {
             GetInputKey();
         }
     }
 
-
-    internal static void clear_one_keypress()
+    internal void clear_one_keypress()
     {
-        if (KeyboardDriver.KEYPRESSED() == true)
+        if (_keyboardDriver.KEYPRESSED() == true)
         {
             GetInputKey();
         }

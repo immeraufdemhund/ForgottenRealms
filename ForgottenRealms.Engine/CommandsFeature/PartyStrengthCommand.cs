@@ -4,9 +4,15 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class PartyStrengthCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    public PartyStrengthCommand(ovr008 ovr008)
+    {
+        _ovr008 = ovr008;
+    }
+
     public void Execute()
     {
-        ovr008.vm_LoadCmdSets(1);
+        _ovr008.vm_LoadCmdSets(1);
         byte power_value = 0;
 
         foreach (var player in gbl.TeamList)
@@ -40,6 +46,6 @@ public class PartyStrengthCommand : IGameCommand
         }
 
         var loc = gbl.cmd_opps[1].Word;
-        ovr008.vm_SetMemoryValue(power_value, loc);
+        _ovr008.vm_SetMemoryValue(power_value, loc);
     }
 }

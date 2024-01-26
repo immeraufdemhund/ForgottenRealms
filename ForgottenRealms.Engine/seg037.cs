@@ -2,33 +2,40 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class seg037
+public class seg037
 {
-    private static int[] outer_frame_bottom /*unk_16EB0*/ = { 1, 8, 6, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 6, 8, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1, 4, 3 };
+    private int[] outer_frame_bottom /*unk_16EB0*/ = { 1, 8, 6, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 6, 8, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1, 4, 3 };
 
-    private static byte[] unk_16ED6 = { 4, 3, 0, 6, 1, 1, 1, 1, 8, 1, 1, 4, 1, 1, 2, 1, 4 };
+    private byte[] unk_16ED6 = { 4, 3, 0, 6, 1, 1, 1, 1, 8, 1, 1, 4, 1, 1, 2, 1, 4 };
 
-    private static byte[] unk_16F0A = { 0, 7, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 2, 9, 4 };
+    private byte[] unk_16F0A = { 0, 7, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 2, 9, 4 };
 
-    private static int[] outer_frame_top /*byte_16E60*/ = { 0, 6, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 1, 4, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 6, 1, 2 };
+    private int[] outer_frame_top /*byte_16E60*/ = { 0, 6, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 1, 4, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 6, 1, 2 };
 
-    private static byte[] x8x8_07 = { 0, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 8, 4,
+    private byte[] x8x8_07 = { 0, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 8, 4,
         1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 6, 1,
         1, 1, 1, 1, 8, 2 };
 
-    private static byte[] unk_16EE3 = { 1, 2, 1, 4, 1, 1, 1, 1, 1, 1, 8, 4, 1, 1, 3 };
-    private static int[] outer_frame_left  /*unk_16EF2*/ = { 0, 2, 9, 5, 2, 2, 2, 2, 2, 2, 5, 7, 2, 2, 2, 2, 2, 9, 7, 2, 2, 2, 7, 1 };
-    private static int[] outer_frame_right /*unk_16F1B*/ = { 2, 2, 9, 7, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 2, 2, 2, 2, 5, 2 };
+    private byte[] unk_16EE3 = { 1, 2, 1, 4, 1, 1, 1, 1, 1, 1, 8, 4, 1, 1, 3 };
+    private int[] outer_frame_left  /*unk_16EF2*/ = { 0, 2, 9, 5, 2, 2, 2, 2, 2, 2, 5, 7, 2, 2, 2, 2, 2, 9, 7, 2, 2, 2, 7, 1 };
+    private int[] outer_frame_right /*unk_16F1B*/ = { 2, 2, 9, 7, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 2, 2, 2, 2, 5, 2 };
 
-    private static byte[] unk_16F31 = { 5, 2, 0, 2, 7, 2, 2, 2, 2, 5, 2, 2, 2, 2, 1 };
-    private static byte[] unk_16F3E = { 2, 1, 2, 5, 9, 2, 2, 2, 7, 5, 2, 2, 2, 2, 3 };
-    private static byte[] unk_16F4D = { 0, 2, 9, 5, 2, 2, 2, 2, 2, 2, 5, 7, 2, 2, 2, 2, 2, 9, 7, 2, 2, 2, 1 };
-    private static byte[] unk_16F64 = { 0, 7, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 5, 2, 2, 2, 2, 2, 2, 5, 2, 4 };
-    private static byte[] unk_16F7B = { 2, 2, 9, 7, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 2, 2, 2, 2, 2 };
+    private byte[] unk_16F31 = { 5, 2, 0, 2, 7, 2, 2, 2, 2, 5, 2, 2, 2, 2, 1 };
+    private byte[] unk_16F3E = { 2, 1, 2, 5, 9, 2, 2, 2, 7, 5, 2, 2, 2, 2, 3 };
+    private byte[] unk_16F4D = { 0, 2, 9, 5, 2, 2, 2, 2, 2, 2, 5, 7, 2, 2, 2, 2, 2, 9, 7, 2, 2, 2, 1 };
+    private byte[] unk_16F64 = { 0, 7, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 5, 2, 2, 2, 2, 2, 2, 5, 2, 4 };
+    private byte[] unk_16F7B = { 2, 2, 9, 7, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 2, 2, 2, 2, 2 };
 
+    private readonly ovr038 _ovr038;
+    private readonly DisplayDriver _displayDriver;
 
+    public seg037(ovr038 ovr038, DisplayDriver displayDriver)
+    {
+        _ovr038 = ovr038;
+        _displayDriver = displayDriver;
+    }
 
-    internal static void DrawFrame_Outer() /* draw8x8_01 */
+    internal void DrawFrame_Outer() /* draw8x8_01 */
     {
         Display.UpdateStop();
 
@@ -36,25 +43,25 @@ internal class seg037
 
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, outer_frame_top[col_x] + 0x11e, 0, col_x);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_top[col_x] + 0x11e, 0, col_x);
         }
 
         for (int row_y = 0; row_y < 0x17; row_y++)
         {
-            ovr038.Put8x8Symbol(0, false, outer_frame_left[row_y] + 0x11e, row_y, 0);
-            ovr038.Put8x8Symbol(0, false, outer_frame_right[row_y] + 0x11e, row_y, 0x27);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_left[row_y] + 0x11e, row_y, 0);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_right[row_y] + 0x11e, row_y, 0x27);
         }
 
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, outer_frame_bottom[col_x] + 0x11e, 0x17, col_x);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_bottom[col_x] + 0x11e, 0x17, col_x);
         }
 
         Display.UpdateStart();
     }
 
 
-    internal static void draw8x8_02()
+    internal void draw8x8_02()
     {
         Display.UpdateStop();
 
@@ -62,15 +69,15 @@ internal class seg037
 
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11E, 3, col_x);
-            ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11E, 8, col_x);
+            _ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11E, 3, col_x);
+            _ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11E, 8, col_x);
         }
 
         Display.UpdateStart();
     }
 
 
-    internal static void draw8x8_03()
+    internal void draw8x8_03()
     {
         Display.UpdateStop();
 
@@ -78,31 +85,31 @@ internal class seg037
 
         for (int colX = 0; colX <= 0x27; colX++)
         {
-            ovr038.Put8x8Symbol(0, false, x8x8_07[colX] + 0x11E, 0x10, colX);
+            _ovr038.Put8x8Symbol(0, false, x8x8_07[colX] + 0x11E, 0x10, colX);
         }
 
         for (int rowY = 0; rowY <= 0x10; rowY++)
         {
-            ovr038.Put8x8Symbol(0, false, unk_16F0A[rowY] + 0x11E, rowY, 0x10);
+            _ovr038.Put8x8Symbol(0, false, unk_16F0A[rowY] + 0x11E, rowY, 0x10);
         }
 
         for (int col_x = 2; col_x <= 14; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, unk_16ED6[col_x] + 0x114, 2, col_x);
-            ovr038.Put8x8Symbol(0, false, unk_16EE3[col_x] + 0x114, 14, col_x);
+            _ovr038.Put8x8Symbol(0, false, unk_16ED6[col_x] + 0x114, 2, col_x);
+            _ovr038.Put8x8Symbol(0, false, unk_16EE3[col_x] + 0x114, 14, col_x);
         }
 
         for (int row_y = 2; row_y <= 14; row_y++)
         {
-            ovr038.Put8x8Symbol(0, false, unk_16F31[row_y] + 0x114, row_y, 2);
-            ovr038.Put8x8Symbol(0, false, unk_16F3E[row_y] + 0x114, row_y, 14);
+            _ovr038.Put8x8Symbol(0, false, unk_16F31[row_y] + 0x114, row_y, 2);
+            _ovr038.Put8x8Symbol(0, false, unk_16F3E[row_y] + 0x114, row_y, 14);
         }
 
         Display.UpdateStart();
     }
 
 
-    internal static void DrawFrame_WildernessMap() // draw8x8_04
+    internal void DrawFrame_WildernessMap() // draw8x8_04
     {
         Display.UpdateStop();
 
@@ -110,14 +117,14 @@ internal class seg037
 
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11E, 0x10, col_x);
+            _ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11E, 0x10, col_x);
         }
 
         Display.UpdateStart();
     }
 
 
-    internal static void draw8x8_05()
+    internal void draw8x8_05()
     {
         Display.UpdateStop();
 
@@ -125,30 +132,30 @@ internal class seg037
 
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, outer_frame_top[col_x] + 0x11E, 0, col_x);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_top[col_x] + 0x11E, 0, col_x);
         }
 
         for (int row_y = 0; row_y <= 0x17; row_y++)
         {
-            ovr038.Put8x8Symbol(0, false, outer_frame_left[row_y] + 0x11E, row_y, 0);
-            ovr038.Put8x8Symbol(0, false, outer_frame_right[row_y] + 0x11E, row_y, 0x27);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_left[row_y] + 0x11E, row_y, 0);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_right[row_y] + 0x11E, row_y, 0x27);
         }
 
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, outer_frame_bottom[col_x] + 0x11E, 0x17, col_x);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_bottom[col_x] + 0x11E, 0x17, col_x);
         }
 
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11E, 0x10, col_x);
+            _ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11E, 0x10, col_x);
         }
 
         Display.UpdateStart();
     }
 
 
-    internal static void DrawFrame_Combat() // draw8x8_06
+    internal void DrawFrame_Combat() // draw8x8_06
     {
         Display.UpdateStop();
 
@@ -157,28 +164,28 @@ internal class seg037
         // Top Bar
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, outer_frame_top[col_x] + 0x11E, 0, col_x);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_top[col_x] + 0x11E, 0, col_x);
         }
 
         // Three Vert Bars
         for (int row_y = 0; row_y <= 0x16; row_y++)
         {
-            ovr038.Put8x8Symbol(0, false, unk_16F4D[row_y] + 0x11e, row_y, 0);
-            ovr038.Put8x8Symbol(0, false, unk_16F64[row_y] + 0x11e, row_y, 0x16);
-            ovr038.Put8x8Symbol(0, false, unk_16F7B[row_y] + 0x11e, row_y, 0x27);
+            _ovr038.Put8x8Symbol(0, false, unk_16F4D[row_y] + 0x11e, row_y, 0);
+            _ovr038.Put8x8Symbol(0, false, unk_16F64[row_y] + 0x11e, row_y, 0x16);
+            _ovr038.Put8x8Symbol(0, false, unk_16F7B[row_y] + 0x11e, row_y, 0x27);
         }
 
         // Bottom Bar
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, outer_frame_bottom[col_x] + 0x11e, 0x16, col_x);
+            _ovr038.Put8x8Symbol(0, false, outer_frame_bottom[col_x] + 0x11e, 0x16, col_x);
         }
 
         Display.UpdateStart();
     }
 
 
-    internal static void draw8x8_07()
+    internal void draw8x8_07()
     {
         Display.UpdateStop();
 
@@ -186,21 +193,21 @@ internal class seg037
 
         for (int col_x = 0; col_x <= 0x27; col_x++)
         {
-            ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11e, 2, col_x);
+            _ovr038.Put8x8Symbol(0, false, x8x8_07[col_x] + 0x11e, 2, col_x);
         }
 
         Display.UpdateStart();
     }
 
 
-    internal static void draw8x8_clear_area(TextRegion region)
+    internal void draw8x8_clear_area(TextRegion region)
     {
         int r = (int)region;
-        draw8x8_clear_area(DisplayDriver.bounds[r, 0], DisplayDriver.bounds[r, 1], DisplayDriver.bounds[r, 2], DisplayDriver.bounds[r, 3]);
+        draw8x8_clear_area(_displayDriver.bounds[r, 0], _displayDriver.bounds[r, 1], _displayDriver.bounds[r, 2], _displayDriver.bounds[r, 3]);
     }
 
-    internal static void draw8x8_clear_area(int yEnd, int xEnd, int yStart, int xStart)
+    internal void draw8x8_clear_area(int yEnd, int xEnd, int yStart, int xStart)
     {
-        DisplayDriver.DrawRectangle(0, yEnd, xEnd, yStart, xStart);
+        _displayDriver.DrawRectangle(0, yEnd, xEnd, yStart, xStart);
     }
 }

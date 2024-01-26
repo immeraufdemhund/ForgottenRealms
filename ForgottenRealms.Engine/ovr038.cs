@@ -1,33 +1,34 @@
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.DaxFiles;
-using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr038
+public class ovr038
 {
-    private static readonly DrawPictureAction DrawPictureAction = new ();
-    private static readonly DaxBlockReader DaxBlockReader = new ();
+    private readonly seg040 _seg040;
+    private readonly KeyboardService _keyboardService;
+    private readonly DrawPictureAction _drawPictureAction;
+    private readonly DaxBlockReader _daxBlockReader;
 
-    internal static void Load8x8D(int symbolSet, int block_id)
+    public ovr038(seg040 seg040, KeyboardService keyboardService, DrawPictureAction drawPictureAction, DaxBlockReader daxBlockReader)
+    {
+        _seg040 = seg040;
+        _keyboardService = keyboardService;
+        _drawPictureAction = drawPictureAction;
+        _daxBlockReader = daxBlockReader;
+    }
+
+    internal void Load8x8D(int symbolSet, int block_id)
     {
         if (symbolSet >= 0 && symbolSet < 5)
         {
-            string text = "8x8d" + gbl.game_area.ToString();
-            gbl.symbol_8x8_set[symbolSet] = DaxBlockReader.LoadDax(13, 1, block_id, text);
-
-            if (gbl.symbol_8x8_set[symbolSet] == null)
-            {
-                Logger.Log("Unable to load {0} from 8x8D{1}", block_id, gbl.game_area);
-                MainGameEngine.EngineStop();
-            }
-
-            KeyboardService.clear_keyboard();
+            gbl.symbol_8x8_set[symbolSet] = _daxBlockReader.LoadDax(13, 1, block_id, $"8x8d{gbl.game_area}");
+            _keyboardService.clear_keyboard();
         }
     }
 
 
-    internal static void Put8x8Symbol(byte arg_0, bool use_overlay, int symbol_id, int rowY, int colX)
+    internal void Put8x8Symbol(byte arg_0, bool use_overlay, int symbol_id, int rowY, int colX)
     {
         byte symbol_set = 0; /*HACK to make compiler happy*/
 
@@ -62,7 +63,7 @@ internal class ovr038
 
             if (use_overlay)
             {
-                seg040.OverlayUnbounded(gbl.symbol_8x8_set[symbol_set], arg_0, symbol_id, rowY, colX);
+                _seg040.OverlayUnbounded(gbl.symbol_8x8_set[symbol_set], arg_0, symbol_id, rowY, colX);
             }
             else
             {
@@ -71,7 +72,7 @@ internal class ovr038
                 int offset = symbol_id * var_6.bpp;
                 System.Array.Copy(var_6.data, offset, gbl.cursor_bkup.data, 0, var_6.bpp);
 
-                DrawPictureAction.DrawPicture(gbl.cursor_bkup, rowY, colX, 0);
+                _drawPictureAction.DrawPicture(gbl.cursor_bkup, rowY, colX, 0);
             }
         }
     }

@@ -2,7 +2,12 @@
 
 public class DaxBlockReader
 {
-    private readonly DaxFileDecoder _daxFileDecoder = new ();
+    private readonly DaxFileDecoder _daxFileDecoder;
+
+    public DaxBlockReader(DaxFileDecoder daxFileDecoder)
+    {
+        _daxFileDecoder = daxFileDecoder;
+    }
 
     public DaxBlock LoadDax(byte maskColor, byte masked, int blockId, string fileName)
     {

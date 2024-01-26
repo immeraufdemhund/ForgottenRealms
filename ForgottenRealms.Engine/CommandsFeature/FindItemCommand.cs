@@ -4,11 +4,17 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class FindItemCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    public FindItemCommand(ovr008 ovr008)
+    {
+        _ovr008 = ovr008;
+    }
+
     public void Execute()
     {
-        ovr008.vm_LoadCmdSets(1);
+        _ovr008.vm_LoadCmdSets(1);
 
-        var item_type = (ItemType)ovr008.vm_GetCmdValue(1);
+        var item_type = (ItemType)_ovr008.vm_GetCmdValue(1);
 
         for (var i = 0; i < 6; i++)
         {

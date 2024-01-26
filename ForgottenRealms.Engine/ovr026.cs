@@ -4,9 +4,9 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr026
+public class ovr026
 {
-    private static byte[,] /*seg600:42BC*/ ClericSpellLevels = { // unk_1A5CC
+    private byte[,] /*seg600:42BC*/ ClericSpellLevels = { // unk_1A5CC
         {1, 0, 0, 0, 0},
         {0, 1, 0, 0, 0},
         {1, 1, 0, 0, 0},
@@ -20,7 +20,7 @@ internal class ovr026
         {1, 1, 1, 0, 0},  //seg600:42FD
     };
 
-    private static byte[,] /*seg600:43E5*/ PaladinSpellLevels = { // unk_1A6F5
+    private byte[,] /*seg600:43E5*/ PaladinSpellLevels = { // unk_1A6F5
         {0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0},
@@ -35,7 +35,7 @@ internal class ovr026
         {0, 1, 0, 0, 0}
     };
 
-    private static byte[,] /*seg600:4448*/ unk_1A758 = {
+    private byte[,] /*seg600:4448*/ unk_1A758 = {
         {0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0},
@@ -51,9 +51,20 @@ internal class ovr026
         {0, 1, 0, 0, 0}
     };
 
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr018 _ovr018;
+    private readonly ovr020 _ovr020;
+    private readonly ovr027 _ovr027;
 
+    public ovr026(DisplayDriver displayDriver, ovr018 ovr018, ovr020 ovr020, ovr027 ovr027)
+    {
+        _displayDriver = displayDriver;
+        _ovr018 = ovr018;
+        _ovr020 = ovr020;
+        _ovr027 = ovr027;
+    }
 
-    internal static void sub_6A00F(Player player) // sub_6A00F
+    internal void sub_6A00F(Player player) // sub_6A00F
     {
         for (int i = 0; i < 5; i++)
         {
@@ -158,11 +169,11 @@ internal class ovr026
                         for (int lvl = 0; lvl <= (skillLevel - 2); lvl++)
                         {
                             /* unk_1A7C6 = seg600:44B6 */
-                            player.spellCastCount[2, 0] += ovr020.MU_spell_lvl_learn[lvl, 0];
-                            player.spellCastCount[2, 1] += ovr020.MU_spell_lvl_learn[lvl, 1];
-                            player.spellCastCount[2, 2] += ovr020.MU_spell_lvl_learn[lvl, 2];
-                            player.spellCastCount[2, 3] += ovr020.MU_spell_lvl_learn[lvl, 3];
-                            player.spellCastCount[2, 4] += ovr020.MU_spell_lvl_learn[lvl, 4];
+                            player.spellCastCount[2, 0] += _ovr020.MU_spell_lvl_learn[lvl, 0];
+                            player.spellCastCount[2, 1] += _ovr020.MU_spell_lvl_learn[lvl, 1];
+                            player.spellCastCount[2, 2] += _ovr020.MU_spell_lvl_learn[lvl, 2];
+                            player.spellCastCount[2, 3] += _ovr020.MU_spell_lvl_learn[lvl, 3];
+                            player.spellCastCount[2, 4] += _ovr020.MU_spell_lvl_learn[lvl, 4];
                         }
                         break;
                 }
@@ -182,7 +193,7 @@ internal class ovr026
     }
 
 
-    internal static void ReclacClassBonuses(Player player) // sub_6A3C6
+    internal void ReclacClassBonuses(Player player) // sub_6A3C6
     {
         player.thac0 = 0;
 
@@ -217,7 +228,7 @@ internal class ovr026
             if (player.ClassLevel[skill] > 0 ||
                 (player.ClassLevelsOld[skill] > 0 && player.ClassLevelsOld[skill] < player.HitDice))
             {
-                player.classFlags += ovr018.classFlagsTable[skill];
+                player.classFlags += _ovr018.classFlagsTable[skill];
             }
         }
 
@@ -267,7 +278,7 @@ internal class ovr026
     }
 
 
-    internal static void calc_cleric_spells(bool ResetSpellLevels, Player player) /* sub_6A686 */
+    internal void calc_cleric_spells(bool ResetSpellLevels, Player player) /* sub_6A686 */
     {
         int clericLvl = player.SkillLevel(SkillType.Cleric);
 
@@ -323,7 +334,7 @@ internal class ovr026
         }
     }
 
-    private static byte[, ,] SaveThrowValues = { // [8,13,5] class, level, save_type
+    private byte[, ,] SaveThrowValues = { // [8,13,5] class, level, save_type
         {{20, 20, 20, 20, 20}, {10, 13, 14, 16, 15}, {10, 13, 14, 16, 15}, {10, 13, 14, 16, 15}, {9, 12, 13, 15, 14}, {9, 12, 13, 15, 14}, {9, 12, 13, 15, 14}, {7, 10, 11, 13, 12}, {7, 10, 11, 13, 12}, {7, 10, 11, 13, 12}, {6, 9, 10, 12, 11}, {6, 9, 10, 12, 11}, {6, 9, 10, 12, 11}},
         {{20, 20, 20, 20, 20}, {10, 13, 14, 16, 15}, {10, 13, 14, 16, 15}, {10, 13, 14, 16, 15}, {9, 12, 13, 15, 14}, {9, 12, 13, 15, 14}, {9, 12, 13, 15, 14}, {7, 10, 11, 13, 12}, {7, 10, 11, 13, 12}, {7, 10, 11, 13, 12}, {6, 9, 10, 12, 11}, {6, 9, 10, 12, 11}, {6, 9, 10, 12, 11}},
         {{20, 20, 20, 20, 20}, {14, 15, 16, 17, 17}, {14, 15, 16, 17, 17}, {13, 14, 15, 16, 16}, {13, 14, 15, 16, 16}, {11, 12, 13, 13, 14}, {11, 12, 13,13, 14}, {10, 11, 12, 12, 13}, {10, 11, 12, 12, 13}, {8, 9, 10, 9, 11}, {8, 9, 10, 9, 11}, {7, 8, 9, 8, 10}, {7, 8, 9, 8, 10}},
@@ -334,7 +345,7 @@ internal class ovr026
         {{20, 20, 20, 20, 20}, {13, 12, 14, 16, 15}, {13, 12, 14, 16, 15}, {13, 12, 14, 16, 15}, {13, 12, 14, 16, 15}, {12, 11, 12, 15, 13}, {12, 11, 12, 15, 13}, {12, 11, 12, 15, 13}, {12, 11, 12, 15, 13}, {11, 10, 10, 14, 11}, {13, 11, 9, 13, 10}, {11, 9, 7, 11, 8}, {11, 9, 7, 11, 8}}};
 
 
-    internal static void reclac_saving_throws(Player player) // sub_6A7FB
+    internal void reclac_saving_throws(Player player) // sub_6A7FB
     {
         Item item = player.items.Find(i => i.affect_3 == Affects.item_affect_6 && i.readied);
         bool applyBonus = item != null;
@@ -377,7 +388,7 @@ internal class ovr026
         }
     }
 
-    private static void SaveVersePoisonBonus(Player player, bool applyBonus)
+    private void SaveVersePoisonBonus(Player player, bool applyBonus)
     {
         int poison = (int)SaveVerseType.Poison;
 
@@ -426,7 +437,7 @@ internal class ovr026
     }
 
 
-    private static sbyte[,] /*seg600:3F20 */ unk_1A230 = {
+    private sbyte[,] /*seg600:3F20 */ unk_1A230 = {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 10, 15, 0, 0, 0, -10, -5 },
         { 0, 5, -5, 0, 5, 10, 5, 0, 0 },
@@ -441,7 +452,7 @@ internal class ovr026
         { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, -5, 0, 0, 0 } };
 
-    private static sbyte[,] /*seg600:3F33 */ unk_1A243 = {
+    private sbyte[,] /*seg600:3F33 */ unk_1A243 = {
         { 0, 5, 10, 5, 0, 0 },
         { 0, 0, 5, 10, 5, 5 },
         { 5, 10, -15, 0, 10, 0 },
@@ -465,7 +476,7 @@ internal class ovr026
         { 12, 8, 8, 18, 17, 99 },
         { 99, 0, 3, 18, 3, 18 } };
 
-    private static byte[,] /*seg600:3EC0 unk_1A1D0 */ base_chance = {
+    private byte[,] /*seg600:3EC0 unk_1A1D0 */ base_chance = {
         { 0, 0, 0, 0 , 0 , 0 ,0 , 0, 0 },
         { 0, 0x1E, 0x19, 0x14 ,0x0F, 0x0A, 0x0A, 0x55, 0x00 },
         { 0, 0x23, 0x1D, 0x19, 0x15, 0x0F, 0x0A, 0x56, 0x00 },
@@ -480,10 +491,10 @@ internal class ovr026
         { 0, 0x48, 0x46, 0x56, 0x46, 0x23, 0x63, 0x3C, 0x64},
         { 0, 0x64, 0x4D, 0x4B, 0x5E, 0x4D, 0x23, 0x63, 0x41 } };
 
-    private static readonly Thac0Table Thac0Table = new ();
+    private readonly Thac0Table Thac0Table = new ();
 
 
-    internal static void reclac_thief_skills(Player player) // sub_6AAEA
+    internal void reclac_thief_skills(Player player) // sub_6AAEA
     {
         byte var_2 = 0; //Simeon
 
@@ -559,7 +570,7 @@ internal class ovr026
     }
 
 
-    internal static bool SecondClassAllowed(ClassId _class, Player player) /* sub_6AD3E */
+    internal bool SecondClassAllowed(ClassId _class, Player player) /* sub_6AD3E */
     {
         var firstClass = HumanCurrentClass_Unknown(player);
         bool var_2 = _class != firstClass;
@@ -604,7 +615,7 @@ internal class ovr026
     }
 
 
-    internal static void DuelClass(Player player)
+    internal void DuelClass(Player player)
     {
         List<MenuItem> list = new List<MenuItem>();
 
@@ -614,13 +625,13 @@ internal class ovr026
         {
             if (SecondClassAllowed(_class, player) == true)
             {
-                list.Add(new MenuItem(ovr020.classString[(int)_class]));
+                list.Add(new MenuItem(_ovr020.classString[(int)_class]));
             }
         }
 
         if (list.Count == 1)
         {
-            DisplayDriver.DisplayStatusText(15, 4, player.name + " doesn't qualify.");
+            _displayDriver.DisplayStatusText(15, 4, player.name + " doesn't qualify.");
             list.Clear();
             return;
         }
@@ -634,7 +645,7 @@ internal class ovr026
 
         do
         {
-            input_key = ovr027.sl_select_item(out list_ptr, ref index, ref var_F, show_exit, list,
+            input_key = _ovr027.sl_select_item(out list_ptr, ref index, ref var_F, show_exit, list,
                 0x16, 0x26, 2, 1, gbl.defaultMenuColors, "Select", string.Empty);
 
             if (input_key == 0)
@@ -647,7 +658,7 @@ internal class ovr026
         player.attacksCount = 2;
         int newClass = 0;
 
-        while (newClass <= 7 && ovr020.classString[newClass] != list_ptr.Text)
+        while (newClass <= 7 && _ovr020.classString[newClass] != list_ptr.Text)
         {
             newClass++;
         }
@@ -683,7 +694,7 @@ internal class ovr026
 
         player._class = (ClassId)newClass;
 
-        DisplayDriver.DisplayStatusText(0, 10, player.name + " is now a 1st level " + ovr020.classString[newClass] + ".");
+        _displayDriver.DisplayStatusText(0, 10, player.name + " is now a 1st level " + _ovr020.classString[newClass] + ".");
 
         player.spellList.Clear();
 
@@ -703,7 +714,7 @@ internal class ovr026
     }
 
 
-    private static ClassId HumanCurrentClass_Unknown(Player player) // getFirstSkill
+    private ClassId HumanCurrentClass_Unknown(Player player) // getFirstSkill
     {
         if (player.race != Race.human)
         {
@@ -721,7 +732,7 @@ internal class ovr026
         return ClassId.unknown;
     }
 
-    internal static byte HumanCurrentClassLevel_Zero(Player player) /* hasAnySkills */
+    internal byte HumanCurrentClassLevel_Zero(Player player) /* hasAnySkills */
     {
         if (player.race != Race.human)
         {
@@ -740,7 +751,7 @@ internal class ovr026
     }
 
 
-    private static bool DualClassExceedLastLevel(Player player) // sub_6B3D1
+    private bool DualClassExceedLastLevel(Player player) // sub_6B3D1
     {
         return HumanCurrentClassLevel_Zero(player) > player.multiclassLevel;
     }

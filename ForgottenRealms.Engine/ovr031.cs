@@ -4,8 +4,12 @@ using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr031
+public class ovr031
 {
+    private byte[] idxOffset = { 0, 2, 6, 10, 22, 38, 54, 110, 132, 154, 1 };   // seg600:0ADA
+    private int[] colCount = { 1, 1, 1, 3, 2, 2, 7, 2, 2, 1 };                 // seg600:0AE4
+    private int[] rowCount = { 2, 4, 4, 4, 8, 8, 8, 11, 11, 2 };               // seg600:0AEE
+
     private const int Column_A = 5; //word_16E08
     private const int Column_B = 4; //word_16E0A
     private const int Column_C = 6; // word_16E0C
@@ -27,7 +31,20 @@ internal class ovr031
     private const int Row_I = 0; // byte_16E2C
     private const int Row_J = 4; // byte_16E2E
 
-    internal static void DrawAreaMap(int partyDir, int partyMapY, int partyMapX)
+    private readonly ovr038 _ovr038;
+    private readonly seg040 _seg040;
+    private readonly MainGameEngine _mainGameEngine;
+    private readonly DaxFileDecoder _daxFileDecoder;
+
+    public ovr031(ovr038 ovr038, seg040 seg040, MainGameEngine mainGameEngine, DaxFileDecoder daxFileDecoder)
+    {
+        _ovr038 = ovr038;
+        _seg040 = seg040;
+        _mainGameEngine = mainGameEngine;
+        _daxFileDecoder = daxFileDecoder;
+    }
+
+    internal void DrawAreaMap(int partyDir, int partyMapY, int partyMapX)
     { /* sub_7100F */
         const int displayWidth = 11;
         const int halfDisplayWidth = displayWidth / 2;
@@ -68,15 +85,15 @@ internal class ovr031
                     if (mi.x3_dir_6 > 0) door_id += 8;
                 }
 
-                ovr038.Put8x8Symbol(0, true, symbol_id, y + displayOffset, x + displayOffset);
+                _ovr038.Put8x8Symbol(0, true, symbol_id, y + displayOffset, x + displayOffset);
 
                 if (Cheats.improved_area_map)
                 {
-                    seg040.draw_clipped_nodraw(8);
-                    seg040.draw_clipped_recolor(7, 1);
-                    ovr038.Put8x8Symbol(0, true, door_id, y + displayOffset, x + displayOffset);
-                    seg040.draw_clipped_recolor(17, 17);
-                    seg040.draw_clipped_nodraw(17);
+                    _seg040.draw_clipped_nodraw(8);
+                    _seg040.draw_clipped_recolor(7, 1);
+                    _ovr038.Put8x8Symbol(0, true, door_id, y + displayOffset, x + displayOffset);
+                    _seg040.draw_clipped_recolor(17, 17);
+                    _seg040.draw_clipped_nodraw(17);
                 }
             }
         }
@@ -84,18 +101,18 @@ internal class ovr031
         int partyScreenY = partyMapX - offsetX;
         int partyScreenX = partyMapY - offsetY;
 
-        seg040.draw_clipped_nodraw(8);
-        ovr038.Put8x8Symbol(0, true, (partyDir >> 1) + 0x100, partyScreenX + displayOffset, partyScreenY + displayOffset);
-        seg040.draw_clipped_nodraw(17);
-        seg040.DrawOverlay();
+        _seg040.draw_clipped_nodraw(8);
+        _ovr038.Put8x8Symbol(0, true, (partyDir >> 1) + 0x100, partyScreenX + displayOffset, partyScreenY + displayOffset);
+        _seg040.draw_clipped_nodraw(17);
+        _seg040.DrawOverlay();
     }
 
 
-    internal static void Draw3dWorldBackground()
+    internal void Draw3dWorldBackground()
     {
-        seg040.DrawColorBlock(gbl.sky_colour, 0x2c, 11, 16, 2);
-        seg040.DrawColorBlock(0, 2, 11, 0x3c, 2);
-        seg040.DrawColorBlock(8, 0x2a, 11, 0x3e, 2);
+        _seg040.DrawColorBlock(gbl.sky_colour, 0x2c, 11, 16, 2);
+        _seg040.DrawColorBlock(0, 2, 11, 0x3c, 2);
+        _seg040.DrawColorBlock(8, 0x2a, 11, 0x3e, 2);
 
         if (get_wall_x2(gbl.mapPosY, gbl.mapPosY) < 0x80 &&
             gbl.sky_colour == 11)
@@ -109,42 +126,35 @@ internal class ovr031
             {
                 if (gbl.mapDirection == 2)
                 {
-                    seg040.OverlayBounded(gbl.sky_dax_251, 1, 0, (row_y + 5) - hour, 12 - 3);
+                    _seg040.OverlayBounded(gbl.sky_dax_251, 1, 0, (row_y + 5) - hour, 12 - 3);
                 }
                 else if (gbl.mapDirection == 4 && hour > 2)
                 {
-                    seg040.OverlayBounded(gbl.sky_dax_251, 1, 0, (row_y + 5) - hour, (col_x + hour) - 3);
+                    _seg040.OverlayBounded(gbl.sky_dax_251, 1, 0, (row_y + 5) - hour, (col_x + hour) - 3);
                 }
             }
             else if (hour >= 13 && hour <= 18)
             {
                 if (gbl.mapDirection == 6)
                 {
-                    seg040.OverlayBounded(gbl.sky_dax_251, 1, 0, (row_y + hour) - 13, col_x);
+                    _seg040.OverlayBounded(gbl.sky_dax_251, 1, 0, (row_y + hour) - 13, col_x);
                 }
                 else if (gbl.mapDirection == 4 && hour >= 16)
                 {
-                    seg040.OverlayBounded(gbl.sky_dax_251, 1, 0, (row_y + hour) - 13, (col_x + hour) - 8);
+                    _seg040.OverlayBounded(gbl.sky_dax_251, 1, 0, (row_y + hour) - 13, (col_x + hour) - 8);
                 }
             }
 
             if (gbl.mapDirection == 0)
             {
-                seg040.OverlayBounded(gbl.sky_dax_250, 1, 0, row_y, col_x);
+                _seg040.OverlayBounded(gbl.sky_dax_250, 1, 0, row_y, col_x);
             }
         }
 
-        seg040.OverlayBounded(gbl.sky_dax_252, 1, 0, 7, 2);
+        _seg040.OverlayBounded(gbl.sky_dax_252, 1, 0, 7, 2);
     }
 
-
-    private static byte[] idxOffset = { 0, 2, 6, 10, 22, 38, 54, 110, 132, 154, 1 };   // seg600:0ADA
-    private static int[] colCount = { 1, 1, 1, 3, 2, 2, 7, 2, 2, 1 };                 // seg600:0AE4
-    private static int[] rowCount = { 2, 4, 4, 4, 8, 8, 8, 11, 11, 2 };               // seg600:0AEE
-    private static readonly DaxFileDecoder DaxFileDecoder = new ();
-
-
-    internal static void draw_3D_8x8_titles(int offsetIndex, int arg_2, int rowStart, int colStart) /* sub_71434 */
+    internal void draw_3D_8x8_titles(int offsetIndex, int arg_2, int rowStart, int colStart) /* sub_71434 */
     {
         int idx = idxOffset[offsetIndex];
 
@@ -162,7 +172,7 @@ internal class ovr031
 
                 if (rowY >= 0 && rowY <= 10 && colX >= 0 && colX <= 10 && symbolId > 0)
                 {
-                    ovr038.Put8x8Symbol(1, true, symbolId, rowY + 2, colX + 2);
+                    _ovr038.Put8x8Symbol(1, true, symbolId, rowY + 2, colX + 2);
 
                     Display.Update();
                 }
@@ -174,13 +184,13 @@ internal class ovr031
 
     private const int MapSize = 16; // 16x16 so 0-15
 
-    internal static bool MapCoordIsValid(int mapY, int mapX)
+    internal bool MapCoordIsValid(int mapY, int mapX)
     { /*sub_71542*/
         return (mapX < MapSize && mapX >= 0 && mapY < MapSize && mapX >= 0);
     }
 
 
-    internal static byte WallDoorFlagsGet(int mapDir, int mapY, int mapX) /*sub_71573*/
+    internal byte WallDoorFlagsGet(int mapDir, int mapY, int mapX) /*sub_71573*/
     {
         if (MapCoordIsValid(mapY, mapX) == false &&
             (gbl.EclBlockId == 0 || gbl.EclBlockId == 10))
@@ -221,7 +231,7 @@ internal class ovr031
     }
 
 
-    internal static byte getMap_wall_type(int direction, int mapY, int mapX)
+    internal byte getMap_wall_type(int direction, int mapY, int mapX)
     {
         byte result = 0;
 
@@ -253,7 +263,7 @@ internal class ovr031
     }
 
 
-    internal static MapInfo getMap_XXX(int mapY, int mapX)
+    internal MapInfo getMap_XXX(int mapY, int mapX)
     {
         MapInfo mi = null;
 
@@ -288,7 +298,7 @@ internal class ovr031
     }
 
 
-    internal static byte get_wall_x2(int mapY, int mapX) /* sub_717A5 */
+    internal byte get_wall_x2(int mapY, int mapX) /* sub_717A5 */
     {
         if (MapCoordIsValid(mapY, mapX) == false &&
             (gbl.EclBlockId == 0 || gbl.EclBlockId == 10))
@@ -320,7 +330,7 @@ internal class ovr031
     }
 
 
-    internal static void Draw3dWorld(byte partyDir, int partyPosY, int partyPosX) /* sub_71820 */
+    internal void Draw3dWorld(byte partyDir, int partyPosY, int partyPosX) /* sub_71820 */
     {
         Display.UpdateStop();
 
@@ -368,11 +378,11 @@ internal class ovr031
         }
 
         Display.UpdateStart();
-        seg040.DrawOverlay();
+        _seg040.DrawOverlay();
     }
 
 
-    private static void Draw3dWorldFar(byte partyDir, int dir_left, int dir_right, int drawX, int drawY)
+    private void Draw3dWorldFar(byte partyDir, int dir_left, int dir_right, int drawX, int drawY)
     {
         int tmpX = drawX;
         int tmpY = drawY;
@@ -522,7 +532,7 @@ internal class ovr031
     }
 
 
-    private static void Draw3dWorldMid(byte partyDir, int dir_left, int dir_right, int var_5, int var_7)
+    private void Draw3dWorldMid(byte partyDir, int dir_left, int dir_right, int var_5, int var_7)
     {
         int tmpX = gbl.MapDirectionXDelta[dir_left] + var_5 + gbl.MapDirectionXDelta[dir_left];
         int tmpY = gbl.MapDirectionYDelta[dir_left] + var_7 + gbl.MapDirectionYDelta[dir_left];
@@ -579,7 +589,7 @@ internal class ovr031
     }
 
 
-    private static void Draw3dWorldNear(byte partyDir, int dir_left, int dir_right, int var_5, int var_7)
+    private void Draw3dWorldNear(byte partyDir, int dir_left, int dir_right, int var_5, int var_7)
     {
         int tmpX = gbl.MapDirectionXDelta[dir_left] + var_5;
         int tmpY = gbl.MapDirectionYDelta[dir_left] + var_7;
@@ -641,7 +651,7 @@ internal class ovr031
         }
     }
 
-    internal static void LoadWalldef(int symbolSet, int block_id)
+    internal void LoadWalldef(int symbolSet, int block_id)
     {
         if (symbolSet >= 1 && symbolSet < 4)
         {
@@ -649,13 +659,13 @@ internal class ovr031
             byte[] data;
 
             short decode_size;
-            DaxFileDecoder.LoadDecodeDax(out data, out decode_size, block_id, $"WALLDEF{area_text}.dax");
+            _daxFileDecoder.LoadDecodeDax(out data, out decode_size, block_id, $"WALLDEF{area_text}.dax");
 
             if (decode_size == 0 ||
                 ((decode_size / 0x30C) + symbolSet) > 4)
             {
                 Logger.Log("Unable to load {0} from WALLDEF{1}.", block_id, area_text);
-                MainGameEngine.EngineStop();
+                _mainGameEngine.EngineStop();
             }
 
             int var_A = gbl.symbol_set_fix[symbolSet] - gbl.symbol_set_fix[1];
@@ -675,11 +685,14 @@ internal class ovr031
 
                     if (blockCount > 1)
                     {
-                        ovr038.Load8x8D(idx, (block_id * 10) + block + 1);
+                        var blockId = (block_id * 10) + block + 1;
+                        _ovr038.Load8x8D(idx, blockId);
+                        _mainGameEngine.ExitIf8x8DIsNotLoaded(idx, blockId);
                     }
                     else
                     {
-                        ovr038.Load8x8D(idx, block_id);
+                        _ovr038.Load8x8D(idx, block_id);
+                        _mainGameEngine.ExitIf8x8DIsNotLoaded(idx, block_id);
                     }
                 }
             }
@@ -690,17 +703,17 @@ internal class ovr031
     }
 
 
-    internal static void Load3DMap(int blockId)
+    internal void Load3DMap(int blockId)
     {
         byte[] data;
         short bytesRead;
 
-        DaxFileDecoder.LoadDecodeDax(out data, out bytesRead, blockId, $"GEO{gbl.game_area}.dax");
+        _daxFileDecoder.LoadDecodeDax(out data, out bytesRead, blockId, $"GEO{gbl.game_area}.dax");
 
         if (bytesRead == 0 || bytesRead != 0x402)
         {
             Logger.Log("Unable to load geo in Load3DMap.");
-            MainGameEngine.EngineStop();
+            _mainGameEngine.EngineStop();
         }
 
         gbl.geo_ptr.LoadData(data);

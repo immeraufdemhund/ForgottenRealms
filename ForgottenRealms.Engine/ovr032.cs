@@ -4,7 +4,7 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr032
+public class ovr032
 {
     private class MapReach
     {
@@ -18,9 +18,15 @@ internal class ovr032
         }
     }
 
-    private static MapReach[, ,] mapReachCache = new MapReach[Point.MapMaxY * Point.MapMaxX, Point.MapMaxY * Point.MapMaxX, 2];
+    private MapReach[, ,] mapReachCache = new MapReach[Point.MapMaxY * Point.MapMaxX, Point.MapMaxY * Point.MapMaxX, 2];
 
-    //internal static void buildMapCache()
+    private readonly ovr033 _ovr033;
+    public ovr032(ovr033 ovr033)
+    {
+        _ovr033 = ovr033;
+    }
+
+    //internal void buildMapCache()
     //{
     //    for (int y1 = 0; y1 < Point.MapMaxY; y1++)
     //    {
@@ -50,7 +56,7 @@ internal class ovr032
     //    }
     //}
 
-    private static MapReach MapCacheGet(Point p1, Point p2, bool ignoreWalls)
+    private MapReach MapCacheGet(Point p1, Point p2, bool ignoreWalls)
     {
         int nIgnoreWalls = ignoreWalls ? 1 : 0;
         MapReach mr = mapReachCache[(p2.y * Point.MapMaxX) + p2.x, (p1.y * Point.MapMaxX) + p1.x, nIgnoreWalls];
@@ -67,14 +73,14 @@ internal class ovr032
         return mr;
     }
 
-    internal static void canReachTarget(ref Point target, Point attacker)
+    internal void canReachTarget(ref Point target, Point attacker)
     {
         MapReach mr = MapCacheGet(attacker, target, gbl.mapToBackGroundTile.ignoreWalls);
 
         target = new Point(mr.target);
     }
 
-    internal static bool canReachTarget(ref int range, Point target, Point attacker)
+    internal bool canReachTarget(ref int range, Point target, Point attacker)
     {
         MapReach mr = MapCacheGet(attacker, target, gbl.mapToBackGroundTile.ignoreWalls);
 
@@ -89,7 +95,7 @@ internal class ovr032
         }
     }
 
-    private static MapReach canReachTargetCalc(Struct_1D1BC groundTilesMap, Point outPos, Point attacker) /* sub_733F1 */
+    private MapReach canReachTargetCalc(Struct_1D1BC groundTilesMap, Point outPos, Point attacker) /* sub_733F1 */
     {
         SteppingPath var_31 = new SteppingPath();
         SteppingPath var_19 = new SteppingPath();
@@ -142,7 +148,7 @@ internal class ovr032
     /// <summary>
     /// Returns if playerB can see playerA
     /// </summary>
-    internal static bool CanSeeCombatant(int direction, Point playerA, Point playerB) /* sub_7354A */
+    internal bool CanSeeCombatant(int direction, Point playerA, Point playerB) /* sub_7354A */
     {
         if (playerA.MapInBounds() == false || playerB.MapInBounds() == false)
         {
@@ -218,17 +224,17 @@ internal class ovr032
         return canSee;
     }
 
-    internal static List<SortedCombatant> Rebuild_SortedCombatantList(Player player, int max_range, Predicate<Player> filter) /* sub_738D8 */
+    internal List<SortedCombatant> Rebuild_SortedCombatantList(Player player, int max_range, Predicate<Player> filter) /* sub_738D8 */
     {
-        var cm = gbl.CombatMap[ovr033.GetPlayerIndex(player)];
+        var cm = gbl.CombatMap[_ovr033.GetPlayerIndex(player)];
 
         return Rebuild_SortedCombatantList(cm.size, max_range, cm.pos, filter);
     }
 
-    internal static List<SortedCombatant> Rebuild_SortedCombatantList(int size, int max_range, Point pos, Predicate<Player> filter) /* sub_738D8 */
+    internal List<SortedCombatant> Rebuild_SortedCombatantList(int size, int max_range, Point pos, Predicate<Player> filter) /* sub_738D8 */
     {
-        var deltas = ovr033.GetSizeBasedMapDeltas(size);
-        var attackerMap = ovr033.BuildSizeMap(size, pos);
+        var deltas = _ovr033.GetSizeBasedMapDeltas(size);
+        var attackerMap = _ovr033.BuildSizeMap(size, pos);
 
         var sortedCombatants = new List<SortedCombatant>();
 
@@ -237,7 +243,7 @@ internal class ovr032
             var combatantMap = gbl.CombatMap[playerIndex];
             if (combatantMap.size > 0 && filter(gbl.player_array[playerIndex]))
             {
-                var targetMap = ovr033.BuildSizeMap(combatantMap.size, combatantMap.pos);
+                var targetMap = _ovr033.BuildSizeMap(combatantMap.size, combatantMap.pos);
 
                 bool found = false;
                 int found_range = max_range;
@@ -280,7 +286,7 @@ internal class ovr032
     }
 
 
-    internal static byte FindCombatantDirection(Point target, Point attacker)
+    internal byte FindCombatantDirection(Point target, Point attacker)
     {
         byte dir = 0;
 

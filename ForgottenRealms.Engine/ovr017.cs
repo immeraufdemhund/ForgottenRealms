@@ -8,9 +8,46 @@ using ForgottenRealms.Engine.Logging;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr017
+public class ovr017
 {
-    private static void BuildLoadablePlayersLists(ref List<MenuItem> fileNames, ref List<MenuItem> displayNames,
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly MainGameEngine _mainGameEngine;
+    private readonly ovr022 _ovr022;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr026 _ovr026;
+    private readonly ovr027 _ovr027;
+    private readonly ovr030 _ovr030;
+    private readonly ovr031 _ovr031;
+    private readonly ovr034 _ovr034;
+    private readonly seg042 _seg042;
+    private readonly seg051 _seg051;
+    private readonly TrainCharacterService TrainCharacterService;
+    private readonly ConstitutionHitPointsAdjustmentTable ConstitutionHitPointsAdjustmentTable;
+    private readonly DaxFileDecoder DaxFileDecoder;
+
+    public ovr017(DisplayDriver displayDriver, KeyboardService keyboardService, MainGameEngine mainGameEngine, ovr022 ovr022, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr030 ovr030, ovr031 ovr031, ovr034 ovr034, seg042 seg042, seg051 seg051, TrainCharacterService trainCharacterService, ConstitutionHitPointsAdjustmentTable constitutionHitPointsAdjustmentTable, DaxFileDecoder daxFileDecoder)
+    {
+        _displayDriver = displayDriver;
+        _keyboardService = keyboardService;
+        _mainGameEngine = mainGameEngine;
+        _ovr022 = ovr022;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr026 = ovr026;
+        _ovr027 = ovr027;
+        _ovr030 = ovr030;
+        _ovr031 = ovr031;
+        _ovr034 = ovr034;
+        _seg042 = seg042;
+        _seg051 = seg051;
+        TrainCharacterService = trainCharacterService;
+        ConstitutionHitPointsAdjustmentTable = constitutionHitPointsAdjustmentTable;
+        DaxFileDecoder = daxFileDecoder;
+    }
+
+    private void BuildLoadablePlayersLists(ref List<MenuItem> fileNames, ref List<MenuItem> displayNames,
         short playerFileSize, int npcOffset, int nameOffset, string fileFilter) // sub_4708B
     {
         Classes.File file = new Classes.File();
@@ -59,10 +96,10 @@ internal class ovr017
         }
     }
 
-    private static int[] PlayerNameOffset = { 0, 0, 4 };
-    private static int[] NpcFileOffset = { 0xf7, 0x84, 0x13 };
+    private int[] PlayerNameOffset = { 0, 0, 4 };
+    private int[] NpcFileOffset = { 0xf7, 0x84, 0x13 };
 
-    internal static void BuildLoadablePlayersLists(out List<MenuItem> fileNames, out List<MenuItem> displayNames) // sub_47465
+    internal void BuildLoadablePlayersLists(out List<MenuItem> fileNames, out List<MenuItem> displayNames) // sub_47465
     {
         displayNames = new List<MenuItem>();
         fileNames = new List<MenuItem>();
@@ -82,19 +119,19 @@ internal class ovr017
         }
     }
 
-    private static Set unk_47635 = new Set(0, 5);
+    private Set unk_47635 = new Set(0, 5);
 
 
-    internal static void LoadPlayerCombatIcon(bool recolour) /* sub_47A90 */
+    internal void LoadPlayerCombatIcon(bool recolour) /* sub_47A90 */
     {
-        seg042.set_game_area(1);
+        _seg042.set_game_area(1);
 
         Player player = gbl.SelectedPlayer;
 
         char[] sizeToken = new char[] { '\0', 'S', 'T' };
 
-        ovr034.chead_cbody_comspr_icon(11, player.head_icon, "CHEAD" + sizeToken[player.icon_size].ToString());
-        ovr034.chead_cbody_comspr_icon(player.icon_id, player.weapon_icon, "CBODY" + sizeToken[player.icon_size].ToString());
+        _ovr034.chead_cbody_comspr_icon(11, player.head_icon, "CHEAD" + sizeToken[player.icon_size].ToString());
+        _ovr034.chead_cbody_comspr_icon(player.icon_id, player.weapon_icon, "CBODY" + sizeToken[player.icon_size].ToString());
 
         gbl.combat_icons[player.icon_id].MergeIcon(gbl.combat_icons[11]);
 
@@ -118,22 +155,22 @@ internal class ovr017
             gbl.combat_icons[player.icon_id].Recolor(false, newColors, oldColors);
         }
 
-        ovr034.ReleaseCombatIcon(11);
-        seg042.restore_game_area();
-        KeyboardService.clear_keyboard();
+        _ovr034.ReleaseCombatIcon(11);
+        _seg042.restore_game_area();
+        _keyboardService.clear_keyboard();
     }
 
 
-    internal static void remove_player_file(Player player)
+    internal void remove_player_file(Player player)
     {
-        string full_path = Path.Combine(Config.GetSavePath(), seg042.clean_string(player.name));
+        string full_path = Path.Combine(Config.GetSavePath(), _seg042.clean_string(player.name));
 
-        seg042.delete_file(full_path + ".guy");
-        seg042.delete_file(full_path + ".swg");
-        seg042.delete_file(full_path + ".fx");
+        _seg042.delete_file(full_path + ".guy");
+        _seg042.delete_file(full_path + ".swg");
+        _seg042.delete_file(full_path + ".fx");
     }
 
-    internal static void SavePlayer(string arg_0, Player player) // sub_47DFC
+    internal void SavePlayer(string arg_0, Player player) // sub_47DFC
     {
         char input_key;
         Classes.File file = new Classes.File();
@@ -146,7 +183,7 @@ internal class ovr017
         if (arg_0 == "")
         {
             ext_text = ".guy";
-            file_text = seg042.clean_string(player.name);
+            file_text = _seg042.clean_string(player.name);
         }
         else
         {
@@ -158,9 +195,9 @@ internal class ovr017
 
         while (input_key == 'N' &&
                arg_0.Length == 0 &&
-               seg042.file_find(Path.Combine(Config.GetSavePath(), file_text) + ext_text) == true)
+               _seg042.file_find(Path.Combine(Config.GetSavePath(), file_text) + ext_text) == true)
         {
-            input_key = ovr027.yes_no(gbl.alertMenuColors, "Overwrite " + file_text + "? ");
+            input_key = _ovr027.yes_no(gbl.alertMenuColors, "Overwrite " + file_text + "? ");
 
             if (input_key == 'N')
             {
@@ -168,7 +205,7 @@ internal class ovr017
 
                 while (file_text == string.Empty)
                 {
-                    file_text = DisplayDriver.getUserInputString(8, 0, 10, "New file name: ");
+                    file_text = _displayDriver.getUserInputString(8, 0, 10, "New file name: ");
                 }
             }
         }
@@ -177,40 +214,40 @@ internal class ovr017
 
         file.Assign(filePath + ext_text);
 
-        seg051.Rewrite(file);
+        _seg051.Rewrite(file);
 
-        seg051.BlockWrite(Player.StructSize, player.ToByteArray(), file);
-        seg051.Close(file);
+        _seg051.BlockWrite(Player.StructSize, player.ToByteArray(), file);
+        _seg051.Close(file);
 
-        seg042.delete_file(filePath + ".swg");
+        _seg042.delete_file(filePath + ".swg");
 
         if (player.items.Count > 0)
         {
             file.Assign(filePath + ".swg");
-            seg051.Rewrite(file);
+            _seg051.Rewrite(file);
 
-            player.items.ForEach(item => seg051.BlockWrite(Item.StructSize, item.ToByteArray(), file));
+            player.items.ForEach(item => _seg051.BlockWrite(Item.StructSize, item.ToByteArray(), file));
 
-            seg051.Close(file);
+            _seg051.Close(file);
         }
 
-        seg042.delete_file(filePath + ".fx");
+        _seg042.delete_file(filePath + ".fx");
 
         if (player.affects.Count > 0)
         {
             file.Assign(filePath + ".fx");
-            seg051.Rewrite(file);
+            _seg051.Rewrite(file);
 
             foreach (Affect affect in player.affects)
             {
-                seg051.BlockWrite(Affect.StructSize, affect.ToByteArray(), file);
+                _seg051.BlockWrite(Affect.StructSize, affect.ToByteArray(), file);
             }
 
-            seg051.Close(file);
+            _seg051.Close(file);
         }
     }
 
-    internal static bool PlayerFileExists(string fileExt, string player_name) // sub_483AE
+    internal bool PlayerFileExists(string fileExt, string player_name) // sub_483AE
     {
         byte[] data = new byte[0x10];
 
@@ -233,7 +270,7 @@ internal class ovr017
     }
 
 
-    internal static Player ConvertPoolRadPlayer(PoolRadPlayer bp_var_1C0)
+    internal Player ConvertPoolRadPlayer(PoolRadPlayer bp_var_1C0)
     {
         /* nested function, arg_0 is BP */
         Player player = new Player();
@@ -383,7 +420,7 @@ internal class ovr017
     }
 
 
-    internal static void TransferHillsFarCharacter(HillsFarPlayer hf_player, Player player, Player previousSelectPlayer) // sub_48F35
+    internal void TransferHillsFarCharacter(HillsFarPlayer hf_player, Player player, Player previousSelectPlayer) // sub_48F35
     {
         if (player.stats2.Str.cur < hf_player.stat_str)
         {
@@ -430,9 +467,9 @@ internal class ovr017
         {
             for (int slot = 0; slot < 5; slot++)
             {
-                ovr022.DropCoins(slot, player.Money.GetCoins(slot), player);
+                _ovr022.DropCoins(slot, player.Money.GetCoins(slot), player);
             }
-            ovr022.addPlayerGold((short)(hf_player.field_28 / 5));
+            _ovr022.addPlayerGold((short)(hf_player.field_28 / 5));
         }
 
         if (player.age < hf_player.age)
@@ -460,7 +497,7 @@ internal class ovr017
         player.hit_point_current = hf_player.field_20;
     }
 
-    internal static void SilentTrainPlayer()
+    internal void SilentTrainPlayer()
     {
         gbl.area2_ptr.training_class_mask = 0xff;
         gbl.can_train_no_more = false;
@@ -475,30 +512,30 @@ internal class ovr017
     }
 
 
-    private static Set asc_49280 = new Set(18, 26, 47, 48, 97, 107, 124);
+    private Set asc_49280 = new Set(18, 26, 47, 48, 97, 107, 124);
 
 
-    private static ClassId[] HillsFarClassMap = {
+    private ClassId[] HillsFarClassMap = {
         ClassId.unknown,    ClassId.thief,      ClassId.fighter,    ClassId.mc_f_t, ClassId.magic_user,
         ClassId.mc_mu_t,    ClassId.mc_f_mu,    ClassId.mc_f_mu_t,  ClassId.cleric, ClassId.mc_c_t,
         ClassId.mc_c_f,     ClassId.unknown,    ClassId.mc_c_mu,    ClassId.unknown, ClassId.mc_c_f_m,
         ClassId.unknown};
 
 
-    internal static void import_char01(ref Player player, string arg_8)
+    internal void import_char01(ref Player player, string arg_8)
     {
         Classes.File file;
 
-        seg042.find_and_open_file(out file, false, Path.Combine(Config.GetSavePath(), arg_8));
+        _seg042.find_and_open_file(out file, false, Path.Combine(Config.GetSavePath(), arg_8));
 
-        DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+        _displayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
 
 
         if (gbl.import_from == ImportSource.Curse)
         {
             byte[] data = new byte[Player.StructSize];
-            seg051.BlockRead(Player.StructSize, data, file);
-            seg051.Close(file);
+            _seg051.BlockRead(Player.StructSize, data, file);
+            _seg051.Close(file);
 
             player = new Player(data, 0);
 
@@ -506,8 +543,8 @@ internal class ovr017
         else if (gbl.import_from == ImportSource.Pool)
         {
             byte[] data = new byte[PoolRadPlayer.StructSize];
-            seg051.BlockRead(PoolRadPlayer.StructSize, data, file);
-            seg051.Close(file);
+            _seg051.BlockRead(PoolRadPlayer.StructSize, data, file);
+            _seg051.Close(file);
 
             PoolRadPlayer poolRadPlayer = new PoolRadPlayer(data);
 
@@ -516,8 +553,8 @@ internal class ovr017
         else if (gbl.import_from == ImportSource.Hillsfar)
         {
             byte[] data = new byte[HillsFarPlayer.StructSize];
-            seg051.BlockRead(HillsFarPlayer.StructSize, data, file);
-            seg051.Close(file);
+            _seg051.BlockRead(HillsFarPlayer.StructSize, data, file);
+            _seg051.Close(file);
 
             HillsFarPlayer var_1C4 = new HillsFarPlayer(data);
 
@@ -532,19 +569,19 @@ internal class ovr017
         }
         else
         {
-            arg_8 = seg042.clean_string(player.name);
+            arg_8 = _seg042.clean_string(player.name);
         }
 
         string filename = Path.Combine(Config.GetSavePath(), arg_8 + ".swg");
-        if (seg042.file_find(filename) == true)
+        if (_seg042.file_find(filename) == true)
         {
             byte[] data = new byte[Item.StructSize];
 
-            seg042.find_and_open_file(out file, false, filename);
+            _seg042.find_and_open_file(out file, false, filename);
 
             while (true)
             {
-                if (seg051.BlockRead(Item.StructSize, data, file) == Item.StructSize)
+                if (_seg051.BlockRead(Item.StructSize, data, file) == Item.StructSize)
                 {
                     player.items.Add(new Item(data, 0));
                 }
@@ -554,18 +591,18 @@ internal class ovr017
                 }
             }
 
-            seg051.Close(file);
+            _seg051.Close(file);
         }
 
         filename = Path.Combine(Config.GetSavePath(), arg_8 + ".fx");
-        if (seg042.file_find(filename) == true)
+        if (_seg042.file_find(filename) == true)
         {
             byte[] data = new byte[Affect.StructSize];
-            seg042.find_and_open_file(out file, false, filename);
+            _seg042.find_and_open_file(out file, false, filename);
 
             while (true)
             {
-                if (seg051.BlockRead(Affect.StructSize, data, file) == Affect.StructSize)
+                if (_seg051.BlockRead(Affect.StructSize, data, file) == Affect.StructSize)
                 {
                     Affect tmp_affect = new Affect(data, 0);
 
@@ -577,20 +614,20 @@ internal class ovr017
                 }
             }
 
-            seg051.Close(file);
+            _seg051.Close(file);
         }
 
         filename = Path.Combine(Config.GetSavePath(), arg_8 + ".spc");
         if (gbl.import_from == ImportSource.Pool)
         {
-            if (seg042.file_find(filename) == true)
+            if (_seg042.file_find(filename) == true)
             {
                 byte[] data = new byte[Affect.StructSize];
-                seg042.find_and_open_file(out file, false, filename);
+                _seg042.find_and_open_file(out file, false, filename);
 
                 while (true)
                 {
-                    if (seg051.BlockRead(Affect.StructSize, data, file) == Affect.StructSize)
+                    if (_seg051.BlockRead(Affect.StructSize, data, file) == Affect.StructSize)
                     {
                         if (asc_49280.MemberOf(data[0]) == true)
                         {
@@ -604,18 +641,18 @@ internal class ovr017
                     }
                 }
 
-                seg051.Close(file);
+                _seg051.Close(file);
 
             }
         }
 
-        KeyboardService.clear_keyboard();
-        ovr025.reclac_player_values(player);
-        ovr026.ReclacClassBonuses(player);
+        _keyboardService.clear_keyboard();
+        _ovr025.reclac_player_values(player);
+        _ovr026.ReclacClassBonuses(player);
     }
 
 
-    private static Player ConvertHillsFarPlayer(HillsFarPlayer hf_player, string arg_8)
+    private Player ConvertHillsFarPlayer(HillsFarPlayer hf_player, string arg_8)
     {
         Player player = new Player();
         Classes.File file;
@@ -630,12 +667,12 @@ internal class ovr017
         {
             string savename = Path.Combine(Config.GetSavePath(), Path.ChangeExtension(arg_8, fileExt));
 
-            seg042.find_and_open_file(out file, false, savename);
+            _seg042.find_and_open_file(out file, false, savename);
 
             byte[] data = new byte[Player.StructSize];
 
-            seg051.BlockRead(Player.StructSize, data, file);
-            seg051.Close(file);
+            _seg051.BlockRead(Player.StructSize, data, file);
+            _seg051.Close(file);
 
             player = new Player(data, 0);
 
@@ -690,10 +727,10 @@ internal class ovr017
 
                 string savename = System.IO.Path.Combine(Config.GetSavePath(), Path.ChangeExtension(arg_8, fileExt));
 
-                seg042.find_and_open_file(out file, false, savename);
+                _seg042.find_and_open_file(out file, false, savename);
 
-                seg051.BlockRead(PoolRadPlayer.StructSize, data, file);
-                seg051.Close(file);
+                _seg051.BlockRead(PoolRadPlayer.StructSize, data, file);
+                _seg051.Close(file);
 
                 PoolRadPlayer poolRadPlayer = new PoolRadPlayer(data);
 
@@ -722,7 +759,7 @@ internal class ovr017
                 player.field_140 = 1;
                 player.field_DE = 1;
 
-                player.mod_id = seg051.Random((byte)0xff);
+                player.mod_id = _seg051.Random((byte)0xff);
                 player.icon_id = 0x0A;
 
                 player.attacksCount = 2;
@@ -751,32 +788,32 @@ internal class ovr017
                 {
                     case Race.halfling:
                         player.icon_size = 1;
-                        ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
                         break;
 
                     case Race.dwarf:
                         player.icon_size = 1;
-                        ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
-                        ovr024.add_affect(false, 0xff, 0, Affects.dwarf_vs_orc, player);
-                        ovr024.add_affect(false, 0xff, 0, Affects.dwarf_and_gnome_vs_giants, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.dwarf_vs_orc, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.dwarf_and_gnome_vs_giants, player);
                         break;
 
                     case Race.gnome:
                         player.icon_size = 1;
-                        ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
-                        ovr024.add_affect(false, 0xff, 0, Affects.gnome_vs_man_sized_giant, player);
-                        ovr024.add_affect(false, 0xff, 0, Affects.dwarf_and_gnome_vs_giants, player);
-                        ovr024.add_affect(false, 0xff, 0, Affects.affect_30, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.gnome_vs_man_sized_giant, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.dwarf_and_gnome_vs_giants, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.affect_30, player);
                         break;
 
                     case Race.elf:
                         player.icon_size = 2;
-                        ovr024.add_affect(false, 0xff, 0, Affects.elf_resist_sleep, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.elf_resist_sleep, player);
                         break;
 
                     case Race.half_elf:
                         player.icon_size = 2;
-                        ovr024.add_affect(false, 0xff, 0, Affects.halfelf_resistance, player);
+                        _ovr024.add_affect(false, 0xff, 0, Affects.halfelf_resistance, player);
                         break;
 
                     default:
@@ -806,7 +843,7 @@ internal class ovr017
 
                 SilentTrainPlayer();
 
-                ovr022.addPlayerGold(300);
+                _ovr022.addPlayerGold(300);
                 gbl.SelectedPlayer = PreviousSelectedPlayer;
                 player.hit_point_max = hf_player.field_21;
                 player.hit_point_rolled = (byte)(player.hit_point_max - ConstitutionHitPointsAdjustmentTable.get_con_hp_adj(player));
@@ -818,12 +855,12 @@ internal class ovr017
     }
 
 
-    internal static Player load_mob(int monster_id)
+    internal Player load_mob(int monster_id)
     {
         return load_mob(monster_id, true);
     }
 
-    internal static Player load_mob(int monster_id, bool exit)
+    internal Player load_mob(int monster_id, bool exit)
     {
         string area_text = gbl.game_area.ToString();
 
@@ -835,8 +872,8 @@ internal class ovr017
         {
             if (exit)
             {
-                DisplayDriver.DisplayAndPause("Unable to load monster", 15);
-                KeyboardService.print_and_exit();
+                _displayDriver.DisplayAndPause("Unable to load monster", 15);
+                _mainGameEngine.EngineStop();
             }
             else
             {
@@ -871,13 +908,13 @@ internal class ovr017
             }
         }
 
-        KeyboardService.clear_keyboard();
+        _keyboardService.clear_keyboard();
 
         return player;
     }
 
 
-    internal static void load_npc(int monster_id) // sub_4A57D
+    internal void load_npc(int monster_id) // sub_4A57D
     {
         if (gbl.area2_ptr.party_size <= 7)
         {
@@ -887,11 +924,11 @@ internal class ovr017
 
             AssignPlayerIconId(player);
 
-            ovr034.chead_cbody_comspr_icon(player.icon_id, monster_id, "CPIC");
+            _ovr034.chead_cbody_comspr_icon(player.icon_id, monster_id, "CPIC");
         }
     }
 
-    internal static void AssignPlayerIconId(Player player) // sub_4A60A
+    internal void AssignPlayerIconId(Player player) // sub_4A60A
     {
         player.icon_id = 0xff;
 
@@ -921,14 +958,14 @@ internal class ovr017
 
         if (player.control_morale >= Control.NPC_Base)
         {
-            ovr026.ReclacClassBonuses(player);
+            _ovr026.ReclacClassBonuses(player);
         }
     }
 
-    private static Set save_game_keys = new Set(65, 66, 67, 68, 69, 70, 71, 72, 73, 74); // asc_4A761
+    private Set save_game_keys = new Set(65, 66, 67, 68, 69, 70, 71, 72, 73, 74); // asc_4A761
 
 
-    internal static void loadGameMenu() // loadGame
+    internal void loadGameMenu() // loadGame
     {
         gbl.import_from = ImportSource.Curse;
 
@@ -938,7 +975,7 @@ internal class ovr017
         {
             string file_name = Path.Combine(Config.GetSavePath(), "savgam" + save_letter.ToString() + ".dat");
 
-            if (seg042.file_find(file_name) == true)
+            if (_seg042.file_find(file_name) == true)
             {
                 games_list += save_letter.ToString() + " ";
             }
@@ -953,7 +990,7 @@ internal class ovr017
             do
             {
                 bool speical_key;
-                char input_key = ovr027.displayInput(out speical_key, false, 0, gbl.defaultMenuColors, games_list, "Load Which Game: ");
+                char input_key = _ovr027.displayInput(out speical_key, false, 0, gbl.defaultMenuColors, games_list, "Load Which Game: ");
 
                 stop_loop = input_key == 0x00; // Escape
                 save_letter = '\0';
@@ -962,7 +999,7 @@ internal class ovr017
                 {
                     save_letter = input_key;
                     string file_name = Path.Combine(Config.GetSavePath(), "savgam" + save_letter.ToString() + ".dat");
-                    stop_loop = seg042.file_find(file_name);
+                    stop_loop = _seg042.file_find(file_name);
                 }
             } while (stop_loop == false);
 
@@ -975,61 +1012,61 @@ internal class ovr017
         }
     }
 
-    internal static void loadSaveGame(string file_name)
+    internal void loadSaveGame(string file_name)
     {
         Classes.File file;
-        seg042.find_and_open_file(out file, true, file_name);
+        _seg042.find_and_open_file(out file, true, file_name);
 
-        ovr027.ClearPromptArea();
-        DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+        _ovr027.ClearPromptArea();
+        _displayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
         gbl.reload_ecl_and_pictures = true;
 
         byte[] data = new byte[0x2000];
 
-        seg051.BlockRead(1, data, file);
+        _seg051.BlockRead(1, data, file);
         gbl.game_area = data[0];
 
-        seg051.BlockRead(0x800, data, file);
+        _seg051.BlockRead(0x800, data, file);
         gbl.area_ptr = new Area1(data, 0);
 
-        seg051.BlockRead(0x800, data, file);
+        _seg051.BlockRead(0x800, data, file);
         gbl.area2_ptr = new Area2(data, 0);
 
-        seg051.BlockRead(0x400, data, file);
+        _seg051.BlockRead(0x400, data, file);
         gbl.stru_1B2CA = new Struct_1B2CA(data, 0);
 
-        seg051.BlockRead(0x1E00, data, file);
+        _seg051.BlockRead(0x1E00, data, file);
         gbl.ecl_ptr = new EclBlock(data, 0);
 
-        seg051.BlockRead(5, data, file);
+        _seg051.BlockRead(5, data, file);
         gbl.mapPosX = (sbyte)data[0];
         gbl.mapPosY = (sbyte)data[1];
         gbl.mapDirection = data[2];
         gbl.mapWallType = data[3];
         gbl.mapWallRoof = data[4];
 
-        seg051.BlockRead(1, data, file);
+        _seg051.BlockRead(1, data, file);
         gbl.last_game_state = (GameState)data[0];
 
-        seg051.BlockRead(1, data, file);
+        _seg051.BlockRead(1, data, file);
         gbl.game_state = (GameState)data[0];
 
         for (int i = 0; i < 3; i++)
         {
-            seg051.BlockRead(2, data, file);
+            _seg051.BlockRead(2, data, file);
             gbl.setBlocks[i].blockId = Sys.ArrayToShort(data, 0);
 
-            seg051.BlockRead(2, data, file);
+            _seg051.BlockRead(2, data, file);
             gbl.setBlocks[i].setId = Sys.ArrayToShort(data, 0);
         }
 
-        seg051.BlockRead(1, data, file);
+        _seg051.BlockRead(1, data, file);
         int number_of_players = data[0];
 
-        seg051.BlockRead(0x148, data, file);
+        _seg051.BlockRead(0x148, data, file);
         string[] var_148 = Sys.ArrayToStrings(data, 0, System.Math.Min(0x148, 0x29 * number_of_players), 0x29);
 
-        seg051.Close(file);
+        _seg051.Close(file);
 
         //gbl.PicsOn = ((gbl.area_ptr.pics_on >> 1) != 0);
         //gbl.AnimationsOn = ((gbl.area_ptr.pics_on & 1) != 0);
@@ -1038,9 +1075,9 @@ internal class ovr017
 
         for (int index = 0; index < number_of_players; index++)
         {
-            string var_1F6 = seg042.clean_string(var_148[index]);
+            string var_1F6 = _seg042.clean_string(var_148[index]);
 
-            if (seg042.file_find(Path.Combine(Config.GetSavePath(), var_1F6 + ".sav")) == true)
+            if (_seg042.file_find(Path.Combine(Config.GetSavePath(), var_1F6 + ".sav")) == true)
             {
                 Player player = new Player();
 
@@ -1064,7 +1101,7 @@ internal class ovr017
             }
             else
             {
-                ovr034.chead_cbody_comspr_icon(gbl.SelectedPlayer.icon_id, gbl.SelectedPlayer.mod_id, "CPIC");
+                _ovr034.chead_cbody_comspr_icon(gbl.SelectedPlayer.icon_id, gbl.SelectedPlayer.mod_id, "CPIC");
             }
         }
 
@@ -1079,39 +1116,35 @@ internal class ovr017
             {
                 if (gbl.setBlocks[0].blockId > 0)
                 {
-                    ovr031.Load3DMap(gbl.area_ptr.current_3DMap_block_id);
+                    _ovr031.Load3DMap(gbl.area_ptr.current_3DMap_block_id);
                 }
 
                 for (int i = 0; i < 3; i++)
                 {
                     if (gbl.setBlocks[i].blockId > 0)
                     {
-                        ovr031.LoadWalldef(gbl.setBlocks[i].setId, gbl.setBlocks[i].blockId);
+                        _ovr031.LoadWalldef(gbl.setBlocks[i].setId, gbl.setBlocks[i].blockId);
                     }
                 }
             }
         }
         else
         {
-            ovr030.load_bigpic(0x79);
+            _ovr030.load_bigpic(0x79);
         }
 
-        KeyboardService.clear_keyboard();
-        ovr027.ClearPromptArea();
+        _keyboardService.clear_keyboard();
+        _ovr027.ClearPromptArea();
 
         gbl.last_game_state = gbl.game_state;
 
         gbl.game_state = GameState.StartGameMenu;
     }
 
-    private static Set unk_4AEA0 = new Set(0, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74);
-    private static Set unk_4AEEF = new Set(0, 2, 18);
-    private static readonly TrainCharacterService TrainCharacterService = new ();
-    private static readonly ConstitutionHitPointsAdjustmentTable ConstitutionHitPointsAdjustmentTable = new ();
-    private static readonly DaxFileDecoder DaxFileDecoder = new ();
+    private Set unk_4AEA0 = new Set(0, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74);
+    private Set unk_4AEEF = new Set(0, 2, 18);
 
-
-    internal static void SaveGame()
+    internal void SaveGame()
     {
         char inputKey;
         Classes.File save_file = new Classes.File();
@@ -1119,7 +1152,7 @@ internal class ovr017
 
         do
         {
-            inputKey = ovr027.displayInput((gbl.game_state == GameState.Camping), 0, gbl.defaultMenuColors, "A B C D E F G H I J", "Save Which Game: ");
+            inputKey = _ovr027.displayInput((gbl.game_state == GameState.Camping), 0, gbl.defaultMenuColors, "A B C D E F G H I J", "Save Which Game: ");
 
         } while (unk_4AEA0.MemberOf(inputKey) == false);
 
@@ -1132,19 +1165,19 @@ internal class ovr017
             do
             {
                 save_file.Assign(Path.Combine(Config.GetSavePath(), "savgam" + inputKey + ".dat"));
-                seg051.Rewrite(save_file);
+                _seg051.Rewrite(save_file);
                 var_1FC = gbl.FIND_result;
 
                 if (unk_4AEEF.MemberOf(var_1FC) == false)
                 {
-                    DisplayDriver.DisplayAndPause("Unexpected error during save: " + var_1FC.ToString(), 14);
-                    seg051.Close(save_file);
+                    _displayDriver.DisplayAndPause("Unexpected error during save: " + var_1FC.ToString(), 14);
+                    _seg051.Close(save_file);
                     return;
                 }
             } while (unk_4AEEF.MemberOf(var_1FC) == false);
 
-            ovr027.ClearPromptArea();
-            DisplayDriver.displayString("Saving...Please Wait", 0, 10, 0x18, 0);
+            _ovr027.ClearPromptArea();
+            _displayDriver.displayString("Saving...Please Wait", 0, 10, 0x18, 0);
 
             gbl.area_ptr.game_speed = (byte)gbl.game_speed_var;
             gbl.area_ptr.pics_on = (byte)(((gbl.PicsOn) ? 0x02 : 0) | ((gbl.AnimationsOn) ? 0x01 : 0));
@@ -1153,31 +1186,31 @@ internal class ovr017
             byte[] data = new byte[0x1E00];
 
             data[0] = gbl.game_area;
-            seg051.BlockWrite(1, data, save_file);
+            _seg051.BlockWrite(1, data, save_file);
 
-            seg051.BlockWrite(0x800, gbl.area_ptr.ToByteArray(), save_file);
-            seg051.BlockWrite(0x800, gbl.area2_ptr.ToByteArray(), save_file);
-            seg051.BlockWrite(0x400, gbl.stru_1B2CA.ToByteArray(), save_file);
-            seg051.BlockWrite(0x1E00, gbl.ecl_ptr.ToByteArray(), save_file);
+            _seg051.BlockWrite(0x800, gbl.area_ptr.ToByteArray(), save_file);
+            _seg051.BlockWrite(0x800, gbl.area2_ptr.ToByteArray(), save_file);
+            _seg051.BlockWrite(0x400, gbl.stru_1B2CA.ToByteArray(), save_file);
+            _seg051.BlockWrite(0x1E00, gbl.ecl_ptr.ToByteArray(), save_file);
 
             data[0] = (byte)gbl.mapPosX;
             data[1] = (byte)gbl.mapPosY;
             data[2] = gbl.mapDirection;
             data[3] = gbl.mapWallType;
             data[4] = gbl.mapWallRoof;
-            seg051.BlockWrite(5, data, save_file);
+            _seg051.BlockWrite(5, data, save_file);
 
             data[0] = (byte)gbl.last_game_state;
-            seg051.BlockWrite(1, data, save_file);
+            _seg051.BlockWrite(1, data, save_file);
             data[0] = (byte)gbl.game_state;
-            seg051.BlockWrite(1, data, save_file);
+            _seg051.BlockWrite(1, data, save_file);
 
             for (int i = 0; i < 3; i++)
             {
                 Sys.ShortToArray((short)gbl.setBlocks[i].blockId, data, (i * 4) + 0);
                 Sys.ShortToArray((short)gbl.setBlocks[i].setId, data, (i * 4) + 2);
             }
-            seg051.BlockWrite(12, data, save_file);
+            _seg051.BlockWrite(12, data, save_file);
 
             int party_count = 0;
             foreach (Player tmp_player in gbl.TeamList)
@@ -1187,14 +1220,14 @@ internal class ovr017
             }
 
             data[0] = (byte)party_count;
-            seg051.BlockWrite(1, data, save_file);
+            _seg051.BlockWrite(1, data, save_file);
 
             for (int i = 0; i < party_count; i++)
             {
                 Sys.StringToArray(data, 0x29 * i, 0x29, var_171[i]);
             }
-            seg051.BlockWrite(0x148, data, save_file);
-            seg051.Close(save_file);
+            _seg051.BlockWrite(0x148, data, save_file);
+            _seg051.Close(save_file);
 
             party_count = 0;
             foreach (Player tmp_player in gbl.TeamList)
@@ -1205,7 +1238,7 @@ internal class ovr017
             }
 
             gbl.gameSaved = true;
-            ovr027.ClearPromptArea();
+            _ovr027.ClearPromptArea();
         }
     }
 }

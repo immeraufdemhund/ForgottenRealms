@@ -1,42 +1,72 @@
-using System;
-using System.IO;
 using System.Threading;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.Combat;
 using ForgottenRealms.Engine.Classes.DaxFiles;
+using ForgottenRealms.Engine.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace ForgottenRealms.Engine;
 
-public struct MainGameEngineConfig
-{
-    public CancellationTokenSource EngineThreadStoppedCallback;
-    public Func<string,Stream?> ResourceLoader;
-}
 public class MainGameEngine
 {
-    private static MainGameEngineConfig _config;
-    private static readonly TitleScreenAction TitleScreenAction = new ();
-    private static readonly DaxBlockReader DaxBlockReader = new ();
+    private readonly CancellationTokenSource _cancellationTokenSource;
+    private readonly TitleScreenAction _titleScreenAction;
+    private readonly DaxBlockReader _daxBlockReader;
+    private readonly SoundDriver _soundDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr003 _ovr003;
+    private readonly ovr004 _ovr004;
+    private readonly ovr008 _ovr008;
+    private readonly ovr013 _ovr013;
+    private readonly ovr016 _ovr016;
+    private readonly ovr018 _ovr018;
+    private readonly ovr023 _ovr023;
+    private readonly ovr027 _ovr027;
+    private readonly ovr034 _ovr034;
+    private readonly ovr038 _ovr038;
+    private readonly seg051 _seg051;
+    private readonly ILogger<MainGameEngine> _logger;
 
-    internal static void EngineStop()
+    public MainGameEngine(CancellationTokenSource cancellationTokenSource, TitleScreenAction titleScreenAction, DaxBlockReader daxBlockReader,
+        SoundDriver soundDriver, KeyboardService keyboardService, DisplayDriver displayDriver,
+        ovr003 ovr003, ovr004 ovr004, ovr008 ovr008,
+        ovr013 ovr013, ovr016 ovr016, ovr018 ovr018, ovr023 ovr023, ovr027 ovr027, ovr034 ovr034,
+        ovr038 ovr038, seg051 seg051, ILogger<MainGameEngine> logger)
     {
-        _config.EngineThreadStoppedCallback.Cancel();
-    }
-
-    public static void __SystemInit(MainGameEngineConfig config)
-    {
-        _config = config;
-        ConfigGame();
-    }
-
-    internal static void ConfigGame()
-    {
+        _cancellationTokenSource = cancellationTokenSource;
+        _titleScreenAction = titleScreenAction;
+        _daxBlockReader = daxBlockReader;
+        _soundDriver = soundDriver;
+        _keyboardService = keyboardService;
+        _displayDriver = displayDriver;
+        _ovr003 = ovr003;
+        _ovr004 = ovr004;
+        _ovr008 = ovr008;
+        _ovr013 = ovr013;
+        _ovr016 = ovr016;
+        _ovr018 = ovr018;
+        _ovr023 = ovr023;
+        _ovr027 = ovr027;
+        _ovr034 = ovr034;
+        _ovr038 = ovr038;
+        _seg051 = seg051;
+        _logger = logger;
         gbl.exe_path = System.IO.Directory.GetCurrentDirectory();
-
-        SoundDriver.SoundInit(_config.ResourceLoader);
     }
 
-    public static void PROGRAM()
+    public void EngineStop()
+    {
+        if (!_cancellationTokenSource.IsCancellationRequested)
+        {
+            _soundDriver.PlaySound(Sound.sound_FF);
+            Logger.Close();
+            ItemLibrary.Write();
+            _cancellationTokenSource.Cancel();
+        }
+    }
+
+    public void PROGRAM()
     {
         /* Memory Init - Start */
         gbl.CombatMap = new CombatantMap[gbl.MaxCombatantCount + 1]; /* God damm 1-n arrays */
@@ -46,13 +76,13 @@ public class MainGameEngine
         }
         /* Memory Init - End */
 
-        ovr003.SetupCommandTable();
+        _ovr003.SetupCommandTable();
 
         InitFirst();
 
         ItemLibrary.Read();
 
-        new SoundDriver().PlaySound(Sound.sound_0);
+        _soundDriver.PlaySound(Sound.sound_0);
 
         //Logging.Logger.Debug("Field_6 & 0x0F == 0");
         //foreach (var s in gbl.spellCastingTable )
@@ -113,13 +143,13 @@ public class MainGameEngine
 
         if (Cheats.skip_title_screen == false)
         {
-            TitleScreenAction.ShowTitleScreen();
+            _titleScreenAction.ShowTitleScreen();
         }
 
         gbl.displayInputSecondsToWait = 30;
         gbl.displayInputTimeoutValue = 'D';
 
-        char inputKey = ovr027.displayInput(false, 0, gbl.defaultMenuColors, "Play Demo", "Curse of the Azure Bonds v1.3 ");
+        char inputKey = _ovr027.displayInput(false, 0, gbl.defaultMenuColors, "Play Demo", "Curse of the Azure Bonds v1.3 ");
 
         gbl.displayInputSecondsToWait = 0;
         gbl.displayInputTimeoutValue = '\0';
@@ -132,7 +162,7 @@ public class MainGameEngine
         if (Cheats.skip_copy_protection == false &&
             gbl.inDemo == false)
         {
-            ovr004.copy_protection();
+            _ovr004.copy_protection();
         }
 
         while (true)
@@ -149,22 +179,22 @@ public class MainGameEngine
 
             if (gbl.inDemo == false)
             {
-                ovr018.StartGameMenu();
+                _ovr018.StartGameMenu();
             }
 
-            ovr003.sub_29758();
+            _ovr003.sub_29758();
 
             InitAgain();
 
             if (gbl.inDemo == true)
             {
-                TitleScreenAction.ShowTitleScreen();
-                KeyboardService.clear_keyboard();
+                _titleScreenAction.ShowTitleScreen();
+                _keyboardService.clear_keyboard();
 
                 gbl.displayInputSecondsToWait = 10;
                 gbl.displayInputTimeoutValue = 'D';
 
-                inputKey = ovr027.displayInput(false, 0, gbl.defaultMenuColors, "Play Demo", "Curse of the Azure Bonds v1.3 ");
+                inputKey = _ovr027.displayInput(false, 0, gbl.defaultMenuColors, "Play Demo", "Curse of the Azure Bonds v1.3 ");
 
                 gbl.displayInputSecondsToWait = 0;
                 gbl.displayInputTimeoutValue = '\0';
@@ -174,17 +204,17 @@ public class MainGameEngine
                 if (Cheats.skip_copy_protection == false &&
                     gbl.inDemo == false)
                 {
-                    ovr004.copy_protection();
+                    _ovr004.copy_protection();
                 }
 
-                new SoundDriver().PlaySound(Sound.sound_0);
+                _soundDriver.PlaySound(Sound.sound_0);
             }
         }
     }
 
-    private static void InitFirst() /* sub_39054 */
+    private void InitFirst() /* sub_39054 */
     {
-        seg051.Randomize();
+        _seg051.Randomize();
 
         gbl.area_ptr = new Area1();
         gbl.area2_ptr = new Area2();
@@ -193,18 +223,18 @@ public class MainGameEngine
         gbl.dax_8x8d1_201 = new byte[177, 8];
         gbl.geo_ptr.LoadData(new byte[0x402]);
 
-        ovr016.BuildEffectNameMap();
+        _ovr016.BuildEffectNameMap();
 
         for (int i = 0; i < gbl.cmdOppsLimit; i++)
         {
             gbl.cmd_opps[i] = new Opperation();
-            gbl.cmd_opps[i].getMemoryValue = ovr008.vm_GetMemoryValue;
+            gbl.cmd_opps[i].getMemoryValue = _ovr008.vm_GetMemoryValue;
         }
 
         gbl.cursor_bkup = new DaxBlock(0, 1, 1, 8);
         gbl.cursor = new DaxBlock(0, 1, 1, 8);
 
-        seg051.FillChar(0xf, gbl.cursor.bpp, gbl.cursor.data);
+        _seg051.FillChar(0xf, gbl.cursor.bpp, gbl.cursor.data);
 
         gbl.symbol_8x8_set = new DaxBlock[5];
         gbl.symbol_8x8_set[0] = null;
@@ -307,32 +337,44 @@ public class MainGameEngine
         gbl.sky_dax_251 = null;
         gbl.sky_dax_252 = null;
         gbl.gameWon = false;
-        DisplayDriver.Load8x8Tiles();
-        ovr027.ClearPromptArea();
-        DisplayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
+        _displayDriver.Load8x8Tiles();
+        _ovr027.ClearPromptArea();
+        _displayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
 
-        ovr038.Load8x8D(4, 0xca);
-        ovr038.Load8x8D(0, 0xcb);
+        _ovr038.Load8x8D(4, 0xca);
+        ExitIf8x8DIsNotLoaded(4, 0xca);
+        _ovr038.Load8x8D(0, 0xcb);
+        ExitIf8x8DIsNotLoaded(0, 0xcb);
 
         for (gbl.byte_1AD44 = 0; gbl.byte_1AD44 <= 0x0b; gbl.byte_1AD44++)
         {
-            ovr034.chead_cbody_comspr_icon((byte)(gbl.byte_1AD44 + 0x0D), gbl.byte_1AD44, "COMSPR");
+            _ovr034.chead_cbody_comspr_icon((byte)(gbl.byte_1AD44 + 0x0D), gbl.byte_1AD44, "COMSPR");
         }
 
-        ovr034.chead_cbody_comspr_icon(0x19, 0x19, "COMSPR");
+        _ovr034.chead_cbody_comspr_icon(0x19, 0x19, "COMSPR");
 
-        gbl.sky_dax_250 = DaxBlockReader.LoadDax(13, 1, 250, "SKY");
-        gbl.sky_dax_251 = DaxBlockReader.LoadDax(13, 1, 251, "SKY");
-        gbl.sky_dax_252 = DaxBlockReader.LoadDax(13, 1, 252, "SKY");
+        gbl.sky_dax_250 = _daxBlockReader.LoadDax(13, 1, 250, "SKY");
+        gbl.sky_dax_251 = _daxBlockReader.LoadDax(13, 1, 251, "SKY");
+        gbl.sky_dax_252 = _daxBlockReader.LoadDax(13, 1, 252, "SKY");
 
         gbl.ItemDataTable = new ItemDataTable("ITEMS");
 
-        ovr023.setup_spells();
-        ovr013.SetupAffectTables();
+        _ovr023.setup_spells();
+        _ovr013.SetupAffectTables();
+    }
+
+    public void ExitIf8x8DIsNotLoaded(int symbolSet, int blockId)
+    {
+        if (gbl.symbol_8x8_set[symbolSet] == null)
+        {
+            _logger.LogCritical("Unable to load {SymbolSet} from 8x8D{BlockId}", blockId, gbl.game_area);
+            Logger.Log("Unable to load {0} from 8x8D{1}", blockId, gbl.game_area);
+            EngineStop();
+        }
     }
 
 
-    private static void InitAgain() /* sub_396E5 */
+    private void InitAgain() /* sub_396E5 */
     {
         gbl.area_ptr.Clear();
         gbl.area_ptr.inDungeon = 1;
@@ -392,7 +434,7 @@ public class MainGameEngine
         gbl.focusCombatAreaOnPlayer = true;
         gbl.bigpic_block_id = 0x0FF;
         gbl.silent_training = false;
-        ovr027.ClearPromptArea();
+        _ovr027.ClearPromptArea();
         gbl.menuSelectedWord = 1;
         gbl.game_state = GameState.DungeonMap;
         gbl.last_game_state = 0;

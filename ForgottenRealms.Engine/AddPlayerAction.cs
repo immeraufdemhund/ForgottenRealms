@@ -4,11 +4,26 @@ namespace ForgottenRealms.Engine;
 
 public class AddPlayerAction
 {
-    public void AddPlayer()
-    {
-        seg037.draw8x8_clear_area(0x16, 0x26, 1, 1);
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr017 _ovr017;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly seg037 _seg037;
 
-        var input_key = ovr027.displayInput(false, 0, gbl.defaultMenuColors, "Curse Pool Hillsfar Exit", "Add from where? ");
+    public AddPlayerAction(DisplayDriver displayDriver, ovr017 ovr017, ovr025 ovr025, ovr027 ovr027, seg037 seg037)
+    {
+        _displayDriver = displayDriver;
+        _ovr017 = ovr017;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _seg037 = seg037;
+    }
+
+    internal void AddPlayer()
+    {
+        _seg037.draw8x8_clear_area(0x16, 0x26, 1, 1);
+
+        var input_key = _ovr027.displayInput(false, 0, gbl.defaultMenuColors, "Curse Pool Hillsfar Exit", "Add from where? ");
 
         switch (input_key)
         {
@@ -29,7 +44,7 @@ public class AddPlayerAction
                 return;
         }
 
-        ovr017.BuildLoadablePlayersLists(out var strList, out var nameList);
+        _ovr017.BuildLoadablePlayersLists(out var strList, out var nameList);
 
         if (nameList.Count <= 0)
         {
@@ -44,19 +59,19 @@ public class AddPlayerAction
         do
         {
             var showExit = true;
-            input_key = ovr027.sl_select_item(out var select_sl, ref strList_index, ref menuRedraw, showExit, nameList,
+            input_key = _ovr027.sl_select_item(out var select_sl, ref strList_index, ref menuRedraw, showExit, nameList,
                 22, 38, 2, 1, gbl.defaultMenuColors, "Add", "Add a character: ");
 
             if ((input_key == 13 || input_key == 'A') &&
                 select_sl.Text[0] != '*')
             {
-                ovr027.ClearPromptArea();
+                _ovr027.ClearPromptArea();
 
                 var new_player = new Player();
 
-                var var_10 = ovr027.getStringListEntry(strList, strList_index);
+                var var_10 = _ovr027.getStringListEntry(strList, strList_index);
 
-                ovr017.import_char01(ref new_player, var_10.Text);
+                _ovr017.import_char01(ref new_player, var_10.Text);
 
                 select_sl.Text = "* " + select_sl.Text;
                 pc_count = 0;
@@ -64,9 +79,9 @@ public class AddPlayerAction
                 if (gbl.TeamList.Count == 0)
                 {
                     gbl.area2_ptr.party_size = 0;
-                    ovr017.AssignPlayerIconId(new_player);
+                    _ovr017.AssignPlayerIconId(new_player);
 
-                    ovr017.LoadPlayerCombatIcon(true);
+                    _ovr017.LoadPlayerCombatIcon(true);
                 }
                 else
                 {
@@ -114,8 +129,8 @@ public class AddPlayerAction
                         (new_player.ranger_lvl == 0 || ranger_count < 3) &&
                         (((new_player.alignment + 1) % 3) != 0 || paladin_present == false))
                     {
-                        ovr017.AssignPlayerIconId(new_player);
-                        ovr017.LoadPlayerCombatIcon(true);
+                        _ovr017.AssignPlayerIconId(new_player);
+                        _ovr017.LoadPlayerCombatIcon(true);
 
                         if (new_player.control_morale < Control.NPC_Base)
                         {
@@ -128,17 +143,17 @@ public class AddPlayerAction
 
                         if (new_player.paladin_lvl > 0 && evil_present == true)
                         {
-                            ovr025.string_print01("paladins do not join with evil scum");
-                            DisplayDriver.GameDelay();
+                            _ovr025.string_print01("paladins do not join with evil scum");
+                            _displayDriver.GameDelay();
                         }
                         else if (new_player.ranger_lvl > 0 && ranger_count > 2)
                         {
-                            ovr025.string_print01("too many rangers in party");
+                            _ovr025.string_print01("too many rangers in party");
                         }
                         else if (((new_player.alignment + 1) % 3) == 0 &&
                                  paladin_present == true)
                         {
-                            ovr025.string_print01(paladins_name + " will tolerate no evil!");
+                            _ovr025.string_print01(paladins_name + " will tolerate no evil!");
                         }
 
                         new_player = null; // FreeMem( Player.StructSize, player_ptr1 );

@@ -4,7 +4,24 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class CombatCommand : IGameCommand
 {
-    private readonly TempleShopService _templeShopService = new ();
+    private readonly TempleShopService _templeShopService;
+    private readonly ovr006 _ovr006;
+    private readonly ovr007 _ovr007;
+    private readonly ovr008 _ovr008;
+    private readonly ovr009 _ovr009;
+    private readonly ovr025 _ovr025;
+    private readonly ovr030 _ovr030;
+
+    public CombatCommand(TempleShopService templeShopService, ovr006 ovr006, ovr007 ovr007, ovr008 ovr008, ovr009 ovr009, ovr025 ovr025, ovr030 ovr030)
+    {
+        _templeShopService = templeShopService;
+        _ovr006 = ovr006;
+        _ovr007 = ovr007;
+        _ovr008 = ovr008;
+        _ovr009 = ovr009;
+        _ovr025 = ovr025;
+        _ovr030 = ovr030;
+    }
 
     public void Execute()
     {
@@ -17,7 +34,7 @@ public class CombatCommand : IGameCommand
             {
                 gbl.area2_ptr.EnterShop = 0;
 
-                ovr007.CityShop();
+                _ovr007.CityShop();
             }
             else if (gbl.area2_ptr.EnterTemple == 1)
             {
@@ -27,25 +44,25 @@ public class CombatCommand : IGameCommand
             }
             else
             {
-                ovr006.AfterCombatExpAndTreasure();
+                _ovr006.AfterCombatExpAndTreasure();
             }
         }
         else
         {
-            ushort var_2 = ovr008.sub_304B4(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+            ushort var_2 = _ovr008.sub_304B4(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
 
             if (var_2 < gbl.area2_ptr.encounter_distance)
             {
                 gbl.area2_ptr.encounter_distance = var_2;
             }
 
-            ovr009.MainCombatLoop();
+            _ovr009.MainCombatLoop();
 
-            ovr006.AfterCombatExpAndTreasure();
+            _ovr006.AfterCombatExpAndTreasure();
 
             if (gbl.area_ptr.inDungeon == 0)
             {
-                ovr030.load_bigpic(0x79);
+                _ovr030.load_bigpic(0x79);
             }
         }
 
@@ -63,6 +80,6 @@ public class CombatCommand : IGameCommand
         gbl.encounter_flags[0] = false;
         gbl.encounter_flags[1] = false;
         gbl.spriteChanged = false;
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
     }
 }

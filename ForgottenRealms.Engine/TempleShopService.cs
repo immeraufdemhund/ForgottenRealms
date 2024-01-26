@@ -4,14 +4,36 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class TempleShopService
+public class TempleShopService
 {
-    private static Affects[] disease_types = {  Affects.helpless,  Affects.cause_disease_1,
+    private Affects[] disease_types = {  Affects.helpless,  Affects.cause_disease_1,
         Affects.weaken, Affects.cause_disease_2,
         Affects.animate_dead, Affects.affect_39 };
 
-    private static string[] temple_sl = { "Cure Blindness", "Cure Disease", "Cure Light Wounds", "Cure Serious Wounds", "Cure Critical Wounds", "Heal", "Neutralize Poison", "Raise Dead", "Remove Curse", "Stone to Flesh", "Exit" };
+    private string[] temple_sl = { "Cure Blindness", "Cure Disease", "Cure Light Wounds", "Cure Serious Wounds", "Cure Critical Wounds", "Heal", "Neutralize Poison", "Raise Dead", "Remove Curse", "Stone to Flesh", "Exit" };
 
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr008 _ovr008;
+    private readonly ovr020 _ovr020;
+    private readonly ovr022 _ovr022;
+    private readonly ovr023 _ovr023;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly seg037 _seg037;
+
+    public TempleShopService(DisplayDriver displayDriver, ovr008 ovr008, ovr020 ovr020, ovr022 ovr022, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, seg037 seg037)
+    {
+        _displayDriver = displayDriver;
+        _ovr008 = ovr008;
+        _ovr020 = ovr020;
+        _ovr022 = ovr022;
+        _ovr023 = ovr023;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _seg037 = seg037;
+    }
 
     internal void temple_shop()
     {
@@ -20,9 +42,9 @@ internal class TempleShopService
         gbl.game_state = GameState.Shop;
         gbl.redrawBoarder = (gbl.area_ptr.inDungeon == 0);
 
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
         gbl.redrawBoarder = true;
-        ovr025.PartySummary(gbl.SelectedPlayer);
+        _ovr025.PartySummary(gbl.SelectedPlayer);
 
         gbl.pooled_money.ClearAll();
 
@@ -33,7 +55,7 @@ internal class TempleShopService
             bool items_present;
             bool money_present;
 
-            ovr022.treasureOnGround(out items_present, out money_present);
+            _ovr022.treasureOnGround(out items_present, out money_present);
             string text;
             if (money_present == true)
             {
@@ -45,7 +67,7 @@ internal class TempleShopService
             }
 
             bool ctrl_key;
-            char input_key = ovr027.displayInput(out ctrl_key, false, 1, gbl.defaultMenuColors, text, string.Empty);
+            char input_key = _ovr027.displayInput(out ctrl_key, false, 1, gbl.defaultMenuColors, text, string.Empty);
 
             switch (input_key)
             {
@@ -57,38 +79,38 @@ internal class TempleShopService
                     break;
 
                 case 'V':
-                    ovr020.viewPlayer();
+                    _ovr020.viewPlayer();
                     break;
 
                 case 'T':
-                    ovr022.TakePoolMoney();
+                    _ovr022.TakePoolMoney();
                     break;
 
                 case 'P':
                     if (ctrl_key == false)
                     {
-                        ovr022.poolMoney();
+                        _ovr022.poolMoney();
                     }
                     break;
 
                 case 'S':
-                    ovr022.share_pooled();
+                    _ovr022.share_pooled();
                     break;
 
                 case 'A':
-                    reloadPics = ovr022.appraiseGemsJewels();
+                    reloadPics = _ovr022.appraiseGemsJewels();
                     break;
 
                 case 'E':
-                    ovr022.treasureOnGround(out items_present, out money_present);
+                    _ovr022.treasureOnGround(out items_present, out money_present);
 
                     if (money_present == true)
                     {
                         string prompt = "~Yes ~No";
 
-                        DisplayDriver.press_any_key("As you leave a priest says, \"Excuse me but you have left some money here\" ", true, 10, TextRegion.NormalBottom);
-                        DisplayDriver.press_any_key("Do you want to go back and retrieve your money?", true, 10, TextRegion.NormalBottom);
-                        int menu_selected = ovr008.sub_317AA(false, false, gbl.defaultMenuColors, prompt, "");
+                        _displayDriver.press_any_key("As you leave a priest says, \"Excuse me but you have left some money here\" ", true, 10, TextRegion.NormalBottom);
+                        _displayDriver.press_any_key("Do you want to go back and retrieve your money?", true, 10, TextRegion.NormalBottom);
+                        int menu_selected = _ovr008.sub_317AA(false, false, gbl.defaultMenuColors, prompt, "");
 
                         if (menu_selected == 1)
                         {
@@ -96,7 +118,7 @@ internal class TempleShopService
                         }
                         else
                         {
-                            seg037.draw8x8_clear_area(0x16, 0x26, 17, 1);
+                            _seg037.draw8x8_clear_area(0x16, 0x26, 17, 1);
                         }
                     }
                     else
@@ -107,30 +129,30 @@ internal class TempleShopService
                     break;
 
                 case 'G':
-                    ovr020.scroll_team_list(input_key);
+                    _ovr020.scroll_team_list(input_key);
                     break;
 
                 case 'O':
-                    ovr020.scroll_team_list(input_key);
+                    _ovr020.scroll_team_list(input_key);
                     break;
             }
 
             if (input_key == 'B' ||
                 input_key == 'T')
             {
-                ovr025.LoadPic();
+                _ovr025.LoadPic();
             }
             else if (reloadPics == true)
             {
-                ovr025.LoadPic();
+                _ovr025.LoadPic();
                 reloadPics = false;
             }
 
-            ovr025.PartySummary(gbl.SelectedPlayer);
+            _ovr025.PartySummary(gbl.SelectedPlayer);
         } while (stop_loop == false);
     }
 
-    private static void temple_heal()
+    private void temple_heal()
     {
         int sl_index = 0;
 
@@ -143,17 +165,17 @@ internal class TempleShopService
             stringList.Add(new MenuItem(temple_sl[i]));
         }
 
-        ovr027.ClearPromptAreaNoUpdate();
+        _ovr027.ClearPromptAreaNoUpdate();
         bool redrawMenuItems = true;
-        seg037.DrawFrame_WildernessMap();
+        _seg037.DrawFrame_WildernessMap();
 
         do
         {
             string text = gbl.SelectedPlayer.name + ", how can we help you?";
-            DisplayDriver.displayString(text, 0, 15, 1, 1);
+            _displayDriver.displayString(text, 0, 15, 1, 1);
             MenuItem dummySelected;
 
-            char sl_output = ovr027.sl_select_item(out dummySelected, ref sl_index, ref redrawMenuItems, false,
+            char sl_output = _ovr027.sl_select_item(out dummySelected, ref sl_index, ref redrawMenuItems, false,
                 stringList, 15, 0x26, 4, 2, gbl.defaultMenuColors, "Heal Exit", string.Empty);
 
             if (sl_output == 'H' || sl_output == 0x0d)
@@ -214,18 +236,18 @@ internal class TempleShopService
 
         stringList.Clear();
 
-        ovr025.LoadPic();
-        ovr025.PartySummary(gbl.SelectedPlayer);
+        _ovr025.LoadPic();
+        _ovr025.PartySummary(gbl.SelectedPlayer);
     }
 
-    private static bool buy_cure(int cost, string cure_name) /* buy_cure */
+    private bool buy_cure(int cost, string cure_name) /* buy_cure */
     {
         string text = string.Format("{0} will only cost {1} gold pieces.", cure_name, cost);
-        DisplayDriver.press_any_key(text, true, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(text, true, 10, TextRegion.NormalBottom);
 
         bool buy = false;
 
-        if ('Y' == ovr027.yes_no(gbl.defaultMenuColors, "pay for cure "))
+        if ('Y' == _ovr027.yes_no(gbl.defaultMenuColors, "pay for cure "))
         {
             if (cost <= gbl.SelectedPlayer.Money.GetGoldWorth())
             {
@@ -239,21 +261,21 @@ internal class TempleShopService
             }
             else
             {
-                ovr025.string_print01("Not enough money.");
+                _ovr025.string_print01("Not enough money.");
                 buy = false;
             }
         }
 
         if (buy)
         {
-            ovr025.ClearPlayerTextArea();
-            ovr025.DisplayPlayerStatusString(true, 0, "is cured.", gbl.SelectedPlayer);
+            _ovr025.ClearPlayerTextArea();
+            _ovr025.DisplayPlayerStatusString(true, 0, "is cured.", gbl.SelectedPlayer);
         }
 
         return buy;
     }
 
-    private static void cure_blindness()
+    private void cure_blindness()
     {
         bool cast = true;
 
@@ -266,12 +288,12 @@ internal class TempleShopService
         {
             if (buy_cure(1000, "Cure Blindness"))
             {
-                ovr024.remove_affect(null, Affects.blinded, gbl.SelectedPlayer);
+                _ovr024.remove_affect(null, Affects.blinded, gbl.SelectedPlayer);
             }
         }
     }
 
-    private static void cure_disease()
+    private void cure_disease()
     {
         bool is_diseased = Array.Exists(disease_types, aff => gbl.SelectedPlayer.HasAffect(aff));
 
@@ -288,7 +310,7 @@ internal class TempleShopService
                 gbl.cureSpell = true;
                 for (int i = 0; i < 6; i++)
                 {
-                    ovr024.remove_affect(null, disease_types[i], gbl.SelectedPlayer);
+                    _ovr024.remove_affect(null, disease_types[i], gbl.SelectedPlayer);
                 }
 
                 gbl.cureSpell = false;
@@ -296,31 +318,31 @@ internal class TempleShopService
         }
     }
 
-    private static void cure_wounds(int healType)
+    private void cure_wounds(int healType)
     {
         switch (healType)
         {
             case 1:
                 if (buy_cure(100, "Cure Light Wounds"))
                 {
-                    int heal_amount = ovr024.roll_dice(8, 1);
-                    ovr024.heal_player(0, heal_amount, gbl.SelectedPlayer);
+                    int heal_amount = _ovr024.roll_dice(8, 1);
+                    _ovr024.heal_player(0, heal_amount, gbl.SelectedPlayer);
                 }
                 break;
 
             case 2:
                 if (buy_cure(350, "Cure Serious Wounds"))
                 {
-                    int heal_amount = ovr024.roll_dice(8, 2) + 1;
-                    ovr024.heal_player(0, heal_amount, gbl.SelectedPlayer);
+                    int heal_amount = _ovr024.roll_dice(8, 2) + 1;
+                    _ovr024.heal_player(0, heal_amount, gbl.SelectedPlayer);
                 }
                 break;
 
             case 3:
                 if (buy_cure(600, "Cure Critical Wounds"))
                 {
-                    int heal_amount = ovr024.roll_dice(8, 3) + 3;
-                    ovr024.heal_player(0, heal_amount, gbl.SelectedPlayer);
+                    int heal_amount = _ovr024.roll_dice(8, 3) + 3;
+                    _ovr024.heal_player(0, heal_amount, gbl.SelectedPlayer);
                 }
                 break;
 
@@ -329,26 +351,26 @@ internal class TempleShopService
                 {
                     int heal_amount = gbl.SelectedPlayer.hit_point_max;
                     heal_amount -= gbl.SelectedPlayer.hit_point_current;
-                    heal_amount -= ovr024.roll_dice(4, 1);
+                    heal_amount -= _ovr024.roll_dice(4, 1);
 
-                    ovr024.heal_player(0, heal_amount, gbl.SelectedPlayer);
-                    ovr024.remove_affect(null, Affects.blinded, gbl.SelectedPlayer);
+                    _ovr024.heal_player(0, heal_amount, gbl.SelectedPlayer);
+                    _ovr024.remove_affect(null, Affects.blinded, gbl.SelectedPlayer);
 
                     for (int i = 0; i < 6; i++)
                     {
-                        ovr024.remove_affect(null, disease_types[i], gbl.SelectedPlayer);
+                        _ovr024.remove_affect(null, disease_types[i], gbl.SelectedPlayer);
                     }
 
-                    ovr024.remove_affect(null, Affects.feeblemind, gbl.SelectedPlayer);
+                    _ovr024.remove_affect(null, Affects.feeblemind, gbl.SelectedPlayer);
 
-                    ovr024.CalcStatBonuses(Stat.INT, gbl.SelectedPlayer);
-                    ovr024.CalcStatBonuses(Stat.WIS, gbl.SelectedPlayer);
+                    _ovr024.CalcStatBonuses(Stat.INT, gbl.SelectedPlayer);
+                    _ovr024.CalcStatBonuses(Stat.WIS, gbl.SelectedPlayer);
                 }
                 break;
         }
     }
 
-    private static void raise_dead()
+    private void raise_dead()
     {
         Player player = gbl.SelectedPlayer;
         bool player_dead = false;
@@ -366,8 +388,8 @@ internal class TempleShopService
             {
                 gbl.cureSpell = true;
 
-                ovr024.remove_affect(null, Affects.animate_dead, player);
-                ovr024.remove_affect(null, Affects.poisoned, player);
+                _ovr024.remove_affect(null, Affects.animate_dead, player);
+                _ovr024.remove_affect(null, Affects.poisoned, player);
 
                 gbl.cureSpell = false;
 
@@ -429,7 +451,7 @@ internal class TempleShopService
         }
     }
 
-    private static void cure_poison2()
+    private void cure_poison2()
     {
         bool isPoisoned = gbl.SelectedPlayer.HasAffect(Affects.poisoned);
 
@@ -440,16 +462,16 @@ internal class TempleShopService
             {
                 gbl.cureSpell = true;
 
-                ovr024.remove_affect(null, Affects.poisoned, gbl.SelectedPlayer);
-                ovr024.remove_affect(null, Affects.slow_poison, gbl.SelectedPlayer);
-                ovr024.remove_affect(null, Affects.poison_damage, gbl.SelectedPlayer);
+                _ovr024.remove_affect(null, Affects.poisoned, gbl.SelectedPlayer);
+                _ovr024.remove_affect(null, Affects.slow_poison, gbl.SelectedPlayer);
+                _ovr024.remove_affect(null, Affects.poison_damage, gbl.SelectedPlayer);
 
                 gbl.cureSpell = false;
             }
         }
     }
 
-    private static void remove_curse()
+    private void remove_curse()
     {
         bool has_curse_items = gbl.SelectedPlayer.items.Find(item => item.cursed) != null;
         bool cast = true;
@@ -464,11 +486,11 @@ internal class TempleShopService
         {
             gbl.spellTargets.Clear();
             gbl.spellTargets.Add(gbl.SelectedPlayer);
-            ovr023.SpellRemoveCurse();
+            _ovr023.SpellRemoveCurse();
         }
     }
 
-    private static void stone_to_flesh()
+    private void stone_to_flesh()
     {
         if (gbl.SelectedPlayer.health_status == Status.stoned ||
             (gbl.SelectedPlayer.health_status != Status.stoned && CastCureAnyway("is not stoned.")))
@@ -483,13 +505,13 @@ internal class TempleShopService
         }
     }
 
-    private static bool CastCureAnyway(string text)
+    private bool CastCureAnyway(string text)
     {
-        ovr025.DisplayPlayerStatusString(false, 0, text, gbl.SelectedPlayer);
+        _ovr025.DisplayPlayerStatusString(false, 0, text, gbl.SelectedPlayer);
 
-        char ret_val = ovr027.yes_no(gbl.defaultMenuColors, "cast cure anyway: ");
+        char ret_val = _ovr027.yes_no(gbl.defaultMenuColors, "cast cure anyway: ");
 
-        ovr025.ClearPlayerTextArea();
+        _ovr025.ClearPlayerTextArea();
 
         return ret_val == 'Y';
     }

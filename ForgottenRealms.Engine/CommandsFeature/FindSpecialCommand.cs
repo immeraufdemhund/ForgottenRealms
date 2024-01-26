@@ -4,6 +4,12 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class FindSpecialCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    public FindSpecialCommand(ovr008 ovr008)
+    {
+        _ovr008 = ovr008;
+    }
+
     public void Execute()
     {
         for (var i = 0; i < 6; i++)
@@ -11,8 +17,8 @@ public class FindSpecialCommand : IGameCommand
             gbl.compare_flags[i] = false;
         }
 
-        ovr008.vm_LoadCmdSets(1);
-        var affect_type = (Affects)ovr008.vm_GetCmdValue(1);
+        _ovr008.vm_LoadCmdSets(1);
+        var affect_type = (Affects)_ovr008.vm_GetCmdValue(1);
 
         if (gbl.SelectedPlayer.HasAffect(affect_type) == true)
         {

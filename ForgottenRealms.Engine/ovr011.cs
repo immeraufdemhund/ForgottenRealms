@@ -4,12 +4,136 @@ using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr011
+public class ovr011
 {
     // the 2 is made up.
-    private static byte[, , ,] unk_1AB1C = new byte[2, 4, 6, 11]; //seg600:480C unk_1AB1C
+    private byte[,,,] unk_1AB1C = new byte[2, 4, 6, 11]; //seg600:480C unk_1AB1C
+    private int[] dir_x_offset /*seg600:034C unk_1665B*/ = { 0, 1, 0, -1 };
+    private int[] dir_y_offset /*seg600:0350 unk_1665F*/ = { -1, 0, 1, 0 };
 
-    internal static void set_background_tile(int tileId, int y, int x) /* sub_37046 */
+    private int[] CityInfo =
+    {
+        /* unk_16664 seg600:0354 */
+        0x00, 0x18, 0x11, 0x15, 0x01, 0x01, 0x60, 0x14, // 354 - 35B
+        0x08, 0x01, 0x00, 0x21, 0x71, 0x09, 0x06, 0x04, // 35C - 363
+        0x01, 0x09, 0x09, 0x08, 0x59, 0x00, 0x11, 0x11, // 364 - 36B
+        0x00, 0x00, 0x01, 0x11, 0x00, 0x00, 0x20, 0x20, // 36C - 373
+        0x0A
+    };
+
+    private int min_placement_column = 0;
+    private int max_placement_column = 10;
+    private int min_placement_row = 0;
+    private int max_placement_row = 5;
+    private int[,] direction_165EC = { { 8, 4, 6, 2 }, { 8, 6, 4, 0 }, { 8, 0, 6, 2 }, { 8, 2, 0, 4 } }; /*seg600:02DC unk_165EC*/
+    private int[,] direction_165FC = { { 0, 0, 2, 6 }, { 2, 2, 0, 4 }, { 4, 4, 2, 6 }, { 6, 6, 4, 0 } }; /*seg600:02EC unk_165FC*/
+
+    private int[] HalfDirToIso = { 7, 2, 3, 6 }; /*seg600:02FC unk_1660C */
+
+    private byte[] /*seg600:0300*/
+        unk_16610 = { 5, 4, 5, 6, 3, 8, 7, 2 };
+
+    private byte[] /*seg600:0308*/
+        unk_16618 = { 3, 2, 2, 3, 0, 2, 5, 3 };
+
+    private byte[,,] unk_16620 = new byte[5, 6, 2]
+    {
+        // unk_16620 seg600:0310
+        { { 1, 0 }, { 1, 0 }, { 1, 0 }, { 2, 9 }, { 3, 10 }, { 4, 10 } }, // 310 - 31B
+        { { 0, 2 }, { 0, 3 }, { 1, 4 }, { 2, 5 }, { 3, 6 }, { 4, 7 } }, // 31C - 327
+        { { 0, 6 }, { 0, 7 }, { 1, 8 }, { 1, 0 }, { 1, 0 }, { 1, 0 } }, // 328 - 333
+        { { 3, 6 }, { 4, 7 }, { 5, 8 }, { 6, 9 }, { 7, 10 }, { 8, 10 } }, // 334 - 33F
+        { { 0, 6 }, { 0, 7 }, { 1, 8 }, { 2, 9 }, { 3, 10 }, { 4, 10 } }, // 340 - 31B
+    };
+
+    private enum tri_state
+    {
+        start = 1,
+        right = 2,
+        left = 3
+    }
+
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly ovr014 _ovr014;
+    private readonly ovr018 _ovr018;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly ovr030 _ovr030;
+    private readonly ovr031 _ovr031;
+    private readonly ovr033 _ovr033;
+    private readonly ovr034 _ovr034;
+
+    public ovr011(DisplayDriver displayDriver, KeyboardService keyboardService, ovr014 ovr014, ovr018 ovr018, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr030 ovr030, ovr031 ovr031, ovr033 ovr033, ovr034 ovr034)
+    {
+        _displayDriver = displayDriver;
+        _keyboardService = keyboardService;
+        _ovr014 = ovr014;
+        _ovr018 = ovr018;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _ovr030 = ovr030;
+        _ovr031 = ovr031;
+        _ovr033 = ovr033;
+        _ovr034 = ovr034;
+    }
+
+    internal void BattleSetup() // battle_begins
+    {
+        gbl.DelayBetweenCharacters = false;
+
+        _ovr030.DaxArrayFreeDaxBlocks(gbl.byte_1D556);
+
+        gbl.headX_dax = null;
+        gbl.bodyX_dax = null;
+        gbl.bigpic_dax = null;
+        gbl.bigpic_block_id = 0xff;
+        gbl.current_head_id = 0xff;
+        gbl.current_body_id = 0xff;
+        _ovr027.ClearPromptArea();
+        _displayDriver.GameDelay();
+
+        _displayDriver.displayString("A battle begins...", 0, 0x0a, 0x18, 0);
+
+        gbl.AutoPCsCastMagic = false; // TODO review this...
+        gbl.combat_round = 0;
+        gbl.combat_round_no_action_limit = gbl.combat_round_no_action_value;
+        gbl.attack_roll = 0;
+
+        gbl.StinkingCloud = new List<GasCloud>();
+        gbl.CloudKillCloud = new List<GasCloud>();
+        gbl.item_ptr = null;
+
+        gbl.downedPlayers = new List<DownedPlayerTile>();
+
+        gbl.area2_ptr.field_666 = 0;
+
+        SetupGroundTiles();
+
+        SetupCombatActions();
+        PlaceCombatants();
+
+        _keyboardService.clear_one_keypress();
+
+        gbl.missile_dax = new DaxBlock(1, 4, 3, 0x18);
+
+        Point pos = _ovr033.PlayerMapPos(gbl.TeamList[0]);
+        gbl.mapToBackGroundTile.mapScreenTopLeft = pos - Point.ScreenCenter;
+
+        _ovr025.RedrawCombatScreen();
+        foreach (Player player in gbl.TeamList)
+        {
+            _ovr024.CheckAffectsEffect(player, CheckType.Type_8);
+            _ovr024.CheckAffectsEffect(player, CheckType.Type_22);
+        }
+
+        _ovr014.calc_enemy_health_percentage();
+        gbl.game_state = GameState.Combat;
+    }
+
+    private void set_background_tile(int tileId, int y, int x) /* sub_37046 */
     {
         int tmpX = (gbl.byte_1AD34 * 6) + (gbl.byte_1AD35 * 5) + 21 + x;
         int tmpY = (gbl.byte_1AD35 * 5) + 10 + y;
@@ -23,10 +147,7 @@ internal class ovr011
         }
     }
 
-    private static int[] dir_x_offset /*seg600:034C unk_1665B*/ = { 0, 1, 0, -1 };
-    private static int[] dir_y_offset /*seg600:0350 unk_1665F*/ = { -1, 0, 1, 0 };
-
-    internal static void sub_370D3()
+    private void sub_370D3()
     {
         bool byte_1AD3E;
 
@@ -68,7 +189,7 @@ internal class ovr011
                     if (gbl.BackGroundTiles[gbl.mapToBackGroundTile[posX, posY]].tile_index == 0x16 &&
                         gbl.byte_1AD3D != 0 &&
                         byte_1AD3E &&
-                        ovr024.roll_dice(10, 1) <= 5)
+                        _ovr024.roll_dice(10, 1) <= 5)
                     {
                         gbl.mapToBackGroundTile[posX, posY] = gbl.Tile_Table; // Table
 
@@ -81,7 +202,7 @@ internal class ovr011
                                 tmpY >= 0 && tmpY <= 0x18)
                             {
                                 if (gbl.BackGroundTiles[gbl.mapToBackGroundTile[tmpX, tmpY]].tile_index == 0x16 &&
-                                    ovr024.roll_dice(10, 1) <= 9)
+                                    _ovr024.roll_dice(10, 1) <= 9)
                                 {
                                     gbl.mapToBackGroundTile[posX, posY] = gbl.Tile_Chair; // Chair
                                 }
@@ -94,18 +215,18 @@ internal class ovr011
     }
 
 
-    internal static int sub_37306(int dir, int mapY, int mapX)
+    private int sub_37306(int dir, int mapY, int mapX)
     {
         int flags;
 
         if (mapX >= 0 && mapX <= 15 &&
             mapY >= 0 && mapY <= 15)
         {
-            if (ovr031.WallDoorFlagsGet(dir, mapY, mapX) == 0)
+            if (_ovr031.WallDoorFlagsGet(dir, mapY, mapX) == 0)
             {
                 flags = 1;
             }
-            else if (ovr031.getMap_wall_type(dir, mapY, mapX) == 0)
+            else if (_ovr031.getMap_wall_type(dir, mapY, mapX) == 0)
             {
                 flags = 0;
             }
@@ -134,7 +255,7 @@ internal class ovr011
     /// <summary>
     /// result can be 0, 1, 3
     /// </summary>
-    internal static int get_dir_flags(int dir, int mapX, int mapY) /* sub_37388 */
+    private int get_dir_flags(int dir, int mapX, int mapY) /* sub_37388 */
     {
         int oppositeDir = (dir + 4) % 8;
         int newMapY = gbl.MapDirectionXDelta[dir] + mapY;
@@ -147,7 +268,7 @@ internal class ovr011
     }
 
 
-    internal static void build_background_tiles_1() /* sub_373FC */
+    private void build_background_tiles_1() /* sub_373FC */
     {
         for (int y_pos = 2; y_pos <= 4; y_pos++)
         {
@@ -174,7 +295,7 @@ internal class ovr011
     }
 
 
-    internal static void build_background_tiles_2() /* sub_374A1 */
+    private void build_background_tiles_2() /* sub_374A1 */
     {
         if (gbl.dir_0_flags == 1)
         {
@@ -193,7 +314,7 @@ internal class ovr011
     }
 
 
-    internal static void build_backgrould_tiles_3(int mapX, int mapY) /* sub_3751E */
+    private void build_backgrould_tiles_3(int mapX, int mapY) /* sub_3751E */
     {
         byte var_5 = 0; /* simeon added */
         byte var_4 = 0; /* simeon added */
@@ -229,6 +350,7 @@ internal class ovr011
                             {
                                 var_2 = 0x0D;
                             }
+
                             break;
                     }
                 }
@@ -290,6 +412,7 @@ internal class ovr011
                         {
                             var_3 = 0x0A;
                         }
+
                         break;
 
                     case 3:
@@ -301,6 +424,7 @@ internal class ovr011
                         {
                             var_3 = 7;
                         }
+
                         break;
 
                     case 1:
@@ -312,6 +436,7 @@ internal class ovr011
                         {
                             var_3 = 3;
                         }
+
                         break;
                 }
             }
@@ -357,7 +482,7 @@ internal class ovr011
     }
 
 
-    internal static void build_background_tiles_4(int mapX, int mapY) /* sub_376F6 */
+    private void build_background_tiles_4(int mapX, int mapY) /* sub_376F6 */
     {
         byte var_5;
         byte var_4;
@@ -497,8 +622,7 @@ internal class ovr011
         set_background_tile(var_5, 1, 6);
     }
 
-
-    internal static void SetupDungeonFloor() // sub_378CD0
+    private void SetupDungeonFloor() // sub_378CD0
     {
         for (gbl.byte_1AD35 = -2; gbl.byte_1AD35 <= 2; gbl.byte_1AD35++)
         {
@@ -516,26 +640,18 @@ internal class ovr011
                 build_background_tiles_2();
                 build_backgrould_tiles_3(mapX, mapY);
                 build_background_tiles_4(mapX, mapY);
-                gbl.byte_1AD3D = (byte)(ovr031.get_wall_x2(mapY, mapX) & 0x40);
+                gbl.byte_1AD3D = (byte)(_ovr031.get_wall_x2(mapY, mapX) & 0x40);
                 sub_370D3();
             }
         }
     }
 
-    private static int[] CityInfo = { /* unk_16664 seg600:0354 */
-        0x00, 0x18, 0x11, 0x15, 0x01, 0x01, 0x60, 0x14, // 354 - 35B
-        0x08, 0x01, 0x00, 0x21, 0x71, 0x09, 0x06, 0x04, // 35C - 363
-        0x01, 0x09, 0x09, 0x08, 0x59, 0x00, 0x11, 0x11, // 364 - 36B
-        0x00, 0x00, 0x01, 0x11, 0x00, 0x00, 0x20, 0x20, // 36C - 373
-        0x0A};
-
-    private static int GetCityInfo() // sub_37991
+    private int GetCityInfo() // sub_37991
     {
         return CityInfo[gbl.current_city];
     }
 
-
-    private static void SetGroundTile_40(int map_x, int map_y) // sub_379AC
+    private void SetGroundTile_40(int map_x, int map_y) // sub_379AC
     {
         if (map_x < 0x31)
         {
@@ -548,8 +664,7 @@ internal class ovr011
         }
     }
 
-
-    internal static void SetupWildernessFloor01() // sub_37A00
+    private void SetupWildernessFloor01() // sub_37A00
     {
         byte var_1 = 0;
 
@@ -563,9 +678,9 @@ internal class ovr011
             var_1 = 0x4B;
         }
 
-        if (ovr024.roll_dice(100, 1) <= var_1)
+        if (_ovr024.roll_dice(100, 1) <= var_1)
         {
-            int map_x = 0x22 - ovr024.roll_dice(4, 5);
+            int map_x = 0x22 - _ovr024.roll_dice(4, 5);
 
             while (((map_x + 2) % 7) > 0)
             {
@@ -576,14 +691,14 @@ internal class ovr011
             {
                 if (map_x <= 0x31)
                 {
-                    gbl.mapToBackGroundTile[map_x, map_y] = ovr024.roll_dice(2, 1) + 0x3B;
+                    gbl.mapToBackGroundTile[map_x, map_y] = _ovr024.roll_dice(2, 1) + 0x3B;
 
                     if (map_x < 0x31)
                     {
-                        gbl.mapToBackGroundTile[map_x + 1, map_y] = ovr024.roll_dice(2, 1) + 0x3D;
+                        gbl.mapToBackGroundTile[map_x + 1, map_y] = _ovr024.roll_dice(2, 1) + 0x3D;
                     }
 
-                    if (ovr024.roll_dice(20, 1) == 1)
+                    if (_ovr024.roll_dice(20, 1) == 1)
                     {
                         SetGroundTile_40(map_x, map_y);
                     }
@@ -594,8 +709,7 @@ internal class ovr011
         }
     }
 
-
-    private static void SetupWildernessFloor02() // sub_37B0B
+    private void SetupWildernessFloor02() // sub_37B0B
     {
         int cityFlags = GetCityInfo();
         if ((cityFlags & 0x80) == 0)
@@ -633,16 +747,16 @@ internal class ovr011
                 {
                     if (gbl.BackGroundTiles[gbl.mapToBackGroundTile[mapX, mapY]].tile_index == 22 &&
                         gbl.BackGroundTiles[gbl.mapToBackGroundTile[mapX, mapY - 1]].tile_index == 22 &&
-                        neededRoll >= ovr024.roll_dice(100, 1))
+                        neededRoll >= _ovr024.roll_dice(100, 1))
                     {
-                        if (neededRoll >= ovr024.roll_dice(100, 1))
+                        if (neededRoll >= _ovr024.roll_dice(100, 1))
                         {
-                            gbl.mapToBackGroundTile[mapX, mapY] = ovr024.roll_dice(2, 1) + 0x29;
+                            gbl.mapToBackGroundTile[mapX, mapY] = _ovr024.roll_dice(2, 1) + 0x29;
                         }
                         else
                         {
-                            gbl.mapToBackGroundTile[mapX, mapY - 1] = ovr024.roll_dice(5, 1) + 0x1F;
-                            gbl.mapToBackGroundTile[mapX, mapY] = ovr024.roll_dice(5, 1) + 0x24;
+                            gbl.mapToBackGroundTile[mapX, mapY - 1] = _ovr024.roll_dice(5, 1) + 0x1F;
+                            gbl.mapToBackGroundTile[mapX, mapY] = _ovr024.roll_dice(5, 1) + 0x24;
                         }
                     }
                 }
@@ -650,35 +764,33 @@ internal class ovr011
         }
     }
 
-
-    private static void SetGroupMapStepped(int stepE, int stepD, int stepC, int stepB, int stepA, int map_y, int map_x) // sub_37CA2
+    private void SetGroupMapStepped(int stepE, int stepD, int stepC, int stepB, int stepA, int map_y, int map_x) // sub_37CA2
     {
-        int roll = ovr024.roll_dice(100, 1);
+        int roll = _ovr024.roll_dice(100, 1);
 
         if (roll <= stepA)
         {
-            gbl.mapToBackGroundTile[map_x, map_y] = ovr024.roll_dice(2, 1) + 0x39;
+            gbl.mapToBackGroundTile[map_x, map_y] = _ovr024.roll_dice(2, 1) + 0x39;
         }
         else if (roll <= stepA + stepB)
         {
-            gbl.mapToBackGroundTile[map_x, map_y] = ovr024.roll_dice(2, 1) + 0x2f;
+            gbl.mapToBackGroundTile[map_x, map_y] = _ovr024.roll_dice(2, 1) + 0x2f;
         }
         else if (roll <= stepA + stepB + stepC)
         {
-            gbl.mapToBackGroundTile[map_x, map_y] = ovr024.roll_dice(4, 1) + 0x2B;
+            gbl.mapToBackGroundTile[map_x, map_y] = _ovr024.roll_dice(4, 1) + 0x2B;
         }
         else if (roll <= stepA + stepB + stepC + stepD)
         {
-            gbl.mapToBackGroundTile[map_x, map_y] = ovr024.roll_dice(3, 1) + 0x36;
+            gbl.mapToBackGroundTile[map_x, map_y] = _ovr024.roll_dice(3, 1) + 0x36;
         }
         else if (roll <= stepA + stepB + stepC + stepD + stepE)
         {
-            gbl.mapToBackGroundTile[map_x, map_y] = ovr024.roll_dice(4, 1) + 0x31;
+            gbl.mapToBackGroundTile[map_x, map_y] = _ovr024.roll_dice(4, 1) + 0x31;
         }
     }
 
-
-    private static void SetupWildernessFloor03() // sub_37E4A
+    private void SetupWildernessFloor03() // sub_37E4A
     {
         int var_4 = 50;
 
@@ -743,8 +855,7 @@ internal class ovr011
         }
     }
 
-
-    private static void SetupWildernessFloor() // sub_37FC8
+    private void SetupWildernessFloor() // sub_37FC8
     {
         gbl.mapToBackGroundTile.SetField_7(23);
 
@@ -754,19 +865,18 @@ internal class ovr011
         SetupWildernessFloor03();
     }
 
-
-    private static void SetupGroundTiles() // sub_38030
+    private void SetupGroundTiles() // sub_38030
     {
         if (gbl.area_ptr.inDungeon != 0)
         {
-            ovr034.Load24x24Set(0x19, 0, 1, "DungCom");
+            _ovr034.Load24x24Set(0x19, 0, 1, "DungCom");
         }
         else
         {
-            ovr034.Load24x24Set(0x21, 0, 1, "WildCom");
+            _ovr034.Load24x24Set(0x21, 0, 1, "WildCom");
         }
 
-        ovr034.Load24x24Set(6, 0x22, 1, "RandCom");
+        _ovr034.Load24x24Set(6, 0x22, 1, "RandCom");
 
         gbl.mapToBackGroundTile = new Struct_1D1BC();
 
@@ -784,14 +894,13 @@ internal class ovr011
         }
     }
 
-
-    private static void SetupCombatActions() // sub_380E0
+    private void SetupCombatActions() // sub_380E0
     {
         int playerCount = 0;
 
         foreach (Player player in gbl.TeamList)
         {
-            ovr025.reclac_player_values(player);
+            _ovr025.reclac_player_values(player);
             playerCount++;
 
             player.actions = new Action();
@@ -824,13 +933,7 @@ internal class ovr011
         }
     }
 
-
-    private static int min_placement_column = 0;
-    private static int max_placement_column = 10;
-    private static int min_placement_row = 0;
-    private static int max_placement_row = 5;
-
-    private static bool row_column_both_out_of_range(int row, int column) /* sub_38202 */
+    private bool row_column_both_out_of_range(int row, int column) /* sub_38202 */
     {
         if ((column >= min_placement_column && column <= max_placement_column) ||
             (row >= min_placement_row && row <= max_placement_row))
@@ -843,8 +946,7 @@ internal class ovr011
         }
     }
 
-
-    private static bool try_place_combatant(int arg_0, int arg_2, int arg_4, int arg_6, int arg_8, int player_index) /* sub_38233 */
+    private bool try_place_combatant(int arg_0, int arg_2, int arg_4, int arg_6, int arg_8, int player_index) /* sub_38233 */
     {
         if (arg_8 < 0 || arg_8 > 10 ||
             arg_6 < 0 || arg_6 > 5 ||
@@ -859,7 +961,7 @@ internal class ovr011
 
             int groundTile;
             int tmp_player_index;
-            ovr033.getGroundInformation(out groundTile, out tmp_player_index, 8, gbl.player_array[player_index]);
+            _ovr033.getGroundInformation(out groundTile, out tmp_player_index, 8, gbl.player_array[player_index]);
 
             if (tmp_player_index == 0 &&
                 groundTile > 0 &&
@@ -875,30 +977,7 @@ internal class ovr011
         }
     }
 
-    private static int[,] direction_165EC = { { 8, 4, 6, 2 }, { 8, 6, 4, 0 }, { 8, 0, 6, 2 }, { 8, 2, 0, 4 } }; /*seg600:02DC unk_165EC*/
-    private static int[,] direction_165FC = { { 0, 0, 2, 6 }, { 2, 2, 0, 4 }, { 4, 4, 2, 6 }, { 6, 6, 4, 0 } }; /*seg600:02EC unk_165FC*/
-
-    private static int[] HalfDirToIso = { 7, 2, 3, 6 }; /*seg600:02FC unk_1660C */
-
-    private static byte[] /*seg600:0300*/ unk_16610 = { 5, 4, 5, 6, 3, 8, 7, 2 };
-    private static byte[] /*seg600:0308*/ unk_16618 = { 3, 2, 2, 3, 0, 2, 5, 3 };
-
-    private static byte[, ,] unk_16620 = new byte[5, 6, 2] { // unk_16620 seg600:0310
-        {{1,0},{1,0},{1,0},{2,9},{3,10},{4,10}}, // 310 - 31B
-        {{0,2},{0,3},{1,4},{2,5},{3,6},{4,7}}, // 31C - 327
-        {{0,6},{0,7},{1,8},{1,0},{1,0},{1,0}}, // 328 - 333
-        {{3,6},{4,7},{5,8},{6,9},{7,10},{8,10}}, // 334 - 33F
-        {{0,6},{0,7},{1,8},{2,9},{3,10},{4,10}}, // 340 - 31B
-    };
-
-    private enum tri_state
-    {
-        start = 1,
-        right = 2,
-        left = 3
-    }
-
-    internal static bool place_combatant(int player_index) /* sub_38380 */
+    private bool place_combatant(int player_index) /* sub_38380 */
     {
         int cur_y = 0; /* Simeon */
         int cur_x = 0; /* Simeon */
@@ -1002,6 +1081,7 @@ internal class ovr011
                             row_scale++;
                         }
                     }
+
                     state = tri_state.start;
                     first_row = false;
                 }
@@ -1051,15 +1131,16 @@ internal class ovr011
     }
 
 
-    private static void PlaceCombatants() /* sub_387FE */
+    private void PlaceCombatants() /* sub_387FE */
     {
-        ovr025.CountCombatTeamMembers();
+        _ovr025.CountCombatTeamMembers();
 
         for (int i = 1; i <= gbl.MaxCombatantCount; i++)
         {
             gbl.CombatMap[i].size = 0;
         }
-        ovr033.setup_mapToPlayerIndex_and_playerScreen();
+
+        _ovr033.setup_mapToPlayerIndex_and_playerScreen();
 
         gbl.team_start_x[0] = 0;
         gbl.team_start_y[0] = 0;
@@ -1110,7 +1191,7 @@ internal class ovr011
         List<Player> to_remove = new List<Player>();
         foreach (Player player in gbl.TeamList)
         {
-            KeyboardService.clear_one_keypress();
+            _keyboardService.clear_one_keypress();
 
             gbl.player_array[loop_var] = player;
 
@@ -1141,7 +1222,7 @@ internal class ovr011
                 }
 
                 gbl.CombatantCount++;
-                ovr033.setup_mapToPlayerIndex_and_playerScreen();
+                _ovr033.setup_mapToPlayerIndex_and_playerScreen();
                 loop_var++;
             }
             else
@@ -1162,61 +1243,7 @@ internal class ovr011
 
         foreach (Player player in to_remove)
         {
-            gbl.SelectedPlayer = ovr018.FreeCurrentPlayer(player, false, true);
+            gbl.SelectedPlayer = _ovr018.FreeCurrentPlayer(player, false, true);
         }
-    }
-
-
-    internal static void BattleSetup() // battle_begins
-    {
-        gbl.DelayBetweenCharacters = false;
-
-        ovr030.DaxArrayFreeDaxBlocks(gbl.byte_1D556);
-
-        gbl.headX_dax = null;
-        gbl.bodyX_dax = null;
-        gbl.bigpic_dax = null;
-        gbl.bigpic_block_id = 0xff;
-        gbl.current_head_id = 0xff;
-        gbl.current_body_id = 0xff;
-        ovr027.ClearPromptArea();
-        DisplayDriver.GameDelay();
-
-        DisplayDriver.displayString("A battle begins...", 0, 0x0a, 0x18, 0);
-
-        gbl.AutoPCsCastMagic = false; // TODO review this...
-        gbl.combat_round = 0;
-        gbl.combat_round_no_action_limit = gbl.combat_round_no_action_value;
-        gbl.attack_roll = 0;
-
-        gbl.StinkingCloud = new List<GasCloud>();
-        gbl.CloudKillCloud = new List<GasCloud>();
-        gbl.item_ptr = null;
-
-        gbl.downedPlayers = new List<DownedPlayerTile>();
-
-        gbl.area2_ptr.field_666 = 0;
-
-        SetupGroundTiles();
-
-        SetupCombatActions();
-        PlaceCombatants();
-
-        KeyboardService.clear_one_keypress();
-
-        gbl.missile_dax = new DaxBlock(1, 4, 3, 0x18);
-
-        Point pos = ovr033.PlayerMapPos(gbl.TeamList[0]);
-        gbl.mapToBackGroundTile.mapScreenTopLeft = pos - Point.ScreenCenter;
-
-        ovr025.RedrawCombatScreen();
-        foreach (Player player in gbl.TeamList)
-        {
-            ovr024.CheckAffectsEffect(player, CheckType.Type_8);
-            ovr024.CheckAffectsEffect(player, CheckType.Type_22);
-        }
-
-        ovr014.calc_enemy_health_percentage();
-        gbl.game_state = GameState.Combat;
     }
 }

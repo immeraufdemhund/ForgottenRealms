@@ -2,9 +2,38 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr015
+public class ovr015
 {
-    internal static void MapSetDoorUnlocked(int mapDir, int mapY, int mapX) /*sub_43148*/
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardDriver _keyboardDriver;
+    private readonly ovr016 _ovr016;
+    private readonly ovr020 _ovr020;
+    private readonly ovr021 _ovr021;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly ovr030 _ovr030;
+    private readonly ovr031 _ovr031;
+    private readonly seg037 _seg037;
+    private readonly SoundDriver _soundDriver;
+
+    public ovr015(DisplayDriver displayDriver, KeyboardDriver keyboardDriver, ovr016 ovr016, ovr020 ovr020, ovr021 ovr021, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr030 ovr030, ovr031 ovr031, seg037 seg037, SoundDriver soundDriver)
+    {
+        _displayDriver = displayDriver;
+        _keyboardDriver = keyboardDriver;
+        _ovr016 = ovr016;
+        _ovr020 = ovr020;
+        _ovr021 = ovr021;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _ovr030 = ovr030;
+        _ovr031 = ovr031;
+        _seg037 = seg037;
+        _soundDriver = soundDriver;
+    }
+
+    internal void MapSetDoorUnlocked(int mapDir, int mapY, int mapX) /*sub_43148*/
     {
         if (mapX < 0 || mapX > 15 ||
             mapY < 0 || mapY > 15)
@@ -33,7 +62,7 @@ internal class ovr015
     }
 
 
-    private static bool AnyPlayerHasSkill(SkillType skill) // any_player_has_skill
+    private bool AnyPlayerHasSkill(SkillType skill) // any_player_has_skill
     {
         foreach (Player player in gbl.TeamList)
         {
@@ -46,7 +75,7 @@ internal class ovr015
     }
 
 
-    private static bool bash_door()
+    private bool bash_door()
     {
         bool bash_worked = false;
 
@@ -57,21 +86,21 @@ internal class ovr015
                 break;
             }
 
-            if (ovr031.WallDoorFlagsGet(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX) == 3)
+            if (_ovr031.WallDoorFlagsGet(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX) == 3)
             {
                 if (player.stats2.Str.full == 18)
                 {
                     if (player.stats2.Str00.cur >= 0x5b &&
                         player.stats2.Str00.cur <= 99)
                     {
-                        if (ovr024.roll_dice(6, 1) == 1)
+                        if (_ovr024.roll_dice(6, 1) == 1)
                         {
                             bash_worked = true;
                         }
                     }
                     else if (player.stats2.Str00.cur == 100)
                     {
-                        if (ovr024.roll_dice(6, 1) <= 2)
+                        if (_ovr024.roll_dice(6, 1) <= 2)
                         {
                             bash_worked = true;
                         }
@@ -84,7 +113,7 @@ internal class ovr015
                 else if (player.stats2.Str.full == 19 ||
                          player.stats2.Str.full == 20)
                 {
-                    if (ovr024.roll_dice(6, 1) <= 3)
+                    if (_ovr024.roll_dice(6, 1) <= 3)
                     {
                         bash_worked = true;
                     }
@@ -92,21 +121,21 @@ internal class ovr015
                 else if (player.stats2.Str.full == 21 ||
                          player.stats2.Str.full == 22)
                 {
-                    if (ovr024.roll_dice(6, 1) <= 4)
+                    if (_ovr024.roll_dice(6, 1) <= 4)
                     {
                         bash_worked = true;
                     }
                 }
                 else if (player.stats2.Str.full == 23)
                 {
-                    if (ovr024.roll_dice(6, 1) <= 5)
+                    if (_ovr024.roll_dice(6, 1) <= 5)
                     {
                         bash_worked = true;
                     }
                 }
                 else if (player.stats2.Str.full == 24)
                 {
-                    if (ovr024.roll_dice(8, 1) <= 7)
+                    if (_ovr024.roll_dice(8, 1) <= 7)
                     {
                         bash_worked = true;
                     }
@@ -126,21 +155,21 @@ internal class ovr015
 
                 if (str >= 3 && str <= 7)
                 {
-                    if (ovr024.roll_dice(6, 1) == 1)
+                    if (_ovr024.roll_dice(6, 1) == 1)
                     {
                         bash_worked = true;
                     }
                 }
                 else if (str >= 8 && str <= 15)
                 {
-                    if (ovr024.roll_dice(6, 1) <= 2)
+                    if (_ovr024.roll_dice(6, 1) <= 2)
                     {
                         bash_worked = true;
                     }
                 }
                 else if (str == 15 || str == 17)
                 {
-                    if (ovr024.roll_dice(6, 1) <= 3)
+                    if (_ovr024.roll_dice(6, 1) <= 3)
                     {
                         bash_worked = true;
                     }
@@ -152,7 +181,7 @@ internal class ovr015
                     {
                         bash_worked = true;
 
-                        if (ovr024.roll_dice(6, 1) <= 3)
+                        if (_ovr024.roll_dice(6, 1) <= 3)
                         {
                             bash_worked = true;
                         }
@@ -160,7 +189,7 @@ internal class ovr015
                     else if (player.stats2.Str00.cur >= 51 &&
                              player.stats2.Str00.cur <= 99)
                     {
-                        if (ovr024.roll_dice(6, 1) <= 4)
+                        if (_ovr024.roll_dice(6, 1) <= 4)
                         {
                             bash_worked = true;
                         }
@@ -168,7 +197,7 @@ internal class ovr015
                     }
                     else if (player.stats2.Str00.cur == 100)
                     {
-                        if (ovr024.roll_dice(6, 1) <= 5)
+                        if (_ovr024.roll_dice(6, 1) <= 5)
                         {
                             bash_worked = true;
                         }
@@ -176,28 +205,28 @@ internal class ovr015
                 }
                 else if (str == 19 || str == 20)
                 {
-                    if (ovr024.roll_dice(8, 1) <= 7)
+                    if (_ovr024.roll_dice(8, 1) <= 7)
                     {
                         bash_worked = true;
                     }
                 }
                 else if (str == 21)
                 {
-                    if (ovr024.roll_dice(10, 1) <= 9)
+                    if (_ovr024.roll_dice(10, 1) <= 9)
                     {
                         bash_worked = true;
                     }
                 }
                 else if (str == 22 || str == 23)
                 {
-                    if (ovr024.roll_dice(12, 1) <= 11)
+                    if (_ovr024.roll_dice(12, 1) <= 11)
                     {
                         bash_worked = true;
                     }
                 }
                 else if (str == 24)
                 {
-                    if (ovr024.roll_dice(20, 1) <= 19)
+                    if (_ovr024.roll_dice(20, 1) <= 19)
                     {
                         bash_worked = true;
                     }
@@ -224,7 +253,7 @@ internal class ovr015
     }
 
 
-    internal static bool pick_lock() /*sub_435B6*/
+    internal bool pick_lock() /*sub_435B6*/
     {
         bool door_picked = false;
 
@@ -232,7 +261,7 @@ internal class ovr015
         {
             if (door_picked) break;
 
-            if (ovr024.roll_dice(100, 1) <= player.thief_skills[1] &&
+            if (_ovr024.roll_dice(100, 1) <= player.thief_skills[1] &&
                 player.health_status == Status.okey)
             {
                 door_picked = true;
@@ -254,13 +283,13 @@ internal class ovr015
     }
 
 
-    private static bool TeamMemberHasSpell(Spells spellId)
+    private bool TeamMemberHasSpell(Spells spellId)
     {
         return gbl.TeamList.Exists(p => p.spellList.HasSpell((int)spellId));
     }
 
 
-    private static bool RemoveKnockSpell()
+    private bool RemoveKnockSpell()
     {
         foreach (Player player in gbl.TeamList)
         {
@@ -275,7 +304,7 @@ internal class ovr015
     }
 
 
-    private static void TryStepForward() // sub_43765
+    private void TryStepForward() // sub_43765
     {
         int mapX = gbl.mapPosX;
         int mapY = gbl.mapPosY;
@@ -283,7 +312,7 @@ internal class ovr015
 
         gbl.area2_ptr.tried_to_exit_map = false;
 
-        if (ovr031.WallDoorFlagsGet(mapDir, mapY, mapX) != 0)
+        if (_ovr031.WallDoorFlagsGet(mapDir, mapY, mapX) != 0)
         {
             mapX += gbl.MapDirectionXDelta[mapDir];
             mapY += gbl.MapDirectionYDelta[mapDir];
@@ -315,10 +344,10 @@ internal class ovr015
     }
 
 
-    internal static void MovePartyForward() /* sub_43813 */
+    internal void MovePartyForward() /* sub_43813 */
     {
-        new SoundDriver().PlaySound(Sound.sound_a);
-        KeyboardDriver.SysDelay(50);
+        _soundDriver.PlaySound(Sound.sound_a);
+        _keyboardDriver.SysDelay(50);
 
         gbl.mapPosX += gbl.MapDirectionXDelta[gbl.mapDirection];
         gbl.mapPosY += gbl.MapDirectionYDelta[gbl.mapDirection];
@@ -326,26 +355,26 @@ internal class ovr015
         gbl.mapPosX &= 0x0f; // wrap via masking
         gbl.mapPosY &= 0x0f; // wrap via masking
 
-        gbl.mapWallType = ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+        gbl.mapWallType = _ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
 
         gbl.can_bash_door = true;
         gbl.can_pick_door = true;
         gbl.can_knock_door = true;
 
-        gbl.mapWallRoof = ovr031.get_wall_x2(gbl.mapPosY, gbl.mapPosX);
+        gbl.mapWallRoof = _ovr031.get_wall_x2(gbl.mapPosY, gbl.mapPosX);
 
         if ((gbl.area2_ptr.search_flags & 1) > 0)
         {
-            ovr021.step_game_time(2, 1);
+            _ovr021.step_game_time(2, 1);
         }
         else
         {
-            ovr021.step_game_time(1, 1);
+            _ovr021.step_game_time(1, 1);
         }
     }
 
 
-    internal static char main_3d_world_menu() /* sub_438DF */
+    internal char main_3d_world_menu() /* sub_438DF */
     {
         char input_key = '\0'; /* simeon */
 
@@ -359,7 +388,7 @@ internal class ovr015
             {
                 bool special_key;
 
-                input_key = ovr027.displayInput(out special_key, false, 1, gbl.defaultMenuColors, "Area Cast View Encamp Search Look", string.Empty);
+                input_key = _ovr027.displayInput(out special_key, false, 1, gbl.defaultMenuColors, "Area Cast View Encamp Search Look", string.Empty);
 
                 if (special_key == false)
                 {
@@ -371,11 +400,11 @@ internal class ovr015
                             {
                                 gbl.mapAreaDisplay = !gbl.mapAreaDisplay;
 
-                                ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                                _ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
                             }
                             else
                             {
-                                DisplayDriver.DisplayStatusText(0, 14, "Not Here");
+                                _displayDriver.DisplayStatusText(0, 14, "Not Here");
                             }
                             break;
 
@@ -383,13 +412,13 @@ internal class ovr015
                             if (gbl.SelectedPlayer.health_status == Status.okey)
                             {
                                 gbl.menuSelectedWord = 1;
-                                ovr016.cast_spell();
+                                _ovr016.cast_spell();
                             }
                             break;
 
                         case 'V':
                             gbl.menuSelectedWord = 1;
-                            ovr020.viewPlayer();
+                            _ovr020.viewPlayer();
                             break;
 
                         case 'E':
@@ -403,7 +432,7 @@ internal class ovr015
 
                         case 'L':
                             gbl.area2_ptr.search_flags |= 2;
-                            ovr021.step_game_time(2, 1);
+                            _ovr021.step_game_time(2, 1);
                             gbl.ecl_offset = gbl.SearchLocationAddr;
                             stop_loop = true;
                             break;
@@ -421,42 +450,42 @@ internal class ovr015
                         case 'P': // turn 180
                             gbl.mapDirection = (byte)((gbl.mapDirection + 4) % 8);
 
-                            gbl.mapWallType = ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
-                            ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                            gbl.mapWallType = _ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                            _ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
                             break;
 
                         case 'K': // turn left
                             gbl.mapDirection = (byte)((gbl.mapDirection + 6) % 8);
 
-                            new SoundDriver().PlaySound(Sound.sound_a);
-                            gbl.mapWallType = ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
-                            ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                            _soundDriver.PlaySound(Sound.sound_a);
+                            gbl.mapWallType = _ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                            _ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
                             break;
 
                         case 'M': // turn right
                             gbl.mapDirection = (byte)((gbl.mapDirection + 2) % 8);
 
-                            new SoundDriver().PlaySound(Sound.sound_a);
+                            _soundDriver.PlaySound(Sound.sound_a);
 
-                            gbl.mapWallType = ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
-                            ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                            gbl.mapWallType = _ovr031.getMap_wall_type(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                            _ovr031.Draw3dWorld(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
                             break;
 
                         default:
-                            ovr020.scroll_team_list(input_key);
-                            ovr025.PartySummary(gbl.SelectedPlayer);
+                            _ovr020.scroll_team_list(input_key);
+                            _ovr025.PartySummary(gbl.SelectedPlayer);
                             break;
                     }
                 }
 
-                ovr025.display_map_position_time();
+                _ovr025.display_map_position_time();
 
             } while (stop_loop == false);
         }
 
         if (gbl.bottomTextHasBeenCleared == false)
         {
-            seg037.draw8x8_clear_area(TextRegion.NormalBottom);
+            _seg037.draw8x8_clear_area(TextRegion.NormalBottom);
 
             gbl.bottomTextHasBeenCleared = true;
         }
@@ -465,7 +494,7 @@ internal class ovr015
     }
 
 
-    internal static void locked_door()
+    internal void locked_door()
     {
         char input;
         bool var_2;
@@ -478,7 +507,7 @@ internal class ovr015
             {
                 gbl.can_draw_bigpic = true;
 
-                byte al = ovr031.WallDoorFlagsGet(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
+                byte al = _ovr031.WallDoorFlagsGet(gbl.mapDirection, gbl.mapPosY, gbl.mapPosX);
 
                 if (al == 1)
                 {
@@ -509,7 +538,7 @@ internal class ovr015
                     {
                         prompt += " Exit";
 
-                        input = ovr027.displayInput(out var_2, false, 0, gbl.defaultMenuColors, prompt, "Locked. ");
+                        input = _ovr027.displayInput(out var_2, false, 0, gbl.defaultMenuColors, prompt, "Locked. ");
 
                         switch (input)
                         {
@@ -552,7 +581,7 @@ internal class ovr015
                     {
                         prompt += " Exit";
 
-                        input = ovr027.displayInput(out var_2, false, 0, gbl.defaultMenuColors, prompt, "Locked. ");
+                        input = _ovr027.displayInput(out var_2, false, 0, gbl.defaultMenuColors, prompt, "Locked. ");
 
                         switch (input)
                         {
@@ -576,7 +605,7 @@ internal class ovr015
                     MovePartyForward();
                 }
 
-                ovr025.display_map_position_time();
+                _ovr025.display_map_position_time();
             }
             else
             {
@@ -584,7 +613,7 @@ internal class ovr015
             }
         }
 
-        ovr030.DaxArrayFreeDaxBlocks(gbl.byte_1D556);
+        _ovr030.DaxArrayFreeDaxBlocks(gbl.byte_1D556);
 
         gbl.headX_dax = null;
         gbl.bodyX_dax = null;

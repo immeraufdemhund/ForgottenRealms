@@ -3,31 +3,50 @@ using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr019
+public class ovr019
 {
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly ovr030 _ovr030;
+    private readonly seg040 _seg040;
+    private readonly seg051 _seg051;
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardDriver _keyboardDriver;
+
+    public ovr019(ovr025 ovr025, ovr027 ovr027, ovr030 ovr030, seg040 seg040, seg051 seg051, DisplayDriver displayDriver, KeyboardDriver keyboardDriver)
+    {
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _ovr030 = ovr030;
+        _seg040 = seg040;
+        _seg051 = seg051;
+        _displayDriver = displayDriver;
+        _keyboardDriver = keyboardDriver;
+    }
+
     /// <summary>
     /// set a single pixel on the display in graphics modes
     /// </summary>
     /// <param name="colour">if bit 7 set, value is XOR'ed onto screen</param>
     /// <param name="row"></param>
     /// <param name="column"></param>
-    private static void SetPixel(byte colour, ushort row, ushort column)
+    private void SetPixel(byte colour, ushort row, ushort column)
     {
         Display.SetPixel3(column, row, colour);
     }
 
 
-    internal static byte GetPixel(ushort row, ushort column)
+    internal byte GetPixel(ushort row, ushort column)
     {
         return Display.GetPixel(column, row);
     }
 
 
-    internal static void sub_52068()
+    internal void sub_52068()
     {
-        seg040.SetPaletteColor(15, 9);
-        KeyboardDriver.SysDelay(1);
-        seg040.SetPaletteColor(9, 9);
+        _seg040.SetPaletteColor(15, 9);
+        _keyboardDriver.SysDelay(1);
+        _seg040.SetPaletteColor(9, 9);
     }
 
     private class Struct_1ADFB
@@ -65,9 +84,9 @@ internal class ovr019
         }
     }
 
-    private static Struct_1ADFB[] unk_1ADFB = new Struct_1ADFB[3];
+    private Struct_1ADFB[] unk_1ADFB = new Struct_1ADFB[3];
 
-    internal static void sub_520B8(byte[] arg_0, int arg_4, int arg_6, ushort arg_8, ushort arg_A)
+    internal void sub_520B8(byte[] arg_0, int arg_4, int arg_6, ushort arg_8, ushort arg_A)
     {
         double var_12;
         double var_C;
@@ -105,31 +124,31 @@ internal class ovr019
 
             unk_1ADFB[var_5].field_4 = 1;
 
-            byte var_15 = (byte)(seg051.Random(20) + 25);
+            byte var_15 = (byte)(_seg051.Random(20) + 25);
 
             if (gbl.byte_1ADFA < var_15)
             {
                 gbl.byte_1ADFA = var_15;
             }
 
-            int var_16 = seg051.Random(5) + 5;
+            int var_16 = _seg051.Random(5) + 5;
             int var_18 = var_16 + 15;
 
-            var_C = seg051.Random__Real() * (System.Math.PI * 2.0);
-            var_12 = seg051.Random__Real() * (System.Math.PI * 2.0);
+            var_C = _seg051.Random__Real() * (System.Math.PI * 2.0);
+            var_12 = _seg051.Random__Real() * (System.Math.PI * 2.0);
 
-            d = (seg051.Random(10) + 24) * System.Math.Sin(var_C) * System.Math.Sin(var_12);
+            d = (_seg051.Random(10) + 24) * System.Math.Sin(var_C) * System.Math.Sin(var_12);
             int var_1A = (int)d + arg_6;
 
-            d = (seg051.Random(10) + 24) * System.Math.Cos(var_C) * System.Math.Sin(var_12);
+            d = (_seg051.Random(10) + 24) * System.Math.Cos(var_C) * System.Math.Sin(var_12);
             int var_1C = (int)d + arg_4;
 
             for (int var_4 = 1; var_4 <= 0x28; var_4++)
             {
                 Struct_1ADF6 var_21 = gbl.dword_1ADF6[var_4 + ((var_5) * 40) - 1];
 
-                var_C = seg051.Random__Real() * (System.Math.PI * 2.0);
-                var_12 = seg051.Random__Real() * (System.Math.PI * 2.0);
+                var_C = _seg051.Random__Real() * (System.Math.PI * 2.0);
+                var_12 = _seg051.Random__Real() * (System.Math.PI * 2.0);
 
                 var_21.field_00 = arg_A;
                 var_21.field_02 = arg_8;
@@ -146,9 +165,9 @@ internal class ovr019
                 var_21.field_10 = 1;
                 var_21.field_12 = 1;
 
-                var_21.field_13 = (byte)(var_16 + seg051.Random(7) - 4);
-                var_21.field_14 = (byte)(var_18 + seg051.Random(11) - 6);
-                var_21.field_15 = (byte)(var_15 + seg051.Random(7));
+                var_21.field_13 = (byte)(var_16 + _seg051.Random(7) - 4);
+                var_21.field_14 = (byte)(var_18 + _seg051.Random(11) - 6);
+                var_21.field_15 = (byte)(var_15 + _seg051.Random(7));
 
                 /*HACK commented out this code as it does not make sense
                 var_21.field_16 = var_21.field_16;
@@ -160,7 +179,7 @@ internal class ovr019
     }
 
 
-    private static void sub_524F7(Struct_1ADF6[] arg_2, int arg_6)
+    private void sub_524F7(Struct_1ADF6[] arg_2, int arg_6)
     {
         int var_1 = arg_6 % 6;
 
@@ -249,7 +268,7 @@ internal class ovr019
     }
 
 
-    internal static void sub_5279B(byte[] arg_0)
+    internal void sub_5279B(byte[] arg_0)
     {
         byte[] var_3 = arg_0;
         int var_17 = gbl.byte_1ADFA + 1;
@@ -275,7 +294,7 @@ internal class ovr019
     }
 
 
-    internal static void endgame_5285E(byte arg_0, short arg_2, ref short arg_4, ref ushort arg_8, ref ushort arg_C, ref ushort arg_10) /* sub_5285E */
+    internal void endgame_5285E(byte arg_0, short arg_2, ref short arg_4, ref ushort arg_8, ref ushort arg_C, ref ushort arg_10) /* sub_5285E */
     {
         short var_D;
         byte var_B;
@@ -326,10 +345,10 @@ internal class ovr019
 
                 var_B = GetPixel(var_4, var_2);
 
-                SetPixel((byte)(seg051.Random(7) + 8), var_4, var_2);
+                SetPixel((byte)(_seg051.Random(7) + 8), var_4, var_2);
             }
 
-            KeyboardDriver.SysDelay(0x0F);
+            _keyboardDriver.SysDelay(0x0F);
 
             arg_10 = var_2;
             arg_C = var_4;
@@ -354,7 +373,7 @@ internal class ovr019
     }
 
 
-    internal static void endgame_529F4() /* sub_529F4 */
+    internal void endgame_529F4() /* sub_529F4 */
     {
         gbl.dword_1ADF6 = new Struct_1ADF6[120];
         for (int i = 0; i < 120; i++)
@@ -366,21 +385,21 @@ internal class ovr019
         do
         {
             if (gbl.byte_1AE0A == 0 &&
-                seg051.Random(10000) < 1)
+                _seg051.Random(10000) < 1)
             {
-                seg051.FillChar(1, 3, gbl.unk_1AE0B);
-                gbl.byte_1AE1B = seg051.Random((byte)2);
+                _seg051.FillChar(1, 3, gbl.unk_1AE0B);
+                gbl.byte_1AE1B = _seg051.Random((byte)2);
 
                 for (byte i = 0; i < gbl.byte_1AE1B; i++)
                 {
-                    gbl.unk_1AE0B[i] = (byte)(seg051.Random(5) + 2);
+                    gbl.unk_1AE0B[i] = (byte)(_seg051.Random(5) + 2);
                 }
 
                 gbl.word_1AE0F = 65;
                 gbl.word_1AE11 = 65;
-                gbl.word_1AE13 = (ushort)(seg051.Random(20) + 35);
+                gbl.word_1AE13 = (ushort)(_seg051.Random(20) + 35);
 
-                gbl.word_1AE15 = (short)(-(seg051.Random(5) + 50));
+                gbl.word_1AE15 = (short)(-(_seg051.Random(5) + 50));
 
                 gbl.word_1AE19 = gbl.word_1AE15;
                 gbl.word_1AE17 = gbl.word_1AE13;
@@ -398,9 +417,9 @@ internal class ovr019
 
                 sub_5279B(gbl.unk_1AE0B);/*TODO - extra params - gbl.word_1AE15, gbl.word_1AE13, gbl.word_1AE11, gbl.word_1AE0F );*/
 
-                if (KeyboardDriver.KEYPRESSED() == true)
+                if (_keyboardDriver.KEYPRESSED() == true)
                 {
-                    gbl.byte_1AE0A = KeyboardDriver.READKEY();
+                    gbl.byte_1AE0A = _keyboardDriver.READKEY();
                 }
             }
         } while (gbl.byte_1AE0A == 0);
@@ -409,21 +428,21 @@ internal class ovr019
     }
 
 
-    internal static void ShowAnimation(int num_loops, byte block_id, short row_y, short col_x) // sub_52B79
+    internal void ShowAnimation(int num_loops, byte block_id, short row_y, short col_x) // sub_52B79
     {
         int loop_count = 0;
-        int start_time = DisplayDriver.time01();
+        int start_time = _displayDriver.time01();
 
         DaxArray animation = new DaxArray();
 
-        ovr030.load_pic_final(ref animation, 2, block_id, "PIC");
-        seg040.OverlayBounded(animation.frames[0].picture, 0, 0, row_y - 1, col_x - 1);
-        seg040.DrawOverlay();
+        _ovr030.load_pic_final(ref animation, 2, block_id, "PIC");
+        _seg040.OverlayBounded(animation.frames[0].picture, 0, 0, row_y - 1, col_x - 1);
+        _seg040.DrawOverlay();
 
         do
         {
-            ovr030.DrawMaybeOverlayed(animation.CurrentPicture(), true, row_y, col_x);
-            int current_time = DisplayDriver.time01();
+            _ovr030.DrawMaybeOverlayed(animation.CurrentPicture(), true, row_y, col_x);
+            int current_time = _displayDriver.time01();
 
             int delay = animation.CurrentDelay() * (gbl.game_speed_var + 3);
 
@@ -441,72 +460,72 @@ internal class ovr019
             }
         } while (loop_count != num_loops);
 
-        ovr030.DaxArrayFreeDaxBlocks(animation);
+        _ovr030.DaxArrayFreeDaxBlocks(animation);
     }
 
-    private static string aTyranthraxusSp = "Tyranthraxus' spirit coalesces over the slain ";
-    private static string aStormGiant_You = "storm giant. 'You have defeated me. Were it not for ";
-    private static string aTheAmuletOfLyt = "the Amulet of Lythander, I could possess you and rob ";
-    private static string aYouOfYourVicto = "you of your victory. Still I can escape through the pool.";
+    private string aTyranthraxusSp = "Tyranthraxus' spirit coalesces over the slain ";
+    private string aStormGiant_You = "storm giant. 'You have defeated me. Were it not for ";
+    private string aTheAmuletOfLyt = "the Amulet of Lythander, I could possess you and rob ";
+    private string aYouOfYourVicto = "you of your victory. Still I can escape through the pool.";
 
-    private static string aAsYouReachForT = "As you reach for the Pool of Radiance, he cries ";
-    private static string aOutKeepTheGaun = "out, 'Keep the Gauntlet of Moander away from there, you ";
-    private static string aWillUnleashDan = "will unleash dangerous energies. Stay back!' As the ";
-    private static string aGauntletContac = "gauntlet contacts the pool, it contracts and shatters it.";
-    private static string aIAmTrappedWith = "'I am trapped without escape, you have succeeded ";
-    private static string aWhereArmiesHav = "where armies have not. Gloat while you may, Tyranthraxus ";
-    private static string aIsSlainThisDay = "is slain this day.' Before your eyes he crumbles into ";
-    private static string aNothingness_ = "nothingness.";
-    private static string aYouAreCertainH = "You are certain he is destroyed because your ";
-    private static string aFinalBondFades = "final bond fades away. The Curse of the Azure Bonds ";
-    private static string aHasFinallyBeen = "has finally been lifted from you! You are free at ";
-    private static string aLast = "last!";
-    private static string aTheKnightsOfMy = "The Knights of Myth Drannor rush in, '";
-    private static string aCongratulati_0 = "Congratulations, you have destroyed the Flamed One. ";
-    private static string aWithThePowerOf = "With the power of Elminster, let us take you from ";
-    private static string aThisFoulPlaceT = "this  foul place, to a fine feast.'";
-    private static string aYouAreTeleport = "You are teleported to Shadowdale, where festivities ";
-    private static string aHaveAlreadyBeg = "have already begun. A huge cheer goes up at your arrival. ";
-    private static string aGharriAndNacac = "Gharri and Nacacia, arm in arm, yell congratulations ";
-    private static string aFromTheNearbyS = "from the nearby stands. 'You have won!'";
+    private string aAsYouReachForT = "As you reach for the Pool of Radiance, he cries ";
+    private string aOutKeepTheGaun = "out, 'Keep the Gauntlet of Moander away from there, you ";
+    private string aWillUnleashDan = "will unleash dangerous energies. Stay back!' As the ";
+    private string aGauntletContac = "gauntlet contacts the pool, it contracts and shatters it.";
+    private string aIAmTrappedWith = "'I am trapped without escape, you have succeeded ";
+    private string aWhereArmiesHav = "where armies have not. Gloat while you may, Tyranthraxus ";
+    private string aIsSlainThisDay = "is slain this day.' Before your eyes he crumbles into ";
+    private string aNothingness_ = "nothingness.";
+    private string aYouAreCertainH = "You are certain he is destroyed because your ";
+    private string aFinalBondFades = "final bond fades away. The Curse of the Azure Bonds ";
+    private string aHasFinallyBeen = "has finally been lifted from you! You are free at ";
+    private string aLast = "last!";
+    private string aTheKnightsOfMy = "The Knights of Myth Drannor rush in, '";
+    private string aCongratulati_0 = "Congratulations, you have destroyed the Flamed One. ";
+    private string aWithThePowerOf = "With the power of Elminster, let us take you from ";
+    private string aThisFoulPlaceT = "this  foul place, to a fine feast.'";
+    private string aYouAreTeleport = "You are teleported to Shadowdale, where festivities ";
+    private string aHaveAlreadyBeg = "have already begun. A huge cheer goes up at your arrival. ";
+    private string aGharriAndNacac = "Gharri and Nacacia, arm in arm, yell congratulations ";
+    private string aFromTheNearbyS = "from the nearby stands. 'You have won!'";
 
 
 
-    internal static void end_game_text()
+    internal void end_game_text()
     {
         gbl.last_game_state = gbl.game_state;
         gbl.game_state = GameState.EndGame;
 
-        DisplayDriver.press_any_key(aTyranthraxusSp, true, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aStormGiant_You, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aTheAmuletOfLyt, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aYouOfYourVicto, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.DisplayAndPause("Press any key to continue.", 13);
+        _displayDriver.press_any_key(aTyranthraxusSp, true, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aStormGiant_You, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aTheAmuletOfLyt, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aYouOfYourVicto, false, 10, TextRegion.NormalBottom);
+        _displayDriver.DisplayAndPause("Press any key to continue.", 13);
 
-        DisplayDriver.press_any_key(aAsYouReachForT, true, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aOutKeepTheGaun, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aWillUnleashDan, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aGauntletContac, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aAsYouReachForT, true, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aOutKeepTheGaun, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aWillUnleashDan, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aGauntletContac, false, 10, TextRegion.NormalBottom);
 
         ShowAnimation(1, 0x4a, 3, 3);
 
-        DisplayDriver.DisplayAndPause("Press any key to continue.", 13);
-        ovr027.ClearPromptArea();
+        _displayDriver.DisplayAndPause("Press any key to continue.", 13);
+        _ovr027.ClearPromptArea();
 
-        DisplayDriver.press_any_key(aIAmTrappedWith, true, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aWhereArmiesHav, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aIsSlainThisDay, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aNothingness_, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aIAmTrappedWith, true, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aWhereArmiesHav, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aIsSlainThisDay, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aNothingness_, false, 10, TextRegion.NormalBottom);
 
         ShowAnimation(1, 0x4B, 3, 3);
 
-        DisplayDriver.DisplayAndPause("Press any key to continue.", 13);
-        ovr027.ClearPromptArea();
+        _displayDriver.DisplayAndPause("Press any key to continue.", 13);
+        _ovr027.ClearPromptArea();
 
-        DisplayDriver.press_any_key(aYouAreCertainH, true, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aFinalBondFades, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aHasFinallyBeen, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aLast, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aYouAreCertainH, true, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aFinalBondFades, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aHasFinallyBeen, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aLast, false, 10, TextRegion.NormalBottom);
 
         gbl.area_ptr.picture_fade = 1;
 
@@ -514,27 +533,27 @@ internal class ovr019
 
         gbl.area_ptr.picture_fade = 0;
 
-        ovr030.head_body(0x41, 0x41);
-        ovr030.draw_head_and_body(true, 3, 3);
+        _ovr030.head_body(0x41, 0x41);
+        _ovr030.draw_head_and_body(true, 3, 3);
 
-        DisplayDriver.press_any_key(aTheKnightsOfMy, true, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aCongratulati_0, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aWithThePowerOf, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aThisFoulPlaceT, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aTheKnightsOfMy, true, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aCongratulati_0, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aWithThePowerOf, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aThisFoulPlaceT, false, 10, TextRegion.NormalBottom);
 
-        DisplayDriver.DisplayAndPause("Press any key to continue.", 13);
-        ovr027.ClearPromptArea();
-        ovr030.load_bigpic(0x7A);
+        _displayDriver.DisplayAndPause("Press any key to continue.", 13);
+        _ovr027.ClearPromptArea();
+        _ovr030.load_bigpic(0x7A);
 
-        ovr030.draw_bigpic();
+        _ovr030.draw_bigpic();
 
-        DisplayDriver.press_any_key(aYouAreTeleport, true, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aHaveAlreadyBeg, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aGharriAndNacac, false, 10, TextRegion.NormalBottom);
-        DisplayDriver.press_any_key(aFromTheNearbyS, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aYouAreTeleport, true, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aHaveAlreadyBeg, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aGharriAndNacac, false, 10, TextRegion.NormalBottom);
+        _displayDriver.press_any_key(aFromTheNearbyS, false, 10, TextRegion.NormalBottom);
         endgame_529F4();
 
         gbl.game_state = gbl.last_game_state;
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
     }
 }

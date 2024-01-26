@@ -4,11 +4,17 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class SpellCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    public SpellCommand(ovr008 ovr008)
+    {
+        _ovr008 = ovr008;
+    }
+
     public void Execute()
     {
-        ovr008.vm_LoadCmdSets(3);
+        _ovr008.vm_LoadCmdSets(3);
 
-        var spell_id = (byte)ovr008.vm_GetCmdValue(1);
+        var spell_id = (byte)_ovr008.vm_GetCmdValue(1);
         var loc_a = gbl.cmd_opps[2].Word;
         var loc_b = gbl.cmd_opps[3].Word;
 
@@ -49,7 +55,7 @@ public class SpellCommand : IGameCommand
         VmLog.WriteLine("CMD_Spell: spell_id: {0} loc a: {1} val a: {2} loc b: {3} val b: {4}",
             spell_id, new MemLoc(loc_a), spell_index, new MemLoc(loc_b), player_index);
 
-        ovr008.vm_SetMemoryValue(spell_index, loc_a);
-        ovr008.vm_SetMemoryValue(player_index, loc_b);
+        _ovr008.vm_SetMemoryValue(spell_index, loc_a);
+        _ovr008.vm_SetMemoryValue(player_index, loc_b);
     }
 }

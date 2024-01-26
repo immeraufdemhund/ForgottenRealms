@@ -3,9 +3,93 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr006
+public class ovr006
 {
-    internal static int calc_battle_exp()
+    private readonly ovr007 _ovr007;
+    private readonly ovr008 _ovr008;
+    private readonly ovr018 _ovr018;
+    private readonly ovr020 _ovr020;
+    private readonly ovr022 _ovr022;
+    private readonly ovr023 _ovr023;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly seg037 _seg037;
+    private readonly DisplayDriver _displayDriver;
+
+    public ovr006(ovr007 ovr007, ovr008 ovr008, ovr018 ovr018, ovr020 ovr020, ovr022 ovr022, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, seg037 seg037, DisplayDriver displayDriver)
+    {
+        _ovr007 = ovr007;
+        _ovr008 = ovr008;
+        _ovr018 = ovr018;
+        _ovr020 = ovr020;
+        _ovr022 = ovr022;
+        _ovr023 = ovr023;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _seg037 = seg037;
+        _displayDriver = displayDriver;
+    }
+
+    internal void AfterCombatExpAndTreasure() // sub_2E7A2
+    {
+        gbl.area2_ptr.field_58E = 0;
+        gbl.byte_1AB14 = false;
+
+        if (gbl.inDemo == false)
+        {
+            CleanupPlayersStateAfterCombat();
+        }
+
+        gbl.game_state = GameState.AfterCombat;
+
+        DeallocateNonTeamMemebers();
+
+        if (gbl.inDemo == false)
+        {
+            foreach (Player player in gbl.TeamList)
+            {
+                _ovr025.reclac_player_values(player);
+            }
+
+            if (gbl.party_killed == false ||
+                gbl.combat_type == CombatType.duel)
+            {
+                if (gbl.party_fled == true)
+                {
+                    gbl.items_pointer.Clear();
+                }
+
+                if (gbl.inDemo == false)
+                {
+                    distributeNpcTreasure();
+                    displayCombatResults(gbl.exp_to_add);
+                    distributeCombatTreasure();
+                }
+
+                gbl.items_pointer.Clear();
+            }
+            else
+            {
+                gbl.area2_ptr.field_58E = 0x80;
+                _seg037.DrawFrame_Outer();
+                gbl.textXCol = 2;
+                gbl.textYCol = 6;
+                _displayDriver.press_any_key("The monsters rejoice for the party has been destroyed", true, 10, 0x16, 0x25, 5, 2);
+                _displayDriver.DisplayAndPause("Press any key to continue", 13);
+            }
+
+            gbl.DelayBetweenCharacters = true;
+            gbl.area2_ptr.field_6E0 = 0;
+            gbl.area2_ptr.field_6E2 = 0;
+            gbl.area2_ptr.field_6E4 = 0;
+            gbl.area2_ptr.field_5C6 = 0;
+            gbl.area2_ptr.isDuel = false;
+        }
+    }
+
+    private int calc_battle_exp()
     {
         if (gbl.combat_type == CombatType.duel)
         {
@@ -35,7 +119,7 @@ internal class ovr006
                     {
                         foreach (Item item in player.items)
                         {
-                            ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
+                            _ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
 
                             Item newItem = item.ShallowClone();
                             newItem.readied = false;
@@ -63,8 +147,7 @@ internal class ovr006
         }
     }
 
-
-    internal static void addExp(int exp_to_add)
+    private void addExp(int exp_to_add)
     {
         foreach (Player player in gbl.TeamList)
         {
@@ -166,7 +249,7 @@ internal class ovr006
         Affects.helpless
     };
 
-    internal static void CleanupPlayersStateAfterCombat() // sub_2D556
+    private void CleanupPlayersStateAfterCombat() // sub_2D556
     {
         gbl.partyAnimatedCount = 0;
         gbl.party_killed = true;
@@ -243,7 +326,7 @@ internal class ovr006
                     gbl.partyAnimatedCount++;
                 }
 
-                System.Array.ForEach(affects_array, affect => ovr024.remove_affect(null, affect, player));
+                System.Array.ForEach(affects_array, affect => _ovr024.remove_affect(null, affect, player));
             }
 
             if (gbl.battleWon == true)
@@ -320,7 +403,7 @@ internal class ovr006
 
                 foreach (Player player in to_remove)
                 {
-                    gbl.SelectedPlayer = ovr018.FreeCurrentPlayer(player, true, false);
+                    gbl.SelectedPlayer = _ovr018.FreeCurrentPlayer(player, true, false);
                 }
             }
             else
@@ -341,7 +424,7 @@ internal class ovr006
 
                 foreach (Player player in to_remove)
                 {
-                    gbl.SelectedPlayer = ovr018.FreeCurrentPlayer(player, true, false);
+                    gbl.SelectedPlayer = _ovr018.FreeCurrentPlayer(player, true, false);
                 }
 
                 gbl.area2_ptr.party_size = 0;
@@ -377,17 +460,16 @@ internal class ovr006
         }
     }
 
-
-    internal static void displayCombatResults(int exp) /* sub_2DABC */
+    private void displayCombatResults(int exp) /* sub_2DABC */
     {
-        seg037.DrawFrame_Outer();
+        _seg037.DrawFrame_Outer();
 
         if (gbl.byte_1AB14 == true ||
             gbl.combat_type == CombatType.duel)
         {
             if (gbl.party_fled == true)
             {
-                DisplayDriver.displayString("The party has fled.", 0, 10, 3, 1);
+                _displayDriver.displayString("The party has fled.", 0, 10, 3, 1);
 
                 exp = 0;
 
@@ -401,7 +483,7 @@ internal class ovr006
                     (gbl.battleWon == false && gbl.area2_ptr.isDuel == true))
                 {
                     gbl.area2_ptr.field_58E = 0x80;
-                    DisplayDriver.displayString("You have lost the fight.", 0, 10, 3, 1);
+                    _displayDriver.displayString("You have lost the fight.", 0, 10, 3, 1);
 
                     exp = 0;
                 }
@@ -409,18 +491,18 @@ internal class ovr006
                 {
                     if (gbl.combat_type == CombatType.duel)
                     {
-                        DisplayDriver.displayString("You have won the duel.", 0, 10, 3, 1);
+                        _displayDriver.displayString("You have won the duel.", 0, 10, 3, 1);
                     }
                     else
                     {
-                        DisplayDriver.displayString("The party has won.", 0, 10, 3, 1);
+                        _displayDriver.displayString("The party has won.", 0, 10, 3, 1);
                     }
                 }
             }
         }
         else
         {
-            DisplayDriver.displayString("The party has found Treasure!", 0, 10, 3, 1);
+            _displayDriver.displayString("The party has found Treasure!", 0, 10, 3, 1);
         }
 
         string text;
@@ -433,16 +515,15 @@ internal class ovr006
             text = "Each character receives " + exp.ToString();
         }
 
-        DisplayDriver.displayString(text, 0, 10, 5, 1);
-        DisplayDriver.displayString("experience points.", 0, 10, 7, 1);
+        _displayDriver.displayString(text, 0, 10, 5, 1);
+        _displayDriver.displayString("experience points.", 0, 10, 7, 1);
 
-        ovr027.displayInput(false, 1, new MenuColorSet(15, 15, 15), "press <enter>/<return> to continue", string.Empty);
+        _ovr027.displayInput(false, 1, new MenuColorSet(15, 15, 15), "press <enter>/<return> to continue", string.Empty);
     }
 
-
-    internal static void select_treasure(ref int index, out Item selectedItem, out char key) /* sub_2DD2B */
+    private void select_treasure(ref int index, out Item selectedItem, out char key) /* sub_2DD2B */
     {
-        seg037.DrawFrame_Outer();
+        _seg037.DrawFrame_Outer();
 
         var list = new List<MenuItem>();
 
@@ -453,20 +534,19 @@ internal class ovr006
 
         gbl.items_pointer.ForEach(item =>
         {
-            ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
+            _ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
             list.Insert(0, new MenuItem(item.name, item));
         });
 
         bool redrawMenuItems = true;
         MenuItem selected;
-        key = ovr027.sl_select_item(out selected, ref index, ref redrawMenuItems, true, list,
+        key = _ovr027.sl_select_item(out selected, ref index, ref redrawMenuItems, true, list,
             0x16, 0x26, 1, 1, gbl.defaultMenuColors, "Take", "Items: ");
 
         selectedItem = selected != null ? selected.Item : null;
     }
 
-
-    internal static void take_items_treasure() /* sub_2DDFC */
+    private void take_items_treasure() /* sub_2DDFC */
     {
         bool stop;
         int index = 0;
@@ -487,7 +567,7 @@ internal class ovr006
             {
                 stop = false;
 
-                bool willOverload = ovr007.PlayerAddItem(item);
+                bool willOverload = _ovr007.PlayerAddItem(item);
 
                 if (willOverload == false)
                 {
@@ -498,11 +578,10 @@ internal class ovr006
             }
         } while (stop == false);
 
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
     }
 
-
-    internal static void take_treasure(ref bool items_present, ref bool money_present) /* sub_2DF2E */
+    private void take_treasure(ref bool items_present, ref bool money_present) /* sub_2DF2E */
     {
         if (money_present == true)
         {
@@ -511,13 +590,13 @@ internal class ovr006
                 bool done = false;
                 do
                 {
-                    char key = ovr027.displayInput(true, 1, gbl.defaultMenuColors, "Money Items Exit", "Take: ");
+                    char key = _ovr027.displayInput(true, 1, gbl.defaultMenuColors, "Money Items Exit", "Take: ");
 
                     switch (key)
                     {
                         case 'M':
-                            ovr022.TakePoolMoney();
-                            ovr025.LoadPic();
+                            _ovr022.TakePoolMoney();
+                            _ovr025.LoadPic();
                             break;
 
                         case 'I':
@@ -530,16 +609,16 @@ internal class ovr006
                             break;
 
                         case 'G':
-                            ovr020.scroll_team_list(key);
+                            _ovr020.scroll_team_list(key);
                             break;
 
                         case 'O':
-                            ovr020.scroll_team_list(key);
+                            _ovr020.scroll_team_list(key);
                             break;
                     }
 
-                    ovr025.PartySummary(gbl.SelectedPlayer);
-                    ovr022.treasureOnGround(out items_present, out money_present);
+                    _ovr025.PartySummary(gbl.SelectedPlayer);
+                    _ovr022.treasureOnGround(out items_present, out money_present);
 
                     if (money_present == false ||
                         items_present == false)
@@ -550,8 +629,8 @@ internal class ovr006
             }
             else
             {
-                ovr022.TakePoolMoney();
-                ovr025.LoadPic();
+                _ovr022.TakePoolMoney();
+                _ovr025.LoadPic();
             }
         }
         else
@@ -560,19 +639,18 @@ internal class ovr006
         }
     }
 
-
-    internal static void distributeCombatTreasure() /* sub_2E0C3 */
+    private void distributeCombatTreasure() /* sub_2E0C3 */
     {
         byte spellId = 0; /* Simeon */
 
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
 
         bool done = false;
         do
         {
             bool items_present;
             bool money_present;
-            ovr022.treasureOnGround(out items_present, out money_present);
+            _ovr022.treasureOnGround(out items_present, out money_present);
 
             string text = "View Pool Exit";
             string suffix = " Exit";
@@ -607,12 +685,12 @@ internal class ovr006
             }
 
             bool ctrl_key;
-            char input_key = ovr027.displayInput(out ctrl_key, true, 1, gbl.defaultMenuColors, text, "");
+            char input_key = _ovr027.displayInput(out ctrl_key, true, 1, gbl.defaultMenuColors, text, "");
 
             switch (input_key)
             {
                 case 'V':
-                    ovr020.viewPlayer();
+                    _ovr020.viewPlayer();
                     break;
 
                 case 'T':
@@ -622,27 +700,27 @@ internal class ovr006
                 case 'P':
                     if (ctrl_key == false)
                     {
-                        ovr022.poolMoney();
+                        _ovr022.poolMoney();
                     }
                     break;
 
                 case 'S':
-                    ovr022.share_pooled();
+                    _ovr022.share_pooled();
                     break;
 
                 case 'D':
-                    ovr023.sub_5D2E1(false, QuickFight.False, spellId);
+                    _ovr023.sub_5D2E1(false, QuickFight.False, spellId);
                     break;
 
                 case 'E':
                 case '\0':
-                    ovr022.treasureOnGround(out items_present, out money_present);
+                    _ovr022.treasureOnGround(out items_present, out money_present);
 
                     if (money_present == true || items_present == true)
                     {
-                        DisplayDriver.press_any_key("There is still treasure left.  ", true, 10, TextRegion.NormalBottom);
-                        DisplayDriver.press_any_key("Do you want to go back and claim your treasure?", false, 15, TextRegion.NormalBottom);
-                        int menu_selected = ovr008.sub_317AA(false, false, gbl.defaultMenuColors, "~Yes ~No", "");
+                        _displayDriver.press_any_key("There is still treasure left.  ", true, 10, TextRegion.NormalBottom);
+                        _displayDriver.press_any_key("Do you want to go back and claim your treasure?", false, 15, TextRegion.NormalBottom);
+                        int menu_selected = _ovr008.sub_317AA(false, false, gbl.defaultMenuColors, "~Yes ~No", "");
 
                         if (menu_selected == 1)
                         {
@@ -650,7 +728,7 @@ internal class ovr006
                         }
                         else
                         {
-                            seg037.draw8x8_clear_area(0x16, 0x26, 17, 1);
+                            _seg037.draw8x8_clear_area(0x16, 0x26, 17, 1);
                         }
                     }
                     else
@@ -660,20 +738,19 @@ internal class ovr006
                     break;
 
                 case 'G':
-                    ovr020.scroll_team_list(input_key);
-                    ovr025.PartySummary(gbl.SelectedPlayer);
+                    _ovr020.scroll_team_list(input_key);
+                    _ovr025.PartySummary(gbl.SelectedPlayer);
                     break;
 
                 case 'O':
-                    ovr020.scroll_team_list(input_key);
-                    ovr025.PartySummary(gbl.SelectedPlayer);
+                    _ovr020.scroll_team_list(input_key);
+                    _ovr025.PartySummary(gbl.SelectedPlayer);
                     break;
             }
         } while (done == false);
     }
 
-
-    internal static void DeallocateNonTeamMemebers() // sub_2E3C7
+    private void DeallocateNonTeamMemebers() // sub_2E3C7
     {
         gbl.area2_ptr.field_590 = 0;
 
@@ -703,14 +780,13 @@ internal class ovr006
 
         foreach (KeyValuePair<Player, bool> kvp in to_remove)
         {
-            ovr018.FreeCurrentPlayer(kvp.Key, true, kvp.Value);
+            _ovr018.FreeCurrentPlayer(kvp.Key, true, kvp.Value);
         }
 
         gbl.SelectedPlayer = gbl.TeamList.Count > 0 ? gbl.TeamList[0] : null;
     }
 
-
-    internal static void distributeNpcTreasure() /*sub_2E50E*/
+    private void distributeNpcTreasure() /*sub_2E50E*/
     {
         bool treasureTaken = false;
 
@@ -738,7 +814,7 @@ internal class ovr006
 
         if (treasureTaken)
         {
-            seg037.DrawFrame_Outer();
+            _seg037.DrawFrame_Outer();
             int yCol = 0;
 
             foreach (Player player in gbl.TeamList)
@@ -749,71 +825,13 @@ internal class ovr006
                 {
                     string output = player.name + " takes and hides " + ((player.sex == 0) ? "his" : "her") + " share.";
 
-                    DisplayDriver.press_any_key(output, true, 10, 0x16, 0x22, yCol + 5, 5);
+                    _displayDriver.press_any_key(output, true, 10, 0x16, 0x22, yCol + 5, 5);
 
                     yCol += 2;
                 }
             }
 
-            ovr027.displayInput(false, 1, new MenuColorSet(15, 15, 15), "press <enter>/<return> to continue", string.Empty);
-        }
-    }
-
-
-    internal static void AfterCombatExpAndTreasure() // sub_2E7A2
-    {
-        gbl.area2_ptr.field_58E = 0;
-        gbl.byte_1AB14 = false;
-
-        if (gbl.inDemo == false)
-        {
-            CleanupPlayersStateAfterCombat();
-        }
-
-        gbl.game_state = GameState.AfterCombat;
-
-        DeallocateNonTeamMemebers();
-
-        if (gbl.inDemo == false)
-        {
-            foreach (Player player in gbl.TeamList)
-            {
-                ovr025.reclac_player_values(player);
-            }
-
-            if (gbl.party_killed == false ||
-                gbl.combat_type == CombatType.duel)
-            {
-                if (gbl.party_fled == true)
-                {
-                    gbl.items_pointer.Clear();
-                }
-
-                if (gbl.inDemo == false)
-                {
-                    distributeNpcTreasure();
-                    displayCombatResults(gbl.exp_to_add);
-                    distributeCombatTreasure();
-                }
-
-                gbl.items_pointer.Clear();
-            }
-            else
-            {
-                gbl.area2_ptr.field_58E = 0x80;
-                seg037.DrawFrame_Outer();
-                gbl.textXCol = 2;
-                gbl.textYCol = 6;
-                DisplayDriver.press_any_key("The monsters rejoice for the party has been destroyed", true, 10, 0x16, 0x25, 5, 2);
-                DisplayDriver.DisplayAndPause("Press any key to continue", 13);
-            }
-
-            gbl.DelayBetweenCharacters = true;
-            gbl.area2_ptr.field_6E0 = 0;
-            gbl.area2_ptr.field_6E2 = 0;
-            gbl.area2_ptr.field_6E4 = 0;
-            gbl.area2_ptr.field_5C6 = 0;
-            gbl.area2_ptr.isDuel = false;
+            _ovr027.displayInput(false, 1, new MenuColorSet(15, 15, 15), "press <enter>/<return> to continue", string.Empty);
         }
     }
 }

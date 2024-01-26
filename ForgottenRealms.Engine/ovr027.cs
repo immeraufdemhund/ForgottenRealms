@@ -4,14 +4,31 @@ using ForgottenRealms.Engine.Classes;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr027
+public class ovr027
 {
-    internal static MenuItem getStringListEntry(List<MenuItem> list, int index)
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardDriver _keyboardDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly MapCursor _mapCursor;
+    private readonly ovr030 _ovr030;
+    private readonly seg037 _seg037;
+
+    public ovr027(DisplayDriver displayDriver, KeyboardDriver keyboardDriver, KeyboardService keyboardService, MapCursor mapCursor, ovr030 ovr030, seg037 seg037)
+    {
+        _displayDriver = displayDriver;
+        _keyboardDriver = keyboardDriver;
+        _keyboardService = keyboardService;
+        _mapCursor = mapCursor;
+        _ovr030 = ovr030;
+        _seg037 = seg037;
+    }
+
+    internal MenuItem getStringListEntry(List<MenuItem> list, int index)
     {
         return (list.Count > index) ? list[index] : null;
     }
 
-    private static Set highlightable_text = new Set('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+    private Set highlightable_text = new Set('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 
 
     internal class highlight
@@ -56,7 +73,7 @@ internal class ovr027
     /// <summary>
     /// sub_6C0DA
     /// </summary>
-    internal static HighlightSet BuildInputKeys(string menuText, out int highlighCount)
+    internal HighlightSet BuildInputKeys(string menuText, out int highlighCount)
     {
         HighlightSet highlighSet = new HighlightSet();
 
@@ -85,8 +102,7 @@ internal class ovr027
         return highlighSet;
     }
 
-
-    internal static void display_highlighed_text(int highlighed_word, int highlightFgColor,
+    internal void display_highlighed_text(int highlighed_word, int highlightFgColor,
         string text, int xOffset, int fgColor, HighlightSet highlights) /* sub_6C1E9 */
     {
         if (text.Length > 0)
@@ -97,21 +113,21 @@ internal class ovr027
                     highlights[highlighed_word].end >= i &&
                     highlightFgColor != 0)
                 {
-                    DisplayDriver.display_char01(text[i], 1, highlightFgColor, 0, 0x18, xOffset + i);
+                    _displayDriver.display_char01(text[i], 1, highlightFgColor, 0, 0x18, xOffset + i);
                 }
                 else if (highlightable_text.MemberOf(text[i]) == true)
                 {
-                    DisplayDriver.display_char01(text[i], 1, 0, highlightFgColor, 0x18, xOffset + i);
+                    _displayDriver.display_char01(text[i], 1, 0, highlightFgColor, 0x18, xOffset + i);
                 }
                 else
                 {
-                    DisplayDriver.display_char01(text[i], 1, 0, fgColor, 0x18, xOffset + i);
+                    _displayDriver.display_char01(text[i], 1, 0, fgColor, 0x18, xOffset + i);
                 }
             }
 
             if (text.Length + xOffset < 0x27)
             {
-                DisplayDriver.display_char01(' ', (0x27 - text.Length - xOffset) + 1,
+                _displayDriver.display_char01(' ', (0x27 - text.Length - xOffset) + 1,
                     0, 0, 0x18, xOffset + text.Length);
             }
 
@@ -119,17 +135,17 @@ internal class ovr027
         }
     }
 
-    private static Set alpha_number_input = new Set(' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'); //unk_6C398
-    private static Set number_input = new Set('1', '2', '3', '4', '5', '6', '7', '8', '9', '\\'); //unk_6C3B8
-    private static char[] keypad_ctrl_codes = { 'O', 'P', 'Q', 'K', ' ', 'M', 'G', 'H', 'I' };
+    private Set alpha_number_input = new Set(' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'); //unk_6C398
+    private Set number_input = new Set('1', '2', '3', '4', '5', '6', '7', '8', '9', '\\'); //unk_6C3B8
+    private char[] keypad_ctrl_codes = { 'O', 'P', 'Q', 'K', ' ', 'M', 'G', 'H', 'I' };
 
-    internal static char displayInput(bool useOverlay, byte arg_6, MenuColorSet colors, string displayInputString, string displayExtraString)
+    internal char displayInput(bool useOverlay, byte arg_6, MenuColorSet colors, string displayInputString, string displayExtraString)
     {
         bool dummyBool;
         return displayInput(out dummyBool, useOverlay, arg_6, colors, displayInputString, displayExtraString);
     }
 
-    internal static char displayInput(out bool specialKeyPressed, bool useOverlay, byte accept_ctrlkeys, MenuColorSet colors, string displayInputString, string displayExtraString)
+    internal char displayInput(out bool specialKeyPressed, bool useOverlay, byte accept_ctrlkeys, MenuColorSet colors, string displayInputString, string displayExtraString)
     {
         int highlistCount;
 
@@ -154,7 +170,7 @@ internal class ovr027
 
         if (displayExtraString.Length != 0)
         {
-            DisplayDriver.displayString(displayExtraString, 0, colors.prompt, 0x18, 0);
+            _displayDriver.displayString(displayExtraString, 0, colors.prompt, 0x18, 0);
         }
 
         int displayInputXOffset = displayExtraString.Length;
@@ -166,9 +182,9 @@ internal class ovr027
             gbl.bigpic_block_id == 0x79 &&
             gbl.lastDaxBlockId != 0x50)
         {
-            MapCursor.SetPosition(gbl.area_ptr.current_city);
-            MapCursor.Draw();
-            MapCursor.Restore();
+            _mapCursor.SetPosition(gbl.area_ptr.current_city);
+            _mapCursor.Draw();
+            _mapCursor.Restore();
         }
 
         do
@@ -178,14 +194,14 @@ internal class ovr027
                 gbl.lastDaxBlockId != 0x50 &&
                 DateTime.Now >= timeCursorOn)
             {
-                MapCursor.Draw();
+                _mapCursor.Draw();
                 timeCursorOn = timeCursorOff.AddMilliseconds(300);
             }
 
             if ((gbl.area_ptr.picture_fade != 0 || useOverlay == true) &&
                 gbl.byte_1D556.curFrame > 0)
             {
-                ovr030.DrawMaybeOverlayed(gbl.byte_1D556.CurrentPicture(), useOverlay, 3, 3);
+                _ovr030.DrawMaybeOverlayed(gbl.byte_1D556.CurrentPicture(), useOverlay, 3, 3);
 
                 int delay = gbl.byte_1D556.CurrentDelay() * 100;
 
@@ -204,13 +220,13 @@ internal class ovr027
                 input_key = gbl.displayInputTimeoutValue;
                 stopLoop = true;
             }
-            else if (KeyboardDriver.KEYPRESSED() == true)
+            else if (_keyboardDriver.KEYPRESSED() == true)
             {
-                input_key = (char)KeyboardService.GetInputKey();
+                input_key = (char)_keyboardService.GetInputKey();
 
                 if (input_key == 0)
                 {
-                    input_key = (char)KeyboardService.GetInputKey();
+                    input_key = (char)_keyboardService.GetInputKey();
 
                     if (accept_ctrlkeys != 0)
                     {
@@ -317,7 +333,7 @@ internal class ovr027
                 gbl.lastDaxBlockId != 0x50 &&
                 DateTime.Now >= timeCursorOff)
             {
-                MapCursor.Restore();
+                _mapCursor.Restore();
 
                 timeCursorOff = timeCursorOn.AddMilliseconds(500);
             }
@@ -332,7 +348,7 @@ internal class ovr027
             gbl.bigpic_block_id == 0x79 &&
             gbl.lastDaxBlockId != 0x50)
         {
-            MapCursor.Restore();
+            _mapCursor.Restore();
         }
 
         gbl.displayInput_specialKeyPressed = specialKeyPressed;
@@ -341,23 +357,23 @@ internal class ovr027
     }
 
 
-    internal static void ClearPromptArea() // redraw_screen
+    internal void ClearPromptArea() // redraw_screen
     {
         ClearPromptAreaNoUpdate();
 
         Display.Update();
     }
 
-    internal static void ClearPromptAreaNoUpdate()
+    internal void ClearPromptAreaNoUpdate()
     {
-        DisplayDriver.DrawRectangle(0, 0x18, 0x27, 0x18, 0);
+        _displayDriver.DrawRectangle(0, 0x18, 0x27, 0x18, 0);
     }
 
-    private static void sub_6C897(int index,
+    private void sub_6C897(int index,
         int yEnd, int xEnd, int yStart, int xStart, List<MenuItem> list,
         int normalColor, int headingColor, int displayFillWidth) // sub_6C897
     {
-        seg037.draw8x8_clear_area(yEnd, xEnd, yStart, xStart);
+        _seg037.draw8x8_clear_area(yEnd, xEnd, yStart, xStart);
 
         MenuItem var_4 = getStringListEntry(list, index);
 
@@ -366,29 +382,29 @@ internal class ovr027
 
         foreach (var menu in list.GetRange(index, count))
         {
-            DisplayDriver.displayString(menu.Text, 0, menu.Heading ? headingColor : normalColor, yCol, xStart);
+            _displayDriver.displayString(menu.Text, 0, menu.Heading ? headingColor : normalColor, yCol, xStart);
 
             if (menu.Text.Length < displayFillWidth)
             {
-                DisplayDriver.display_char01(' ', displayFillWidth - menu.Text.Length, 0, 0, yCol, menu.Text.Length + xStart);
+                _displayDriver.display_char01(' ', displayFillWidth - menu.Text.Length, 0, 0, yCol, menu.Text.Length + xStart);
             }
             yCol++;
         }
     }
 
 
-    private static int getBegingOfString(string text)
+    private int getBegingOfString(string text)
     {
         return text.Length - text.TrimStart(' ').Length;
     }
 
-    private static void ListItemHighlighted(int index, List<MenuItem> stringList, int yCol, int xCol, int bgColor)
+    private void ListItemHighlighted(int index, List<MenuItem> stringList, int yCol, int xCol, int bgColor)
     {
         MenuItem menu_item = getStringListEntry(stringList, index);
 
         int stringStart = getBegingOfString(menu_item.Text);
 
-        DisplayDriver.displayString(
+        _displayDriver.displayString(
             menu_item.Text.Trim(),
             bgColor,
             0,
@@ -397,7 +413,7 @@ internal class ovr027
     }
 
 
-    private static void ListItemNormal(int index, List<MenuItem> list, int yCol, int xCol, int normalColor, int headingColor)
+    private void ListItemNormal(int index, List<MenuItem> list, int yCol, int xCol, int normalColor, int headingColor)
     {
         MenuItem menu_item = getStringListEntry(list, index);
 
@@ -407,16 +423,16 @@ internal class ovr027
 
         if (menu_item.Heading)
         {
-            DisplayDriver.displayString(text, 0, headingColor, yCol + (index - gbl.menuScreenIndex), xCol + var_5);
+            _displayDriver.displayString(text, 0, headingColor, yCol + (index - gbl.menuScreenIndex), xCol + var_5);
         }
         else
         {
-            DisplayDriver.displayString(text, 0, normalColor, yCol + (index - gbl.menuScreenIndex), xCol + var_5);
+            _displayDriver.displayString(text, 0, normalColor, yCol + (index - gbl.menuScreenIndex), xCol + var_5);
         }
     }
 
 
-    private static int skipHeadings(bool backwardsStep, int index, List<MenuItem> list, int listDisplayHeight) // sub_6CC08
+    private int skipHeadings(bool backwardsStep, int index, List<MenuItem> list, int listDisplayHeight) // sub_6CC08
     {
         int var_2 = 0;
 
@@ -461,7 +477,7 @@ internal class ovr027
     }
 
 
-    private static void menu_scroll_page(bool backwardsStep, ref int index, List<MenuItem> list, int listDisplayHeight,
+    private void menu_scroll_page(bool backwardsStep, ref int index, List<MenuItem> list, int listDisplayHeight,
         int yEnd, int xEnd, int yStart, int xStart,
         int normalColor, int headingColor, int displayFillWidth) // sub_6CD38
     {
@@ -494,7 +510,7 @@ internal class ovr027
     }
 
 
-    private static int menu_scroll_in_page(bool backwardsStep, int index, List<MenuItem> list, int listDisplayHeight) // sub_6CDCA
+    private int menu_scroll_in_page(bool backwardsStep, int index, List<MenuItem> list, int listDisplayHeight) // sub_6CDCA
     {
         if (backwardsStep == true)
         {
@@ -529,7 +545,7 @@ internal class ovr027
     }
 
 
-    internal static char sl_select_item(out MenuItem result_ptr, ref int index_ptr,
+    internal char sl_select_item(out MenuItem result_ptr, ref int index_ptr,
         ref bool redrawMenuItems, bool showExit, List<MenuItem> stringList,
         int endY, int endX, int startY, int startX,
         MenuColorSet colors, string inputString, string extraTextString)
@@ -673,7 +689,7 @@ internal class ovr027
     }
 
 
-    internal static char yes_no(MenuColorSet colors, string inputString)
+    internal char yes_no(MenuColorSet colors, string inputString)
     {
         char inputKey;
 

@@ -14,74 +14,100 @@ internal enum SpellLoc
     scribe = 6
 }
 
-internal class ovr020
+public class ovr020
 {
-    internal static string[] sexString = { "Male", "Female" };
-    internal static string[] raceString = { "Monster", "Dwarf", "Elf", "Gnome",
+    internal string[] sexString = { "Male", "Female" };
+    internal string[] raceString = { "Monster", "Dwarf", "Elf", "Gnome",
         "Half-Elf", "Halfling", "Half-Orc", "Human" };
 
-    internal static string[] alignmentString = { "Lawful Good", "Lawful Neutral", "Lawful Evil",
+    internal string[] alignmentString = { "Lawful Good", "Lawful Neutral", "Lawful Evil",
         "Neutral Good", "True Neutral", "Neutral Evil",
         "Chaotic Good", "Chaotic Neutral", "Chaotic Evil" };
 
-    internal static string[] classString = { "Cleric", "Druid", "Fighter", "Paladin", "Ranger",
+    internal string[] classString = { "Cleric", "Druid", "Fighter", "Paladin", "Ranger",
         "Magic-User", "Thief", "Monk", "Cleric/Fighter",
         "Cleric/Fighter/Magic-User", "Cleric/Ranger",
         "Cleric/Magic-User","Cleric/Thief", "Fighter/Magic-User",
         "Fighter/Thief", "Fighter/Magic-User/Thief",
         "Magic-User/Thief" };
 
-    private static string[] statShortString = { "STR ", "INT ", "WIS ", "DEX ", "CON ", "CHA " };
+    private string[] statShortString = { "STR ", "INT ", "WIS ", "DEX ", "CON ", "CHA " };
 
-    internal static string[] statusString = { "Okay", "Animated", "tempgone", "Running",
+    internal string[] statusString = { "Okay", "Animated", "tempgone", "Running",
         "Unconscious", "Dying", "Dead", "Stoned",
         "Gone" };
 
-    private static string[] moneyString = { "Copper", "Silver", "Electrum", "Gold", "Platinum",
+    private string[] moneyString = { "Copper", "Silver", "Electrum", "Gold", "Platinum",
         "Gems", "Jewelry" };
 
+    private readonly ovr013 _ovr013;
+    private readonly ovr022 _ovr022;
+    private readonly ovr023 _ovr023;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr026 _ovr026;
+    private readonly ovr027 _ovr027;
+    private readonly ovr033 _ovr033;
+    private readonly seg037 _seg037;
+    private readonly seg051 _seg051;
+    private readonly DisplayDriver _displayDriver;
 
-    internal static void playerDisplayFull(Player player)
+    public ovr020(ovr013 ovr013, ovr022 ovr022, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr033 ovr033, seg037 seg037, seg051 seg051, DisplayDriver displayDriver)
     {
-        seg037.DrawFrame_Outer();
+        _ovr013 = ovr013;
+        _ovr022 = ovr022;
+        _ovr023 = ovr023;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr026 = ovr026;
+        _ovr027 = ovr027;
+        _ovr033 = ovr033;
+        _seg037 = seg037;
+        _seg051 = seg051;
+        _displayDriver = displayDriver;
+    }
 
-        ovr025.displayPlayerName(false, 1, 1, player);
+    internal void playerDisplayFull(Player player)
+    {
+        _seg037.DrawFrame_Outer();
+
+        _ovr025.displayPlayerName(false, 1, 1, player);
 
         if (player.control_morale >= Control.NPC_Base)
         {
-            DisplayDriver.displayString("(NPC)", 0, 10, 1, player.name.Length + 3);
+            _displayDriver.displayString("(NPC)", 0, 10, 1, player.name.Length + 3);
         }
 
         int xCol = 1;
 
         string text2 = sexString[player.sex];
 
-        DisplayDriver.displayString(sexString[player.sex], 0, 15, 3, xCol);
+        _displayDriver.displayString(sexString[player.sex], 0, 15, 3, xCol);
 
         xCol += (byte)(text2.Length + 1);
         text2 = raceString[(int)player.race];
-        DisplayDriver.displayString(text2, 0, 15, 3, xCol);
+        _displayDriver.displayString(text2, 0, 15, 3, xCol);
 
         xCol += (byte)(text2.Length + 1);
         string text = "Age " + player.age.ToString();
 
-        DisplayDriver.displayString(text, 0, 15, 3, xCol);
+        _displayDriver.displayString(text, 0, 15, 3, xCol);
 
         text2 = alignmentString[player.alignment];
-        DisplayDriver.displayString(text2, 0, 15, 4, 1);
+        _displayDriver.displayString(text2, 0, 15, 4, 1);
 
         text2 = classString[(int)player._class];
-        DisplayDriver.displayString(text2, 0, 15, 5, 1);
+        _displayDriver.displayString(text2, 0, 15, 5, 1);
 
         for (int stat = 0; stat < 6; stat++)
         {
             text2 = statShortString[stat];
-            DisplayDriver.displayString(text2, 0, 10, stat + 7, 1);
+            _displayDriver.displayString(text2, 0, 10, stat + 7, 1);
             display_stat(false, stat);
         }
 
         displayMoney();
-        DisplayDriver.displayString("Level", 0, 15, 15, 1);
+        _displayDriver.displayString("Level", 0, 15, 15, 1);
 
         bool displaySlash = false;
         text2 = string.Empty;
@@ -91,7 +117,7 @@ internal class ovr020
             byte tmp = player.ClassLevelsOld[classIdx];
 
             if (player.ClassLevel[classIdx] > 0 ||
-                (tmp < ovr026.HumanCurrentClassLevel_Zero(player) && tmp > 0))
+                (tmp < _ovr026.HumanCurrentClassLevel_Zero(player) && tmp > 0))
             {
                 if (displaySlash)
                 {
@@ -104,36 +130,36 @@ internal class ovr020
             }
         }
 
-        DisplayDriver.displayString(text2, 0, 15, 15, 7);
+        _displayDriver.displayString(text2, 0, 15, 15, 7);
 
         text = "Exp " + player.exp.ToString();
-        DisplayDriver.displayString(text, 0, 15, 15, 17);
+        _displayDriver.displayString(text, 0, 15, 15, 17);
 
-        ovr020.display_player_stats01();
+        display_player_stats01();
         int yCol = 20;
 
         if (player.activeItems.primaryWeapon != null)
         {
-            DisplayDriver.displayString("Weapon", 0, 15, yCol, 1);
-            ovr025.ItemDisplayNameBuild(true, false, yCol, 8, player.activeItems.primaryWeapon);
+            _displayDriver.displayString("Weapon", 0, 15, yCol, 1);
+            _ovr025.ItemDisplayNameBuild(true, false, yCol, 8, player.activeItems.primaryWeapon);
         }
 
         yCol++;
         if (player.activeItems.armor != null)
         {
-            DisplayDriver.displayString("Armor", 0, 15, yCol, 2);
-            ovr025.ItemDisplayNameBuild(true, false, yCol, 8, player.activeItems.armor);
+            _displayDriver.displayString("Armor", 0, 15, yCol, 2);
+            _ovr025.ItemDisplayNameBuild(true, false, yCol, 8, player.activeItems.armor);
         }
 
         yCol++;
 
-        DisplayDriver.displayString("Status", 0, 15, yCol, 1);
-        DisplayDriver.displayString(statusString[(int)player.health_status], 0, 10, yCol, 8);
+        _displayDriver.displayString("Status", 0, 15, yCol, 1);
+        _displayDriver.displayString(statusString[(int)player.health_status], 0, 10, yCol, 8);
     }
 
-    internal static void displayMoney()
+    internal void displayMoney()
     {
-        seg037.draw8x8_clear_area(14, 26, 7, 12);
+        _seg037.draw8x8_clear_area(14, 26, 7, 12);
 
         int yCol = 7;
 
@@ -142,7 +168,7 @@ internal class ovr020
             if (gbl.SelectedPlayer.Money.GetCoins(coinType) > 0)
             {
                 string text = string.Format("{0,8} {1}", Money.names[coinType], gbl.SelectedPlayer.Money.GetCoins(coinType));
-                DisplayDriver.displayString(text, 0, 10, yCol, 12);
+                _displayDriver.displayString(text, 0, 10, yCol, 12);
 
                 yCol++;
             }
@@ -150,34 +176,34 @@ internal class ovr020
     }
 
 
-    internal static void display_player_stats01()
+    internal void display_player_stats01()
     {
         Player player = gbl.SelectedPlayer;
 
-        ovr025.reclac_player_values(player);
+        _ovr025.reclac_player_values(player);
         int yCol = 0x11;
 
-        DisplayDriver.displayString("AC    ", 0, 15, yCol, 1);
-        DisplayDriver.displayString(player.DisplayAc.ToString(), 0, 10, yCol, 4);
+        _displayDriver.displayString("AC    ", 0, 15, yCol, 1);
+        _displayDriver.displayString(player.DisplayAc.ToString(), 0, 10, yCol, 4);
 
-        DisplayDriver.displayString("HP    ", 0, 15, yCol + 1, 1);
-        ovr025.display_hp(false, yCol + 1, 4, player);
+        _displayDriver.displayString("HP    ", 0, 15, yCol + 1, 1);
+        _ovr025.display_hp(false, yCol + 1, 4, player);
 
         int xCol = 8;
 
-        DisplayDriver.displayString("THAC0   ", 0, 15, yCol, xCol + 1);
-        DisplayDriver.displayString((0x3c - player.hitBonus).ToString(), 0, 10, yCol, xCol + 7);
+        _displayDriver.displayString("THAC0   ", 0, 15, yCol, xCol + 1);
+        _displayDriver.displayString((0x3c - player.hitBonus).ToString(), 0, 10, yCol, xCol + 7);
 
 
         string damage = string.Format("{0}d{1}{2}{3}", player.attack1_DiceCount, player.attack1_DiceSize,
             player.attack1_DamageBonus > 0 ? "+" : "", player.attack1_DamageBonus != 0 ? player.attack1_DamageBonus.ToString() : "");
 
-        DisplayDriver.displayString("Damage  ", 0, 15, yCol + 1, xCol);
-        DisplayDriver.displayString(damage, 0, 10, yCol + 1, xCol + 7);
+        _displayDriver.displayString("Damage  ", 0, 15, yCol + 1, xCol);
+        _displayDriver.displayString(damage, 0, 10, yCol + 1, xCol + 7);
 
         xCol = 0x16;
-        DisplayDriver.displayString("Encumbrance  ", 0, 15, yCol, xCol);
-        DisplayDriver.displayString(player.weight.ToString(), 0, 10, yCol, xCol + 12);
+        _displayDriver.displayString("Encumbrance  ", 0, 15, yCol, xCol);
+        _displayDriver.displayString(player.weight.ToString(), 0, 10, yCol, xCol + 12);
 
         int movement = player.movement;
 
@@ -191,16 +217,16 @@ internal class ovr020
             movement /= 2;
         }
 
-        DisplayDriver.displayString("Movement ", 0, 15, yCol + 1, xCol + 3);
-        DisplayDriver.displayString(movement.ToString(), 0, 10, yCol + 1, xCol + 12);
+        _displayDriver.displayString("Movement ", 0, 15, yCol + 1, xCol + 3);
+        _displayDriver.displayString(movement.ToString(), 0, 10, yCol + 1, xCol + 12);
     }
 
 
-    internal static void display_stat(bool highlighted, int stat_index)
+    internal void display_stat(bool highlighted, int stat_index)
     {
         int color = highlighted ? 0x0D : 0x0A;
         int col_x = 5;
-        seg037.draw8x8_clear_area(stat_index + 7, 0x0b, stat_index + 7, col_x);
+        _seg037.draw8x8_clear_area(stat_index + 7, 0x0b, stat_index + 7, col_x);
 
         if (gbl.SelectedPlayer.stats2[stat_index].full < 10)
         {
@@ -208,7 +234,7 @@ internal class ovr020
         }
 
         string s = gbl.SelectedPlayer.stats2[stat_index].full.ToString();
-        DisplayDriver.displayString(s, 0, color, stat_index + 7, col_x);
+        _displayDriver.displayString(s, 0, color, stat_index + 7, col_x);
 
         if (stat_index == 0 &&
             gbl.SelectedPlayer.stats2.Str.full == 18 &&
@@ -226,18 +252,18 @@ internal class ovr020
                 text = "00";
             }
 
-            DisplayDriver.displayString("(" + text + ")", 0, color, 7, 7);
+            _displayDriver.displayString("(" + text + ")", 0, color, 7, 7);
         }
     }
 
-    private static Set asc_54B50 = new Set(73, 83, 84 );
-    private static Set unk_54B03 = new Set(0, 69 );
+    private Set asc_54B50 = new Set(73, 83, 84 );
+    private Set unk_54B03 = new Set(0, 69 );
 
-    internal static bool viewPlayer()
+    internal bool viewPlayer()
     {
         if (gbl.game_state == GameState.Combat)
         {
-            ovr033.Color_0_8_normal();
+            _ovr033.Color_0_8_normal();
         }
 
         char input_key = ' ';
@@ -290,7 +316,7 @@ internal class ovr020
 
             text += "Exit";
 
-            input_key = ovr027.displayInput(false, 0, gbl.defaultMenuColors, text, string.Empty);
+            input_key = _ovr027.displayInput(false, 0, gbl.defaultMenuColors, text, string.Empty);
 
             int index = -1;
 
@@ -331,21 +357,21 @@ internal class ovr020
 
         if (gbl.game_state == GameState.Combat)
         {
-            ovr033.Color_0_8_inverse();
+            _ovr033.Color_0_8_inverse();
         }
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
 
         return arg_0;
     }
 
 
-    internal static bool CanSellDropTradeItem(Item item) // sub_54EC1
+    internal bool CanSellDropTradeItem(Item item) // sub_54EC1
     {
         bool canSellDropTradeItem = false;
 
         if (item.readied)
         {
-            ovr025.string_print01("Must be unreadied");
+            _ovr025.string_print01("Must be unreadied");
         }
         else if (item.IsScroll() == false)
         {
@@ -353,13 +379,13 @@ internal class ovr020
         }
         else if ((int)item.affect_1 > 0x7F || (int)item.affect_2 > 0x7F || (int)item.affect_3 > 0x7F)
         {
-            ovr025.displayPlayerName(false, 15, 1, gbl.SelectedPlayer);
+            _ovr025.displayPlayerName(false, 15, 1, gbl.SelectedPlayer);
 
             gbl.textXCol = gbl.SelectedPlayer.name.Length + 2;
             gbl.textYCol = 0x15;
 
-            DisplayDriver.press_any_key(" was going to scribe from that scroll", false, 14, TextRegion.Normal2);
-            if (ovr027.yes_no(gbl.defaultMenuColors, "is it Okay to lose it? ") == 'Y')
+            _displayDriver.press_any_key(" was going to scribe from that scroll", false, 14, TextRegion.Normal2);
+            if (_ovr027.yes_no(gbl.defaultMenuColors, "is it Okay to lose it? ") == 'Y')
             {
                 canSellDropTradeItem = true;
             }
@@ -369,67 +395,67 @@ internal class ovr020
             canSellDropTradeItem = true;
         }
 
-        seg037.draw8x8_clear_area(TextRegion.Normal2);
+        _seg037.draw8x8_clear_area(TextRegion.Normal2);
 
         return canSellDropTradeItem;
     }
 
 
-    internal static void ItemDisplayStats(Item arg_0) /*sub_550A6*/
+    internal void ItemDisplayStats(Item arg_0) /*sub_550A6*/
     {
-        seg037.DrawFrame_Outer();
+        _seg037.DrawFrame_Outer();
 
-        DisplayDriver.displayString("itemptr:      ", 0, 10, 1, 1);
-        DisplayDriver.displayString(arg_0.type.ToString(), 0, 10, 1, 0x14);
+        _displayDriver.displayString("itemptr:      ", 0, 10, 1, 1);
+        _displayDriver.displayString(arg_0.type.ToString(), 0, 10, 1, 0x14);
 
-        DisplayDriver.displayString("namenum(1):   ", 0, 10, 2, 1);
-        DisplayDriver.displayString(arg_0.namenum1.ToString(), 0, 10, 2, 0x14);
+        _displayDriver.displayString("namenum(1):   ", 0, 10, 2, 1);
+        _displayDriver.displayString(arg_0.namenum1.ToString(), 0, 10, 2, 0x14);
 
-        DisplayDriver.displayString("namenum(2):   ", 0, 10, 3, 1);
-        DisplayDriver.displayString(arg_0.namenum2.ToString(), 0, 10, 3, 0x14);
+        _displayDriver.displayString("namenum(2):   ", 0, 10, 3, 1);
+        _displayDriver.displayString(arg_0.namenum2.ToString(), 0, 10, 3, 0x14);
 
-        DisplayDriver.displayString("namenum(3):   ", 0, 10, 4, 1);
-        DisplayDriver.displayString(arg_0.namenum3.ToString(), 0, 10, 4, 0x14);
+        _displayDriver.displayString("namenum(3):   ", 0, 10, 4, 1);
+        _displayDriver.displayString(arg_0.namenum3.ToString(), 0, 10, 4, 0x14);
 
-        DisplayDriver.displayString("plus:         ", 0, 10, 5, 1);
-        DisplayDriver.displayString(arg_0.plus.ToString(), 0, 10, 5, 0x14);
+        _displayDriver.displayString("plus:         ", 0, 10, 5, 1);
+        _displayDriver.displayString(arg_0.plus.ToString(), 0, 10, 5, 0x14);
 
-        DisplayDriver.displayString("plussave:     ", 0, 10, 6, 1);
-        DisplayDriver.displayString(arg_0.plus_save.ToString(), 0, 10, 6, 0x14);
+        _displayDriver.displayString("plussave:     ", 0, 10, 6, 1);
+        _displayDriver.displayString(arg_0.plus_save.ToString(), 0, 10, 6, 0x14);
 
-        DisplayDriver.displayString("ready:        ", 0, 10, 7, 1);
-        DisplayDriver.displayString(arg_0.readied.ToString(), 0, 10, 7, 0x14);
+        _displayDriver.displayString("ready:        ", 0, 10, 7, 1);
+        _displayDriver.displayString(arg_0.readied.ToString(), 0, 10, 7, 0x14);
 
-        DisplayDriver.displayString("identified:   ", 0, 10, 8, 1);
-        DisplayDriver.displayString(arg_0.hidden_names_flag.ToString(), 0, 10, 8, 0x14);
+        _displayDriver.displayString("identified:   ", 0, 10, 8, 1);
+        _displayDriver.displayString(arg_0.hidden_names_flag.ToString(), 0, 10, 8, 0x14);
 
-        DisplayDriver.displayString("cursed:       ", 0, 10, 9, 1);
-        DisplayDriver.displayString(arg_0.cursed.ToString(), 0, 10, 9, 0x14);
+        _displayDriver.displayString("cursed:       ", 0, 10, 9, 1);
+        _displayDriver.displayString(arg_0.cursed.ToString(), 0, 10, 9, 0x14);
 
-        DisplayDriver.displayString("value:        ", 0, 10, 10, 1);
-        DisplayDriver.displayString(arg_0._value.ToString(), 0, 10, 10, 0x14);
+        _displayDriver.displayString("value:        ", 0, 10, 10, 1);
+        _displayDriver.displayString(arg_0._value.ToString(), 0, 10, 10, 0x14);
 
-        DisplayDriver.displayString("special(1):   ", 0, 10, 11, 1);
-        DisplayDriver.displayString(arg_0.affect_1.ToString(), 0, 10, 11, 0x14);
+        _displayDriver.displayString("special(1):   ", 0, 10, 11, 1);
+        _displayDriver.displayString(arg_0.affect_1.ToString(), 0, 10, 11, 0x14);
 
-        DisplayDriver.displayString("special(2):   ", 0, 10, 12, 1);
-        DisplayDriver.displayString(arg_0.affect_2.ToString(), 0, 10, 12, 0x14);
+        _displayDriver.displayString("special(2):   ", 0, 10, 12, 1);
+        _displayDriver.displayString(arg_0.affect_2.ToString(), 0, 10, 12, 0x14);
 
-        DisplayDriver.displayString("special(3):   ", 0, 10, 13, 1);
-        DisplayDriver.displayString(arg_0.affect_3.ToString(), 0, 10, 13, 0x14);
+        _displayDriver.displayString("special(3):   ", 0, 10, 13, 1);
+        _displayDriver.displayString(arg_0.affect_3.ToString(), 0, 10, 13, 0x14);
 
-        DisplayDriver.displayString("dice large:   ", 0, 10, 14, 1);
-        DisplayDriver.displayString(gbl.ItemDataTable[arg_0.type].diceCountLarge.ToString(), 0, 10, 14, 0x14);
+        _displayDriver.displayString("dice large:   ", 0, 10, 14, 1);
+        _displayDriver.displayString(gbl.ItemDataTable[arg_0.type].diceCountLarge.ToString(), 0, 10, 14, 0x14);
 
-        DisplayDriver.displayString("sides large:  ", 0, 10, 15, 1);
-        DisplayDriver.displayString(gbl.ItemDataTable[arg_0.type].diceSizeLarge.ToString(), 0, 10, 15, 0x14);
+        _displayDriver.displayString("sides large:  ", 0, 10, 15, 1);
+        _displayDriver.displayString(gbl.ItemDataTable[arg_0.type].diceSizeLarge.ToString(), 0, 10, 15, 0x14);
 
-        DisplayDriver.DisplayAndPause("press a key", 10);
+        _displayDriver.DisplayAndPause("press a key", 10);
     }
 
-    private static Set unk_554EE = new Set(0, 69);
+    private Set unk_554EE = new Set(0, 69);
 
-    internal static void PlayerItemsMenu(ref bool arg_0) /*use_item*/
+    internal void PlayerItemsMenu(ref bool arg_0) /*use_item*/
     {
         Player player = gbl.SelectedPlayer;
         char inputKey = ' ';
@@ -493,17 +519,17 @@ internal class ovr020
                     text += " Id";
                 }
 
-                player.items.ForEach(item => ovr025.ItemDisplayNameBuild(false, true, 0, 0, item));
+                player.items.ForEach(item => _ovr025.ItemDisplayNameBuild(false, true, 0, 0, item));
 
 
                 if (redraw_player == true || gbl.byte_1D2C8 == true)
                 {
-                    seg037.draw8x8_07();
+                    _seg037.draw8x8_07();
 
-                    ovr025.displayPlayerName(true, 1, 1, player);
+                    _ovr025.displayPlayerName(true, 1, 1, player);
 
-                    DisplayDriver.displayString("Items", 0, 10, 1, player.name.Length + 4);
-                    DisplayDriver.displayString("Ready Item", 0, 15, 3, 1);
+                    _displayDriver.displayString("Items", 0, 10, 1, player.name.Length + 4);
+                    _displayDriver.displayString("Ready Item", 0, 15, 3, 1);
 
                     redraw_items = true;
                     redraw_player = false;
@@ -513,7 +539,7 @@ internal class ovr020
                 var menulist = player.items.ConvertAll<MenuItem>(item => new MenuItem(item.name, item));
                 MenuItem menuitem;
 
-                inputKey = ovr027.sl_select_item(out menuitem, ref dummy_index, ref redraw_items, true,
+                inputKey = _ovr027.sl_select_item(out menuitem, ref dummy_index, ref redraw_items, true,
                     menulist, 0x16, 0x26, 5, 1, gbl.defaultMenuColors, text, string.Empty);
 
                 Item curr_item = menuitem != null ? menuitem.Item : null;
@@ -535,7 +561,7 @@ internal class ovr020
                         case 'U':
                             if (curr_item.readied == false)
                             {
-                                ovr025.string_print01("Must be Readied");
+                                _ovr025.string_print01("Must be Readied");
                                 inputKey = ' ';
                             }
                             else if (curr_item.IsScroll() == true ||
@@ -569,17 +595,17 @@ internal class ovr020
                         case 'D':
                             if (CanSellDropTradeItem(curr_item) == true)
                             {
-                                ovr025.ItemDisplayNameBuild(false, false, 0, 0, curr_item);
+                                _ovr025.ItemDisplayNameBuild(false, false, 0, 0, curr_item);
 
-                                DisplayDriver.press_any_key("Your " + curr_item.name + " will be gone forever", true, 14, 22, 0x26, 21, 1);
+                                _displayDriver.press_any_key("Your " + curr_item.name + " will be gone forever", true, 14, 22, 0x26, 21, 1);
 
-                                if (ovr027.yes_no(gbl.defaultMenuColors, "Drop It? ") == 'Y')
+                                if (_ovr027.yes_no(gbl.defaultMenuColors, "Drop It? ") == 'Y')
                                 {
-                                    ovr025.lose_item(curr_item, gbl.SelectedPlayer);
+                                    _ovr025.lose_item(curr_item, gbl.SelectedPlayer);
                                     redraw_items = true;
                                 }
 
-                                seg037.draw8x8_clear_area(TextRegion.Normal2);
+                                _seg037.draw8x8_clear_area(TextRegion.Normal2);
                             }
                             else
                             {
@@ -612,7 +638,7 @@ internal class ovr020
                     }
                 }
 
-                ovr025.reclac_player_values(player);
+                _ovr025.reclac_player_values(player);
             }
 
             if (player.items.Count != oldItemCount)
@@ -624,7 +650,7 @@ internal class ovr020
 
 
     /*seg600:44B6 unk_1A7C6*/
-    public readonly static byte[,] MU_spell_lvl_learn = {
+    public readonly byte[,] MU_spell_lvl_learn = {
         {1, 0, 0, 0, 0},
         {0, 1, 0, 0, 0},
         {1, 1, 0, 0, 0},
@@ -637,7 +663,7 @@ internal class ovr020
         {0, 0, 1, 1, 1},
         {0, 0, 0, 1, 1}  };
 
-    internal static void calc_items_effects(bool add_item, Item item) /*sub_55B04*/
+    internal void calc_items_effects(bool add_item, Item item) /*sub_55B04*/
     {
         Player player = gbl.SelectedPlayer;
 
@@ -647,7 +673,7 @@ internal class ovr020
         {
             case 0: // apply affect_2
                 gbl.applyItemAffect = true;
-                ovr013.CallAffectTable((add_item) ? Effect.Add : Effect.Remove, item, player, item.affect_3);
+                _ovr013.CallAffectTable((add_item) ? Effect.Add : Effect.Remove, item, player, item.affect_3);
                 break;
 
             case 1: // ring of wizardy
@@ -680,7 +706,7 @@ internal class ovr020
                     }
 
                     byte[] spCounts = new byte[5];
-                    seg051.FillChar(0, 5, spCounts);
+                    _seg051.FillChar(0, 5, spCounts);
 
                     var removeList = new List<int>();
 
@@ -706,8 +732,8 @@ internal class ovr020
                 break;
 
             case 2: // Gauntlets of Dexterity
-                ovr024.CalcStatBonuses(Stat.DEX, player);
-                ovr026.reclac_thief_skills(player);
+                _ovr024.CalcStatBonuses(Stat.DEX, player);
+                _ovr026.reclac_thief_skills(player);
                 break;
 
             case 4:
@@ -719,21 +745,21 @@ internal class ovr020
                     gbl.damage_flags = DamageType.Magic;
                     if (gbl.game_state == GameState.Combat)
                     {
-                        ovr025.RedrawCombatScreen();
+                        _ovr025.RedrawCombatScreen();
                     }
 
-                    ovr024.damage_person(false, 0, damage, player);
+                    _ovr024.damage_person(false, 0, damage, player);
                     gbl.byte_1D2C8 = true;
                 }
                 break;
 
             case 5:
-                ovr024.CalcStatBonuses(Stat.STR, player);
+                _ovr024.CalcStatBonuses(Stat.STR, player);
                 break;
 
             case 6: // Girdle of the Dwarves
-                ovr024.CalcStatBonuses(Stat.CON, player);
-                ovr024.CalcStatBonuses(Stat.CHA, player);
+                _ovr024.CalcStatBonuses(Stat.CON, player);
+                _ovr024.CalcStatBonuses(Stat.CHA, player);
                 break;
 
             case 8: //Ioun Stone
@@ -745,7 +771,7 @@ internal class ovr020
                     case 3:
                     case 4:
                     case 5:
-                        ovr024.CalcStatBonuses((Stat)item.affect_2, player);
+                        _ovr024.CalcStatBonuses((Stat)item.affect_2, player);
                         break;
                 }
                 break;
@@ -753,25 +779,25 @@ internal class ovr020
             case 9:
                 if (add_item == false)
                 {
-                    ovr024.remove_affect(null, Affects.spiritual_hammer, player);
+                    _ovr024.remove_affect(null, Affects.spiritual_hammer, player);
                 }
                 break;
 
             case 10:
-                ovr024.CalcStatBonuses(Stat.DEX, player);
+                _ovr024.CalcStatBonuses(Stat.DEX, player);
                 break;
 
             case 11: // Gloves of Thievery
-                ovr026.reclac_thief_skills(player);
+                _ovr026.reclac_thief_skills(player);
                 break;
 
             case 12:
-                ovr024.CalcStatBonuses(Stat.INT, player);
+                _ovr024.CalcStatBonuses(Stat.INT, player);
                 break;
 
             case 13:
-                ovr024.CalcStatBonuses(Stat.STR, player);
-                ovr024.CalcStatBonuses(Stat.INT, player);
+                _ovr024.CalcStatBonuses(Stat.STR, player);
+                _ovr024.CalcStatBonuses(Stat.INT, player);
                 break;
         }
     }
@@ -784,7 +810,7 @@ internal class ovr020
         HandsFull = 3
     };
 
-    internal static void ready_Item(Item item)
+    internal void ready_Item(Item item)
     {
         bool magic_item = ((int)item.affect_3 > 0x7f);
 
@@ -795,7 +821,7 @@ internal class ovr020
             // Remove
             if (item.cursed == true)
             {
-                ovr025.string_print01("It's Cursed");
+                _ovr025.string_print01("It's Cursed");
             }
             else
             {
@@ -869,19 +895,19 @@ internal class ovr020
                     break;
 
                 case Weld.WrongClass:
-                    ovr025.string_print01("Wrong Class");
+                    _ovr025.string_print01("Wrong Class");
                     break;
 
                 case Weld.AlreadyUsingX:
-                    ovr025.ItemDisplayNameBuild(false, false, 0, 0, player.activeItems[item_slot]);
-                    ovr025.string_print01("already using " + player.activeItems[item_slot].name);
+                    _ovr025.ItemDisplayNameBuild(false, false, 0, 0, player.activeItems[item_slot]);
+                    _ovr025.string_print01("already using " + player.activeItems[item_slot].name);
                     break;
 
                 case Weld.HandsFull:
                     if (gbl.game_state != GameState.Combat ||
                         player.quick_fight == QuickFight.False)
                     {
-                        ovr025.string_print01("Your hands are full!");
+                        _ovr025.string_print01("Your hands are full!");
                     }
                     break;
             }
@@ -889,31 +915,31 @@ internal class ovr020
     }
 
 
-    internal static void trade_item(Item item)
+    internal void trade_item(Item item)
     {
         Player player = gbl.tradeWith;
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
 
-        ovr025.selectAPlayer(ref player, true, "Trade with Whom?");
+        _ovr025.selectAPlayer(ref player, true, "Trade with Whom?");
 
         if (player != null)
         {
             gbl.tradeWith = player;
             if (canCarry(item, player) == true)
             {
-                ovr025.string_print01("Overloaded");
+                _ovr025.string_print01("Overloaded");
             }
             else
             {
                 player.items.Add(item);
-                ovr025.lose_item(item, gbl.SelectedPlayer);
-                ovr025.reclac_player_values(player);
+                _ovr025.lose_item(item, gbl.SelectedPlayer);
+                _ovr025.reclac_player_values(player);
             }
         }
     }
 
 
-    internal static void halve_items(Item item)
+    internal void halve_items(Item item)
     {
         int half_number = item.count / 2;
 
@@ -931,12 +957,12 @@ internal class ovr020
         }
         else
         {
-            ovr025.string_print01("Can't halve that");
+            _ovr025.string_print01("Can't halve that");
         }
     }
 
 
-    internal static void join_items(Item item) /*sub_56285*/
+    internal void join_items(Item item) /*sub_56285*/
     {
         var actual = gbl.SelectedPlayer.items.Find(i => i == item);
 
@@ -963,7 +989,7 @@ internal class ovr020
             if (item_ptr.count + item.count <= 255)
             {
                 item.count += item_ptr.count;
-                ovr025.lose_item(item_ptr, gbl.SelectedPlayer);
+                _ovr025.lose_item(item_ptr, gbl.SelectedPlayer);
             }
             else
             {
@@ -977,7 +1003,7 @@ internal class ovr020
     }
 
 
-    internal static void UseMagicItem(ref bool arg_0, Item item) // sub_56478
+    internal void UseMagicItem(ref bool arg_0, Item item) // sub_56478
     {
         gbl.spell_from_item = false;
         int spellId = 0;
@@ -1005,26 +1031,26 @@ internal class ovr020
             if (gbl.game_state == GameState.Combat &&
                 gbl.SelectedPlayer.quick_fight == QuickFight.False)
             {
-                ovr025.RedrawCombatScreen();
+                _ovr025.RedrawCombatScreen();
             }
 
             if (gbl.spell_from_item == true)
             {
-                ovr025.DisplayPlayerStatusString(false, 10, "uses an item", gbl.SelectedPlayer);
+                _ovr025.DisplayPlayerStatusString(false, 10, "uses an item", gbl.SelectedPlayer);
 
                 if (gbl.game_state == GameState.Combat)
                 {
-                    DisplayDriver.displayString("Item:", 0, 10, 0x17, 0);
+                    _displayDriver.displayString("Item:", 0, 10, 0x17, 0);
 
-                    ovr025.ItemDisplayNameBuild(true, false, 0x17, 5, item);
+                    _ovr025.ItemDisplayNameBuild(true, false, 0x17, 5, item);
                 }
                 else
                 {
-                    ovr025.ItemDisplayNameBuild(true, false, 0x16, 1, item);
+                    _ovr025.ItemDisplayNameBuild(true, false, 0x16, 1, item);
                 }
 
-                DisplayDriver.GameDelay();
-                ovr025.ClearPlayerTextArea();
+                _displayDriver.GameDelay();
+                _ovr025.ClearPlayerTextArea();
             }
 
             gbl.spell_from_item = true;
@@ -1034,21 +1060,21 @@ internal class ovr020
                 if (gbl.SelectedPlayer.SkillLevel(SkillType.MagicUser) > 0 ||
                     gbl.SelectedPlayer.SkillLevel(SkillType.Cleric) > 0)
                 {
-                    ovr023.sub_5D2E1(ref arg_0, false, gbl.SelectedPlayer.quick_fight, spellId);
+                    _ovr023.sub_5D2E1(ref arg_0, false, gbl.SelectedPlayer.quick_fight, spellId);
                 }
                 else if (gbl.SelectedPlayer.thief_lvl > 9 &&
-                         ovr024.roll_dice(100, 1) <= 75)
+                         _ovr024.roll_dice(100, 1) <= 75)
                 {
-                    ovr023.sub_5D2E1(ref arg_0, false, gbl.SelectedPlayer.quick_fight, spellId);
+                    _ovr023.sub_5D2E1(ref arg_0, false, gbl.SelectedPlayer.quick_fight, spellId);
                 }
                 else
                 {
-                    ovr025.DisplayPlayerStatusString(true, gbl.textYCol, "oops!", gbl.SelectedPlayer);
+                    _ovr025.DisplayPlayerStatusString(true, gbl.textYCol, "oops!", gbl.SelectedPlayer);
                 }
             }
             else
             {
-                ovr023.sub_5D2E1(ref arg_0, false, gbl.SelectedPlayer.quick_fight, spellId);
+                _ovr023.sub_5D2E1(ref arg_0, false, gbl.SelectedPlayer.quick_fight, spellId);
             }
 
             gbl.spell_from_item = false;
@@ -1057,7 +1083,7 @@ internal class ovr020
                 gbl.spellCastingTable[spellId].whenCast != SpellWhen.Camp)
             {
                 arg_0 = true;
-                ovr025.clear_actions(gbl.SelectedPlayer);
+                _ovr025.clear_actions(gbl.SelectedPlayer);
             }
         }
 
@@ -1065,7 +1091,7 @@ internal class ovr020
         {
             if (item.IsScroll() == true)
             {
-                ovr023.remove_spell_from_scroll(spellId, item, gbl.SelectedPlayer);
+                _ovr023.remove_spell_from_scroll(spellId, item, gbl.SelectedPlayer);
             }
             else if (item.affect_1 > 0)
             {
@@ -1078,7 +1104,7 @@ internal class ovr020
                     item.affect_1 -= 1;
                     if (item.affect_1 == 0)
                     {
-                        ovr025.lose_item(item, gbl.SelectedPlayer);
+                        _ovr025.lose_item(item, gbl.SelectedPlayer);
                     }
                 }
             }
@@ -1086,7 +1112,7 @@ internal class ovr020
     }
 
 
-    internal static void ShopSellItem(Item item) // sell_Item
+    internal void ShopSellItem(Item item) // sell_Item
     {
         int item_value = 0;
 
@@ -1108,25 +1134,25 @@ internal class ovr020
             }
         }
 
-        ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
+        _ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
 
         string offer = "I'll give you " + item_value.ToString() + " gold pieces for your " + item.name;
 
-        DisplayDriver.press_any_key(offer, true, 14, TextRegion.Normal2);
+        _displayDriver.press_any_key(offer, true, 14, TextRegion.Normal2);
 
-        if (ovr027.yes_no(gbl.defaultMenuColors, "Is It a Deal? ") == 'Y')
+        if (_ovr027.yes_no(gbl.defaultMenuColors, "Is It a Deal? ") == 'Y')
         {
-            ovr025.string_print01("Sold!");
+            _ovr025.string_print01("Sold!");
 
-            ovr025.lose_item(item, gbl.SelectedPlayer);
+            _ovr025.lose_item(item, gbl.SelectedPlayer);
 
             int plat = item_value / 5;
             int gold = item_value % 5;
             int overflow;
 
-            if (ovr022.willOverload(out overflow, plat + gold, gbl.SelectedPlayer) == true)
+            if (_ovr022.willOverload(out overflow, plat + gold, gbl.SelectedPlayer) == true)
             {
-                ovr025.string_print01("Overloaded. Money will be put in pool.");
+                _ovr025.string_print01("Overloaded. Money will be put in pool.");
 
                 if (overflow > plat)
                 {
@@ -1147,18 +1173,18 @@ internal class ovr020
             }
         }
 
-        seg037.draw8x8_clear_area(TextRegion.Normal2);
+        _seg037.draw8x8_clear_area(TextRegion.Normal2);
     }
 
 
-    internal static void IdentifyItem(ref bool arg_0, Item item)
+    internal void IdentifyItem(ref bool arg_0, Item item)
     {
         bool id_item = false;
-        ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
+        _ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
 
-        DisplayDriver.press_any_key("For 200 gold pieces I'll identify your " + item.name, true, 14, TextRegion.Normal2);
+        _displayDriver.press_any_key("For 200 gold pieces I'll identify your " + item.name, true, 14, TextRegion.Normal2);
 
-        if (ovr027.yes_no(gbl.defaultMenuColors, "Is It a Deal? ") == 'Y')
+        if (_ovr027.yes_no(gbl.defaultMenuColors, "Is It a Deal? ") == 'Y')
         {
             int cost = 200;
             if (cost <= gbl.SelectedPlayer.Money.GetGoldWorth())
@@ -1176,7 +1202,7 @@ internal class ovr020
                 }
                 else
                 {
-                    ovr025.string_print01("Not Enough Money");
+                    _ovr025.string_print01("Not Enough Money");
                 }
             }
         }
@@ -1185,34 +1211,34 @@ internal class ovr020
         {
             if (item.hidden_names_flag == 0)
             {
-                DisplayDriver.press_any_key("I can't tell anything new about your " + item.name, true, 14, TextRegion.Normal2);
+                _displayDriver.press_any_key("I can't tell anything new about your " + item.name, true, 14, TextRegion.Normal2);
             }
             else
             {
                 item.hidden_names_flag = 0;
-                ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
+                _ovr025.ItemDisplayNameBuild(false, false, 0, 0, item);
 
-                DisplayDriver.press_any_key("It looks like some sort of " + item.name, true, 14, TextRegion.Normal2);
+                _displayDriver.press_any_key("It looks like some sort of " + item.name, true, 14, TextRegion.Normal2);
 
                 arg_0 = true;
             }
 
-            DisplayDriver.GameDelay();
+            _displayDriver.GameDelay();
         }
 
-        seg037.draw8x8_clear_area(TextRegion.Normal2);
+        _seg037.draw8x8_clear_area(TextRegion.Normal2);
     }
 
 
-    internal static void tradeCoin()
+    internal void tradeCoin()
     {
         bool finished = false;
         do
         {
             Player dest = gbl.tradeWith;
-            ovr025.LoadPic();
+            _ovr025.LoadPic();
 
-            ovr025.selectAPlayer(ref dest, true, "Trade to?");
+            _ovr025.selectAPlayer(ref dest, true, "Trade to?");
 
             if (dest == null)
             {
@@ -1242,7 +1268,7 @@ internal class ovr020
                     bool dummyBool = true;
                     MenuItem selected;
 
-                    ovr027.sl_select_item(out selected, ref dummyIndex, ref dummyBool, true,
+                    _ovr027.sl_select_item(out selected, ref dummyIndex, ref dummyBool, true,
                         list, 13, 0x19, 7, 12, gbl.defaultMenuColors, " Select", "Select type of coin ");
 
                     if (selected == null)
@@ -1253,13 +1279,13 @@ internal class ovr020
                     {
                         string text;
 
-                        int money_slot = ovr022.GetMoneyIndexFromString(out text, selected.Text);
+                        int money_slot = _ovr022.GetMoneyIndexFromString(out text, selected.Text);
 
                         text = "How much " + text + "will you trade? ";
 
-                        short num_coins = ovr022.AskNumberValue(10, text, gbl.SelectedPlayer.Money.GetCoins(money_slot));
+                        short num_coins = _ovr022.AskNumberValue(10, text, gbl.SelectedPlayer.Money.GetCoins(money_slot));
 
-                        ovr022.trade_money(money_slot, num_coins, dest, gbl.SelectedPlayer);
+                        _ovr022.trade_money(money_slot, num_coins, dest, gbl.SelectedPlayer);
 
                         finished = noMoneyLeft = !gbl.SelectedPlayer.Money.AnyMoney();
                     }
@@ -1272,7 +1298,7 @@ internal class ovr020
     }
 
 
-    internal static void drop_coin()
+    internal void drop_coin()
     {
         bool noMoreMoney;
 
@@ -1293,7 +1319,7 @@ internal class ovr020
             bool redrawMenuItems = true;
 
             MenuItem selected;
-            ovr027.sl_select_item(out selected, ref index, ref redrawMenuItems, true, menuList, 13, 0x19, 7,
+            _ovr027.sl_select_item(out selected, ref index, ref redrawMenuItems, true, menuList, 13, 0x19, 7,
                 12, gbl.defaultMenuColors, " Select", "Select type of coin ");
 
             if (selected == null)
@@ -1304,13 +1330,13 @@ internal class ovr020
             {
                 string text;
 
-                int money_slot = ovr022.GetMoneyIndexFromString(out text, selected.Text);
+                int money_slot = _ovr022.GetMoneyIndexFromString(out text, selected.Text);
 
                 text = "How much " + text + "will you drop? ";
 
-                short num_coins = ovr022.AskNumberValue(10, text, gbl.SelectedPlayer.Money.GetCoins(money_slot));
+                short num_coins = _ovr022.AskNumberValue(10, text, gbl.SelectedPlayer.Money.GetCoins(money_slot));
 
-                ovr022.DropCoins(money_slot, num_coins, gbl.SelectedPlayer);
+                _ovr022.DropCoins(money_slot, num_coins, gbl.SelectedPlayer);
 
                 noMoreMoney = !gbl.SelectedPlayer.Money.AnyMoney();
             }
@@ -1320,9 +1346,9 @@ internal class ovr020
     }
 
 
-    internal static bool canCarry(Item item, Player player)
+    internal bool canCarry(Item item, Player player)
     {
-        ovr025.reclac_player_values(player);
+        _ovr025.reclac_player_values(player);
         bool too_heavy = false;
 
         if (player.items.Count >= Player.MaxItems)
@@ -1337,7 +1363,7 @@ internal class ovr020
             item_weight *= item.count;
         }
 
-        if ((player.weight + item_weight) > (ovr025.max_encumberance(player) + 1500))
+        if ((player.weight + item_weight) > (_ovr025.max_encumberance(player) + 1500))
         {
             too_heavy = true;
         }
@@ -1346,7 +1372,7 @@ internal class ovr020
     }
 
 
-    internal static void scroll_team_list(char input_key)
+    internal void scroll_team_list(char input_key)
     {
         int index = gbl.TeamList.IndexOf(gbl.SelectedPlayer);
 
@@ -1367,7 +1393,7 @@ internal class ovr020
         }
     }
 
-    internal static byte spell_menu2(out bool arg_0, ref int index, SpellSource arg_8, SpellLoc spl_location)
+    internal byte spell_menu2(out bool arg_0, ref int index, SpellSource arg_8, SpellLoc spl_location)
     {
         string text;
         byte result;
@@ -1409,7 +1435,7 @@ internal class ovr020
                 break;
         }
 
-        arg_0 = ovr023.BuildSpellList(spl_location);
+        arg_0 = _ovr023.BuildSpellList(spl_location);
 
         if (arg_0 == true)
         {
@@ -1420,24 +1446,24 @@ internal class ovr020
                 {
                     if (arg_8 == SpellSource.Memorize)
                     {
-                        seg037.draw8x8_05();
+                        _seg037.draw8x8_05();
                     }
                     else
                     {
-                        seg037.draw8x8_07();
+                        _seg037.draw8x8_07();
                     }
                 }
                 else
                 {
-                    seg037.DrawFrame_Outer();
+                    _seg037.DrawFrame_Outer();
                 }
             }
 
-            ovr025.displayPlayerName(true, 1, 1, gbl.SelectedPlayer);
+            _ovr025.displayPlayerName(true, 1, 1, gbl.SelectedPlayer);
 
-            DisplayDriver.displayString("Spells " + text, 0, 10, 1, gbl.SelectedPlayer.name.Length + 4);
+            _displayDriver.displayString("Spells " + text, 0, 10, 1, gbl.SelectedPlayer.name.Length + 4);
 
-            result = ovr023.spell_menu(ref index, arg_8);
+            result = _ovr023.spell_menu(ref index, arg_8);
         }
         else
         {
@@ -1448,7 +1474,7 @@ internal class ovr020
     }
 
 
-    internal static bool CanCastHeal(Player player) /* sub_575F0 */
+    internal bool CanCastHeal(Player player) /* sub_575F0 */
     {
         return (player.SkillLevel(SkillType.Paladin) > 0 &&
                 gbl.game_state != GameState.Combat &&
@@ -1457,7 +1483,7 @@ internal class ovr020
     }
 
 
-    internal static bool CanCastCureDiseases(Player player) /* sub_57655 */
+    internal bool CanCastCureDiseases(Player player) /* sub_57655 */
     {
         return (player.SkillLevel(SkillType.Paladin) > 0 &&
                 gbl.game_state != GameState.Combat &&
@@ -1466,12 +1492,12 @@ internal class ovr020
     }
 
 
-    internal static void PaladinHeal(Player player)
+    internal void PaladinHeal(Player player)
     {
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
         Player target = gbl.TeamList[0];
 
-        ovr025.selectAPlayer(ref target, true, "Heal whom? ");
+        _ovr025.selectAPlayer(ref target, true, "Heal whom? ");
 
         if (target == null)
         {
@@ -1481,20 +1507,20 @@ internal class ovr020
 
         int healAmount = player.SkillLevel(SkillType.Paladin) * 2;
 
-        if (ovr024.heal_player(0, healAmount, target) == true)
+        if (_ovr024.heal_player(0, healAmount, target) == true)
         {
-            ovr025.string_print01(target.name + " feels better");
+            _ovr025.string_print01(target.name + " feels better");
         }
         else
         {
-            ovr025.string_print01(target.name + " is unaffected");
+            _ovr025.string_print01(target.name + " is unaffected");
         }
 
-        ovr024.add_affect(false, 0, 1440, Affects.paladinDailyHealCast, player);
+        _ovr024.add_affect(false, 0, 1440, Affects.paladinDailyHealCast, player);
         playerDisplayFull(gbl.SelectedPlayer);
     }
 
-    private static Affects[] paladinCureableDiseases = { // unk_16B39
+    private Affects[] paladinCureableDiseases = { // unk_16B39
         Affects.helpless,
         Affects.cause_disease_1,
         Affects.weaken,
@@ -1502,12 +1528,12 @@ internal class ovr020
         Affects.hot_fire_shield,
         Affects.affect_39 };
 
-    internal static void PaladinCureDisease(Player player) /* sub_577EC */
+    internal void PaladinCureDisease(Player player) /* sub_577EC */
     {
-        ovr025.LoadPic();
+        _ovr025.LoadPic();
         Player target = gbl.TeamList[0];
 
-        ovr025.selectAPlayer(ref target, true, "Cure whom? ");
+        _ovr025.selectAPlayer(ref target, true, "Cure whom? ");
 
         if (target == null)
         {
@@ -1521,17 +1547,17 @@ internal class ovr020
 
             if (is_diseased == false)
             {
-                ovr025.DisplayPlayerStatusString(false, 0, "is not diseased", target);
+                _ovr025.DisplayPlayerStatusString(false, 0, "is not diseased", target);
 
-                input = ovr027.yes_no(gbl.defaultMenuColors, "cure anyway: ");
+                input = _ovr027.yes_no(gbl.defaultMenuColors, "cure anyway: ");
 
-                ovr025.ClearPlayerTextArea();
+                _ovr025.ClearPlayerTextArea();
             }
 
             if (input == 'Y')
             {
                 gbl.cureSpell = true;
-                System.Array.ForEach(paladinCureableDiseases, affect => ovr024.remove_affect(null, affect, target));
+                System.Array.ForEach(paladinCureableDiseases, affect => _ovr024.remove_affect(null, affect, target));
 
                 gbl.cureSpell = false;
 
@@ -1542,10 +1568,10 @@ internal class ovr020
 
                 if (player.HasAffect(Affects.paladinDailyCureRefresh) == false)
                 {
-                    ovr024.add_affect(true, 0, 0x2760, Affects.paladinDailyCureRefresh, player);
+                    _ovr024.add_affect(true, 0, 0x2760, Affects.paladinDailyCureRefresh, player);
                 }
 
-                ovr025.string_print01(target.name + " is cured");
+                _ovr025.string_print01(target.name + " is cured");
             }
 
             playerDisplayFull(gbl.SelectedPlayer);

@@ -4,10 +4,20 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class PictureCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    private readonly ovr029 _ovr029;
+    private readonly ovr030 _ovr030;
+    public PictureCommand(ovr008 ovr008, ovr029 ovr029, ovr030 ovr030)
+    {
+        _ovr008 = ovr008;
+        _ovr029 = ovr029;
+        _ovr030 = ovr030;
+    }
+
     public void Execute()
     {
-        ovr008.vm_LoadCmdSets(1);
-        var blockId = (byte)ovr008.vm_GetCmdValue(1);
+        _ovr008.vm_LoadCmdSets(1);
+        var blockId = (byte)_ovr008.vm_GetCmdValue(1);
 
         if (blockId != 0xff)
         {
@@ -20,19 +30,19 @@ public class PictureCommand : IGameCommand
 
                 if (blockId >= 0x78)
                 {
-                    ovr030.load_bigpic(blockId);
-                    ovr030.draw_bigpic();
+                    _ovr030.load_bigpic(blockId);
+                    _ovr030.draw_bigpic();
                     gbl.can_draw_bigpic = false;
                 }
                 else
                 {
-                    ovr030.load_pic_final(ref gbl.byte_1D556, 0, blockId, "PIC");
-                    ovr030.DrawMaybeOverlayed(gbl.byte_1D556.frames[0].picture, true, 3, 3);
+                    _ovr030.load_pic_final(ref gbl.byte_1D556, 0, blockId, "PIC");
+                    _ovr030.DrawMaybeOverlayed(gbl.byte_1D556.frames[0].picture, true, 3, 3);
                 }
             }
             else
             {
-                ovr008.set_and_draw_head_body(blockId, (byte)gbl.area2_ptr.HeadBlockId);
+                _ovr008.set_and_draw_head_body(blockId, (byte)gbl.area2_ptr.HeadBlockId);
             }
         }
         else
@@ -41,7 +51,7 @@ public class PictureCommand : IGameCommand
                 (gbl.spriteChanged == true || gbl.displayPlayerSprite))
             {
                 gbl.can_draw_bigpic = true;
-                ovr029.RedrawView();
+                _ovr029.RedrawView();
                 gbl.spriteChanged = false;
                 gbl.displayPlayerSprite = false;
                 gbl.byte_1EE8D = true;

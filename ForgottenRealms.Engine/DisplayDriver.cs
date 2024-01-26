@@ -4,9 +4,30 @@ using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine;
 
-internal class DisplayDriver
+public class DisplayDriver
 {
-    internal static void DrawRectangle(byte color, int yEnd, int xEnd, int yStart, int xStart)
+    internal int[,] bounds = new int[3, 4] {
+        { 0x16, 0x26, 0x11, 1 },
+        { 0x16, 0x26, 0x15, 1 },
+        { 0x15, 0x26, 1, 0x17 } // TextRegion.CombatSummary
+    };
+    //const char[] syms = { '!', ',', '-', '.', ':', ';', '?' };
+    private Set puncutation = new Set(33, 44, 45, 46, 58, 59, 63); // "!,-.:;?" // 33,44,45,46,58,59,63
+
+    private readonly DaxFileDecoder _daxFileDecoder;
+    private readonly KeyboardDriver _keyboardDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly seg051 _seg051;
+
+    public DisplayDriver(DaxFileDecoder daxFileDecoder, KeyboardDriver keyboardDriver, KeyboardService keyboardService, seg051 seg051)
+    {
+        _daxFileDecoder = daxFileDecoder;
+        _keyboardDriver = keyboardDriver;
+        _keyboardService = keyboardService;
+        _seg051 = seg051;
+    }
+
+    internal void DrawRectangle(byte color, int yEnd, int xEnd, int yStart, int xStart)
     {
         xStart *= 8;
         xEnd = (xEnd + 1) * 8;
@@ -22,13 +43,12 @@ internal class DisplayDriver
         }
     }
 
-
-    internal static void Load8x8Tiles() // load_8x8d1_201
+    internal void Load8x8Tiles() // load_8x8d1_201
     {
         byte[] block_ptr;
         short block_size;
 
-        DaxFileDecoder.LoadDecodeDax(out block_ptr, out block_size, 201, "8X8d1.dax");
+        _daxFileDecoder.LoadDecodeDax(out block_ptr, out block_size, 201, "8X8d1.dax");
 
         if (block_size != 0)
         {
@@ -42,8 +62,7 @@ internal class DisplayDriver
         }
     }
 
-
-    internal static void display_char01(char ch, int repeatCount, int bgColor, int fgColor, int y, int x)
+    internal void display_char01(char ch, int repeatCount, int bgColor, int fgColor, int y, int x)
     {
         if (x < 40 &&
             y < 25)
@@ -62,7 +81,7 @@ internal class DisplayDriver
         }
     }
 
-    internal static void displaySpaceChar(int yCol, int xCol)
+    internal void displaySpaceChar(int yCol, int xCol)
     {
         if (xCol >= 0 && xCol <= 0x27 &&
             yCol >= 0 && yCol <= 0x18)
@@ -73,11 +92,10 @@ internal class DisplayDriver
         }
     }
 
-
     [Obsolete]
-    internal static void displayString(string str, int bgColor, int fgColor, int yCol, int xCol)
+    internal void displayString(string str, int bgColor, int fgColor, int yCol, int xCol)
     {
-        new DisplayDriver().DisplayString(str, bgColor, fgColor, yCol, xCol);
+        DisplayString(str, bgColor, fgColor, yCol, xCol);
     }
 
     public void DisplayString(string str, int bgColor, int fgColor, int yCol, int xCol)
@@ -93,53 +111,13 @@ internal class DisplayDriver
         }
     }
 
-
-    internal static int displayStringSlow(string text
-        , int text_index, int text_length, int fgColor) // sub_107DE
-    {
-        while (text_index <= text_length)
-        {
-            display_char01(text[text_index - 1], 1, 0, fgColor, gbl.textYCol, gbl.textXCol);
-
-            if (gbl.DelayBetweenCharacters)
-            {
-                KeyboardDriver.SysDelay(gbl.game_speed_var * 3);
-            }
-
-            text_index += 1;
-            gbl.textXCol++;
-        }
-
-        return text_index;
-    }
-
-
-    internal static void text_skip_space(string text, int text_max, ref int text_index) /* sub_10854 */
-    {
-        while (text_index < text_max &&
-               text[text_index - 1] == ' ')
-        {
-            text_index += 1;
-        }
-    }
-
-    internal static int[,] bounds = new int[3, 4] {
-        { 0x16, 0x26, 0x11, 1 },
-        { 0x16, 0x26, 0x15, 1 },
-        { 0x15, 0x26, 1, 0x17 } // TextRegion.CombatSummary
-    };
-
-    internal static void press_any_key(string text, bool clearArea, int fgColor, TextRegion region)
+    internal void press_any_key(string text, bool clearArea, int fgColor, TextRegion region)
     {
         int r = (int)region;
         press_any_key(text, clearArea, fgColor, bounds[r, 0], bounds[r, 1], bounds[r, 2], bounds[r, 3]);
     }
 
-    //static const char[] syms = { '!', ',', '-', '.', ':', ';', '?' };
-    private static Set puncutation = new Set(33, 44, 45, 46, 58, 59, 63); // "!,-.:;?" // 33,44,45,46,58,59,63
-    private static readonly DaxFileDecoder DaxFileDecoder = new ();
-
-    internal static void press_any_key(string text, bool clearArea, int fgColor,
+    internal void press_any_key(string text, bool clearArea, int fgColor,
         int yEnd, int xEnd, int yStart, int xStart)
     {
         if (xStart > 0x27 || yStart > 0x18 ||
@@ -159,7 +137,7 @@ internal class DisplayDriver
 
         if (clearArea == true)
         {
-            seg037.draw8x8_clear_area(yEnd, xEnd, yStart, xStart);
+            DrawRectangle(0, yEnd, xEnd, yStart, xStart);
             gbl.textXCol = xStart;
             gbl.textYCol = yStart;
         }
@@ -216,9 +194,9 @@ internal class DisplayDriver
                         gbl.textYCol = yStart;
 
                         DisplayAndPause("Press any key to continue", 13);
-                        KeyboardService.clear_keyboard();
+                        _keyboardService.clear_keyboard();
 
-                        seg037.draw8x8_clear_area(yEnd, xEnd, yStart, xStart);
+                        DrawRectangle(0, yEnd, xEnd, yStart, xStart);
 
                         text_start = displayStringSlow(text, text_start, text_end, fgColor);
                     }
@@ -238,11 +216,9 @@ internal class DisplayDriver
         }
     }
 
-
-    internal static string getUserInputString(byte inputLen, byte bgColor, byte fgColor, string prompt)
+    internal string getUserInputString(byte inputLen, byte bgColor, byte fgColor, string prompt)
     {
-        ovr027.ClearPromptAreaNoUpdate();
-
+        ClearPromptArea();
         displayString(prompt, bgColor, fgColor, 0x18, 0);
 
         int xPos = prompt.Length;
@@ -252,7 +228,7 @@ internal class DisplayDriver
 
         do
         {
-            ch = (char)KeyboardService.GetInputKey();
+            ch = (char)_keyboardService.GetInputKey();
 
             if (ch >= 0x20 && ch <= 0x7A)
             {
@@ -267,7 +243,7 @@ internal class DisplayDriver
             }
             else if (ch == 8 && resultString.Length > 0)
             {
-                resultString = seg051.Copy(resultString.Length - 1, 0, resultString);
+                resultString = _seg051.Copy(resultString.Length - 1, 0, resultString);
 
                 displaySpaceChar(24, --xPos);
                 //xPos -= 1;
@@ -275,13 +251,14 @@ internal class DisplayDriver
 
         } while (ch != 0x0d && ch != 0x1B && gbl.inDemo == false);
 
-        ovr027.ClearPromptAreaNoUpdate();
+        ClearPromptArea();
 
         return resultString.ToUpper();
     }
 
+    private void ClearPromptArea() => DrawRectangle(0, 0x18, 0x27, 0x18, 0);
 
-    internal static ushort getUserInputShort(byte bgColor, byte fgColor, string prompt)
+    internal ushort getUserInputShort(byte bgColor, byte fgColor, string prompt)
     {
         bool good_input;
         int value = 0;
@@ -301,48 +278,71 @@ internal class DisplayDriver
         return (ushort)value;
     }
 
-
-    internal static void DisplayAndPause(string txt, byte fgColor) // displayAndDebug
+    internal void DisplayAndPause(string txt, byte fgColor) // displayAndDebug
     {
-        ovr027.ClearPromptAreaNoUpdate();
+        ClearPromptArea();
 
         displayString(txt, 0, fgColor, 0x18, 0);
-        KeyboardService.GetInputKey();
+        _keyboardService.GetInputKey();
     }
-
 
     /// <summary>
     /// Gets the centi seconds since midnight
     /// </summary>
-    internal static int time01() // time01
+    internal int time01() // time01
     {
         System.DateTime dt = System.DateTime.Now;
 
         return (dt.Hour * 360000) + (dt.Minute * 6000) + (dt.Second * 100) + (dt.Millisecond / 10);
     }
 
-
-    public void ClearScreen()
+    internal void ClearScreen()
     {
         DrawRectangle(0, 0x18, 0x27, 0, 0);
     }
 
-
-    internal static void DisplayStatusText(byte bgColor, byte fgColor, string text) /* sub_10ECF */
+    internal void DisplayStatusText(byte bgColor, byte fgColor, string text) /* sub_10ECF */
     {
-        ovr027.ClearPromptAreaNoUpdate();
+        ClearPromptArea();
 
         displayString(text, bgColor, fgColor, 0x18, 0);
 
         GameDelay();
 
-        ovr027.ClearPromptAreaNoUpdate();
+        ClearPromptArea();
     }
 
-
-    internal static void GameDelay()
+    internal void GameDelay()
     {
         //Display.Update();
-        KeyboardDriver.SysDelay(gbl.game_speed_var * 100);
+        _keyboardDriver.SysDelay(gbl.game_speed_var * 100);
+    }
+
+    private int displayStringSlow(string text
+        , int text_index, int text_length, int fgColor) // sub_107DE
+    {
+        while (text_index <= text_length)
+        {
+            display_char01(text[text_index - 1], 1, 0, fgColor, gbl.textYCol, gbl.textXCol);
+
+            if (gbl.DelayBetweenCharacters)
+            {
+                _keyboardDriver.SysDelay(gbl.game_speed_var * 3);
+            }
+
+            text_index += 1;
+            gbl.textXCol++;
+        }
+
+        return text_index;
+    }
+
+    private void text_skip_space(string text, int text_max, ref int text_index) /* sub_10854 */
+    {
+        while (text_index < text_max &&
+               text[text_index - 1] == ' ')
+        {
+            text_index += 1;
+        }
     }
 }

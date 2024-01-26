@@ -3,33 +3,68 @@ using ForgottenRealms.Engine.Classes.Combat;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr010
+public class ovr010
 {
-    internal static void PlayerQuickFight(Player player) // sub_3504B
+    private readonly int[,] data_2B8 = new int[,]{
+        {8, 7, 6, 1, 2, 8}, {8, 1, 2, 7, 6, 7}, {7, 1, 8, 6, 2, 1}, {1, 7, 8, 2, 6, 8}, {8, 7, 6, 5, 4, 8},
+        {8, 1, 2, 3, 4, 8}, {8, 4, 6, 2, 8, 6}, {6, 4, 0, 8, 0, 6}, {6, 2, 8, 2, 0, 4}, {4, 0, 0, 2, 6, 2},
+        {2, 2, 0, 4, 4, 4} /*, {4, 2, 6, 6}*/ };/* actual from seg600:02BD - seg600:02F8 */
+
+    private int byte_1AB18; // byte_1AB18
+    private int byte_1AB19; // byte_1AB19
+
+    private readonly ovr014 _ovr014;
+    private readonly ovr020 _ovr020;
+    private readonly ovr023 _ovr023;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+    private readonly ovr027 _ovr027;
+    private readonly ovr032 _ovr032;
+    private readonly ovr033 _ovr033;
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardService _keyboardService;
+    private readonly KeyboardDriver _keyboardDriver;
+
+    public ovr010(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, KeyboardService keyboardService, KeyboardDriver keyboardDriver)
+    {
+        _ovr014 = ovr014;
+        _ovr020 = ovr020;
+        _ovr023 = ovr023;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+        _ovr027 = ovr027;
+        _ovr032 = ovr032;
+        _ovr033 = ovr033;
+        _displayDriver = displayDriver;
+        _keyboardService = keyboardService;
+        _keyboardDriver = keyboardDriver;
+    }
+
+    internal void PlayerQuickFight(Player player) // sub_3504B
     {
         bool var_2 = process_input_in_monsters_turn(player);
-        ovr027.ClearPromptArea();
-        ovr025.ClearPlayerTextArea();
+        _ovr027.ClearPromptArea();
+        _ovr025.ClearPlayerTextArea();
 
         if (player.in_combat == false)
         {
             var_2 = true;
-            ovr025.clear_actions(player);
+            _ovr025.clear_actions(player);
         }
 
         int var_1 = player.actions.field_15;
 
-        if (var_1 == 0 || var_1 == 4 || ovr024.roll_dice(4, 1) == 1)
+        if (var_1 == 0 || var_1 == 4 || _ovr024.roll_dice(4, 1) == 1)
         {
-            var_1 = ovr024.roll_dice(8, 1);
+            var_1 = _ovr024.roll_dice(8, 1);
 
             if (var_1 != 8)
             {
-                var_1 = ovr024.roll_dice(2, 1) + 4;
+                var_1 = _ovr024.roll_dice(2, 1) + 4;
             }
             else
             {
-                var_1 = ovr024.roll_dice(4, 1);
+                var_1 = _ovr024.roll_dice(4, 1);
             }
         }
 
@@ -43,7 +78,7 @@ internal class ovr010
         if (player.actions.moral_failure == true &&
             player.actions.fleeing == false)
         {
-            ovr025.DisplayPlayerStatusString(true, 10, "flees in panic", player);
+            _ovr025.DisplayPlayerStatusString(true, 10, "flees in panic", player);
         }
 
         if (var_2 == true)
@@ -53,21 +88,21 @@ internal class ovr010
 
         if (sub_354AA(player))
         {
-            ovr025.clear_actions(player);
+            _ovr025.clear_actions(player);
             return;
         }
 
         if (player.actions.spell_id > 0)
         {
-            ovr023.sub_5D2E1(true, QuickFight.True, player.actions.spell_id);
+            _ovr023.sub_5D2E1(true, QuickFight.True, player.actions.spell_id);
 
-            ovr025.clear_actions(player);
+            _ovr025.clear_actions(player);
             return;
         }
 
         if (turn_undead(player))
         {
-            ovr025.clear_actions(player);
+            _ovr025.clear_actions(player);
             return;
         }
 
@@ -81,7 +116,7 @@ internal class ovr010
 
         while (var_2 == false)
         {
-            if (ovr014.find_target(false, 1, 0xff, player) == true &&
+            if (_ovr014.find_target(false, 1, 0xff, player) == true &&
                 player.actions.delay > 0 &&
                 player.in_combat == true)
             {
@@ -95,16 +130,15 @@ internal class ovr010
         }
     }
 
-
-    internal static bool turn_undead(Player player)
+    private bool turn_undead(Player player)
     {
         Player var_5;
 
         if (player.actions.hasTurnedUndead == false &&
             (player.cleric_lvl > 0 || player.cleric_old_lvl > player.multiclassLevel) &&
-            ovr014.FindLowestE9Target(out var_5, player) == true)
+            _ovr014.FindLowestE9Target(out var_5, player) == true)
         {
-            ovr014.turns_undead(player);
+            _ovr014.turns_undead(player);
             return true;
         }
         else
@@ -113,8 +147,7 @@ internal class ovr010
         }
     }
 
-
-    internal static bool ShouldCastSpellX_sub1(int spell_id, Point pos) // sub_352AF
+    private bool ShouldCastSpellX_sub1(int spell_id, Point pos) // sub_352AF
     {
         bool result = false;
         var spell_entry = gbl.spellCastingTable[spell_id];
@@ -124,13 +157,13 @@ internal class ovr010
             int save_bonus = (gbl.SelectedPlayer.combat_team == CombatTeam.Ours) ? -2 : 8;
             var opp = gbl.SelectedPlayer.OppositeTeam();
 
-            var sortedCombatants = ovr032.Rebuild_SortedCombatantList(1, spell_entry.field_F, pos, p => p.combat_team != opp);
+            var sortedCombatants = _ovr032.Rebuild_SortedCombatantList(1, spell_entry.field_F, pos, p => p.combat_team != opp);
 
             foreach (var sc in sortedCombatants)
             {
                 Player tmpPlayer = sc.player;
 
-                if (ovr024.RollSavingThrow(save_bonus, spell_entry.saveVerse, sc.player) == false)
+                if (_ovr024.RollSavingThrow(save_bonus, spell_entry.saveVerse, sc.player) == false)
                 {
                     result = true;
                 }
@@ -139,21 +172,20 @@ internal class ovr010
         return result;
     }
 
-
-    internal static bool ShouldCastSpellX(int minPriority, int spellId, Player attacker) // sub_353B1
+    private bool ShouldCastSpellX(int minPriority, int spellId, Player attacker) // sub_353B1
     {
         var spell_entry = gbl.spellCastingTable[spellId];
         if (spell_entry.priority >= minPriority)
         {
             Player dummy_target;
             if ((spellId != 3 && spell_entry.field_E == 0) ||
-                (spellId == 3 && ovr014.find_healing_target(out dummy_target, attacker)))
+                (spellId == 3 && _ovr014.find_healing_target(out dummy_target, attacker)))
             {
                 return true;
             }
             else
             {
-                var nearTargets = ovr025.BuildNearTargets(ovr023.SpellRange(spellId), attacker);
+                var nearTargets = _ovr025.BuildNearTargets(_ovr023.SpellRange(spellId), attacker);
 
                 if (nearTargets.Count > 0)
                 {
@@ -179,8 +211,7 @@ internal class ovr010
         return false;
     }
 
-
-    internal static bool sub_354AA(Player player)
+    private bool sub_354AA(Player player)
     {
         Item bestWand = null;
 
@@ -189,7 +220,7 @@ internal class ovr010
             teamCount > 0 &&
             gbl.area_ptr.can_cast_spells == false)
         {
-            int prioritisToTry = ovr024.roll_dice(7, 1);
+            int prioritisToTry = _ovr024.roll_dice(7, 1);
             for (int i = 0; i < prioritisToTry; i++)
             {
                 int priority = 7 - i;
@@ -221,15 +252,14 @@ internal class ovr010
         if (bestWand != null)
         {
             bool var_15 = false; /* simeon */
-            ovr020.UseMagicItem(ref var_15, bestWand);
+            _ovr020.UseMagicItem(ref var_15, bestWand);
             return true;
         }
 
         return false;
     }
 
-
-    internal static bool sub_3560B(Player player)
+    private bool sub_3560B(Player player)
     {
         byte[] spell_list = new byte[gbl.max_spells];
 
@@ -245,7 +275,7 @@ internal class ovr010
 
         byte spell_id = 0;
         byte priority = 7;
-        int var_5B = ovr024.roll_dice(7, 1);
+        int var_5B = _ovr024.roll_dice(7, 1);
         int var_5D = 1;
 
 
@@ -258,7 +288,7 @@ internal class ovr010
                 {
                     for (int var_5E = 1; var_5E < 4 && spell_id == 0; var_5E++)
                     {
-                        int random_spell_index = ovr024.roll_dice(spells_count, 1) - 1;
+                        int random_spell_index = _ovr024.roll_dice(spells_count, 1) - 1;
                         byte random_spell_id = spell_list[random_spell_index];
 
                         if (ShouldCastSpellX(priority, random_spell_id, player))
@@ -277,7 +307,7 @@ internal class ovr010
 
         if (spell_id > 0)
         {
-            ovr014.spell_menu3(out casting_spell, QuickFight.True, spell_id);
+            _ovr014.spell_menu3(out casting_spell, QuickFight.True, spell_id);
         }
         else
         {
@@ -287,12 +317,7 @@ internal class ovr010
         return casting_spell;
     }
 
-    private static int[,] data_2B8 = new int[,]{
-        {8, 7, 6, 1, 2, 8}, {8, 1, 2, 7, 6, 7}, {7, 1, 8, 6, 2, 1}, {1, 7, 8, 2, 6, 8}, {8, 7, 6, 5, 4, 8},
-        {8, 1, 2, 3, 4, 8}, {8, 4, 6, 2, 8, 6}, {6, 4, 0, 8, 0, 6}, {6, 2, 8, 2, 0, 4}, {4, 0, 0, 2, 6, 2},
-        {2, 2, 0, 4, 4, 4} /*, {4, 2, 6, 6}*/ };/* actual from seg600:02BD - seg600:02F8 */
-
-    internal static bool CanMove(out bool groundClear, int baseDirecction, int dirStep, Player player) // sub_3573B
+    private bool CanMove(out bool groundClear, int baseDirecction, int dirStep, Player player) // sub_3573B
     {
         groundClear = false;
         bool canMove = false;
@@ -304,7 +329,7 @@ internal class ovr010
         int playerIndex;
         bool isPoisonousCloud;
         bool isNoxiousCloud;
-        ovr033.getGroundInformation(out isPoisonousCloud, out isNoxiousCloud, out groundTile, out playerIndex, playerDirection, player);
+        _ovr033.getGroundInformation(out isPoisonousCloud, out isNoxiousCloud, out groundTile, out playerIndex, playerDirection, player);
 
         if (groundTile == 0)
         {
@@ -338,7 +363,7 @@ internal class ovr010
                     player.HasAffect(Affects.minor_globe_of_invulnerability) == false &&
                     player.actions.fleeing == false)
                 {
-                    if (ovr024.RollSavingThrow(0, 0, player) == false)
+                    if (_ovr024.RollSavingThrow(0, 0, player) == false)
                     {
                         move_cost = player.actions.move + 1;
                     }
@@ -365,15 +390,14 @@ internal class ovr010
         return canMove;
     }
 
-
-    internal static void moralFailureEscape(Player player) // sub_359D1
+    private void moralFailureEscape(Player player) // sub_359D1
     {
         int var_2 = 0; /* Simeon */
         int dir;
 
         string prompt = string.Format("Move/Attack, Move Left = {0} ", player.actions.move / 2);
 
-        DisplayDriver.displayString(prompt, 0, 10, 0x18, 0);
+        _displayDriver.displayString(prompt, 0, 10, 0x18, 0);
 
         if (process_input_in_monsters_turn(player))
         {
@@ -384,7 +408,7 @@ internal class ovr010
             player.actions.delay > 0)
         {
             if (player.control_morale < Control.NPC_Base ||
-                (player.control_morale >= Control.NPC_Base && gbl.enemyHealthPercentage <= (ovr024.roll_dice(100, 1) + gbl.monster_morale)) ||
+                (player.control_morale >= Control.NPC_Base && gbl.enemyHealthPercentage <= (_ovr024.roll_dice(100, 1) + gbl.monster_morale)) ||
                 player.combat_team == CombatTeam.Enemy)
             {
                 if (player.actions.moral_failure == true ||
@@ -393,11 +417,11 @@ internal class ovr010
                 {
                     if (player.actions.moral_failure == false)
                     {
-                        dir = ovr014.getTargetDirection(player.actions.target, player);
+                        dir = _ovr014.getTargetDirection(player.actions.target, player);
                     }
                     else
                     {
-                        player.actions.field_15 = ovr024.roll_dice(2, 1);
+                        player.actions.field_15 = _ovr024.roll_dice(2, 1);
                         dir = gbl.mapDirection - (((gbl.mapDirection + 2) % 4) / 2) + 8;
 
                         if (player.combat_team == CombatTeam.Ours)
@@ -419,7 +443,7 @@ internal class ovr010
                             zeroTitle == true)
                         {
                             var_5 = true;
-                            ovr014.flee_battle(player);
+                            _ovr014.flee_battle(player);
                         }
                         else
                         {
@@ -431,7 +455,7 @@ internal class ovr010
                     {
                         player.actions.move = 0;
                         player.actions.moral_failure = false;
-                        ovr025.clear_actions(player);
+                        _ovr025.clear_actions(player);
                     }
                     else
                     {
@@ -451,7 +475,7 @@ internal class ovr010
                                     player.actions.move = 0;
                                     var_5 = true;
                                 }
-                                else if (ovr014.find_target(false, 1, 0xFF, player) == false)
+                                else if (_ovr014.find_target(false, 1, 0xFF, player) == false)
                                 {
                                     var_5 = true;
                                     TryGuarding(player);
@@ -471,30 +495,30 @@ internal class ovr010
 
                     if (var_5 == false)
                     {
-                        gbl.focusCombatAreaOnPlayer = (gbl.byte_1D90E || ovr033.PlayerOnScreen(false, player) || player.combat_team == CombatTeam.Ours);
+                        gbl.focusCombatAreaOnPlayer = (gbl.byte_1D90E || _ovr033.PlayerOnScreen(false, player) || player.combat_team == CombatTeam.Ours);
 
-                        ovr033.draw_74B3F(false, Icon.Normal, var_2, player);
-                        ovr014.move_step_away_attack(player.actions.direction, player);
+                        _ovr033.draw_74B3F(false, Icon.Normal, var_2, player);
+                        _ovr014.move_step_away_attack(player.actions.direction, player);
 
                         if (player.in_combat == false)
                         {
                             var_5 = true;
-                            ovr025.clear_actions(player);
+                            _ovr025.clear_actions(player);
                         }
                         else
                         {
                             if (player.actions.move > 0)
                             {
-                                ovr014.sub_3E748(player.actions.direction, player);
+                                _ovr014.sub_3E748(player.actions.direction, player);
                             }
 
                             if (player.in_combat == false)
                             {
                                 var_5 = true;
-                                ovr025.clear_actions(player);
+                                _ovr025.clear_actions(player);
                             }
 
-                            ovr024.in_poison_cloud(1, player);
+                            _ovr024.in_poison_cloud(1, player);
                         }
                     }
                     return;
@@ -505,18 +529,15 @@ internal class ovr010
         TryGuarding(player);
     }
 
-    private static int byte_1AB18; // byte_1AB18
-    private static int byte_1AB19; // byte_1AB19
-
-    internal static bool sub_35DB1(Player player)
+    private bool sub_35DB1(Player player)
     {
         byte_1AB18 = 8;
         byte_1AB19 = 0;
 
-        ovr024.CheckAffectsEffect(player, CheckType.Type_14);
+        _ovr024.CheckAffectsEffect(player, CheckType.Type_14);
 
         if (player.combat_team == CombatTeam.Ours &&
-            ovr025.bandage(true) == true)
+            _ovr025.bandage(true) == true)
         {
             player.actions.delay = 0;
         }
@@ -581,16 +602,16 @@ internal class ovr010
                 }
 
                 if (target != null &&
-                    ovr014.CanSeeTargetA(target, player) == true)
+                    _ovr014.CanSeeTargetA(target, player) == true)
                 {
-                    var targetPos = ovr033.PlayerMapPos(target);
-                    var attackPos = ovr033.PlayerMapPos(player);
+                    var targetPos = _ovr033.PlayerMapPos(target);
+                    var attackPos = _ovr033.PlayerMapPos(player);
 
                     int steps = range;
 
                     gbl.mapToBackGroundTile.ignoreWalls = false;
 
-                    if (ovr032.canReachTarget(ref steps, targetPos, attackPos) == true &&
+                    if (_ovr032.canReachTarget(ref steps, targetPos, attackPos) == true &&
                         (steps / 2) <= range)
                     {
                         gbl.byte_1D90E = true;
@@ -599,11 +620,11 @@ internal class ovr010
 
                 if (gbl.byte_1D90E == false)
                 {
-                    var nearTargets = ovr025.BuildNearTargets(range, player);
+                    var nearTargets = _ovr025.BuildNearTargets(range, player);
 
                     if (nearTargets.Count == 0)
                     {
-                        if (ovr014.find_target(false, 0, 0xff, player) == true)
+                        if (_ovr014.find_target(false, 0, 0xff, player) == true)
                         {
                             moralFailureEscape(player);
                         }
@@ -615,19 +636,19 @@ internal class ovr010
                     }
                     else
                     {
-                        int roll = ovr024.roll_dice(nearTargets.Count, 1);
+                        int roll = _ovr024.roll_dice(nearTargets.Count, 1);
 
                         target = nearTargets[roll - 1].player;
 
-                        if (ovr025.is_weapon_ranged(player) == true &&
-                            ovr025.is_weapon_ranged_melee(player) == false &&
-                            ovr025.BuildNearTargets(1, player).Count > 0)
+                        if (_ovr025.is_weapon_ranged(player) == true &&
+                            _ovr025.is_weapon_ranged_melee(player) == false &&
+                            _ovr025.BuildNearTargets(1, player).Count > 0)
                         {
                             AI_items_selection(player);
                             stop = true;
                         }
-                        else if (ovr025.getTargetRange(target, player) == 1 ||
-                                 ovr014.CanSeeTargetA(target, player) == true)
+                        else if (_ovr025.getTargetRange(target, player) == 1 ||
+                                 _ovr014.CanSeeTargetA(target, player) == true)
                         {
                             gbl.byte_1D90E = true;
                         }
@@ -636,34 +657,34 @@ internal class ovr010
 
                 if (gbl.byte_1D90E == true)
                 {
-                    ovr033.redrawCombatArea(ovr014.getTargetDirection(target, player), 2, ovr033.PlayerMapPos(player));
+                    _ovr033.redrawCombatArea(_ovr014.getTargetDirection(target, player), 2, _ovr033.PlayerMapPos(player));
                 }
 
                 if (gbl.byte_1D90E == true)
                 {
-                    if (ovr014.TrySweepAttack(target, player) == true)
+                    if (_ovr014.TrySweepAttack(target, player) == true)
                     {
                         stop = true;
-                        ovr025.clear_actions(player);
+                        _ovr025.clear_actions(player);
                     }
                     else
                     {
-                        ovr014.RecalcAttacksReceived(target, player);
+                        _ovr014.RecalcAttacksReceived(target, player);
 
                         Item item = null;
 
-                        if (ovr025.is_weapon_ranged(player) == true)
+                        if (_ovr025.is_weapon_ranged(player) == true)
                         {
-                            gbl.byte_1D90E = ovr025.GetCurrentAttackItem(out item, player);
+                            gbl.byte_1D90E = _ovr025.GetCurrentAttackItem(out item, player);
 
-                            if (ovr025.is_weapon_ranged_melee(player) == true &&
-                                ovr025.getTargetRange(target, player) == 1)
+                            if (_ovr025.is_weapon_ranged_melee(player) == true &&
+                                _ovr025.getTargetRange(target, player) == 1)
                             {
                                 item = null;
                             }
                         }
 
-                        stop = ovr014.AttackTarget(item, 0, target, player);
+                        stop = _ovr014.AttackTarget(item, 0, target, player);
 
                         if (stop == true)
                         {
@@ -681,38 +702,36 @@ internal class ovr010
         return (delayed == false);
     }
 
-
-    private static void TryGuarding(Player player) // sub_361F7
+    private void TryGuarding(Player player) // sub_361F7
     {
-        ovr025.ClearPlayerTextArea();
+        _ovr025.ClearPlayerTextArea();
 
         if (player.IsHeld() == true ||
-            ovr025.is_weapon_ranged(player) == true ||
+            _ovr025.is_weapon_ranged(player) == true ||
             player.actions.delay == 0)
         {
             player.actions.Clear();
         }
         else
         {
-            ovr025.guarding(player);
+            _ovr025.guarding(player);
         }
     }
-
 
     /// <summary>
     /// processes keyboard input during combat. Returns if current player is user controlled
     /// </summary>
-    private static bool process_input_in_monsters_turn(Player player) /* sub_36269 */
+    private bool process_input_in_monsters_turn(Player player) /* sub_36269 */
     {
         bool player_turn = false;
 
-        if (KeyboardDriver.KEYPRESSED() == true)
+        if (_keyboardDriver.KEYPRESSED() == true)
         {
-            byte var_6 = KeyboardService.GetInputKey();
+            byte var_6 = _keyboardService.GetInputKey();
 
             if (var_6 == 0)
             {
-                var_6 = KeyboardService.GetInputKey();
+                var_6 = _keyboardService.GetInputKey();
             }
 
             if (var_6 == '2')
@@ -721,11 +740,11 @@ internal class ovr010
 
                 if (gbl.AutoPCsCastMagic == true)
                 {
-                    ovr025.string_print01("Magic On");
+                    _ovr025.string_print01("Magic On");
                 }
                 else
                 {
-                    ovr025.string_print01("Magic Off");
+                    _ovr025.string_print01("Magic Off");
                 }
             }
             else if (var_6 == 0x20)
@@ -747,27 +766,26 @@ internal class ovr010
             }
             else if (var_6 == '-')
             {
-                ovr014.god_intervene();
+                _ovr014.god_intervene();
             }
         }
 
-        KeyboardService.clear_keyboard();
+        _keyboardService.clear_keyboard();
 
         return player_turn;
     }
 
-
-    private static bool FleeCheck_001(Player player) // sub_3637F
+    private bool FleeCheck_001(Player player) // sub_3637F
     {
         bool var_1 = false;
         player.actions.moral_failure = false;
 
-        ovr024.RemoveAttackersAffects(player);
+        _ovr024.RemoveAttackersAffects(player);
 
         if (player.actions.fleeing == true)
         {
             player.actions.moral_failure = true;
-            ovr025.DisplayPlayerStatusString(true, 10, "is forced to flee", player);
+            _ovr025.DisplayPlayerStatusString(true, 10, "is forced to flee", player);
         }
         else if (player.control_morale >= Control.NPC_Base)
         {
@@ -777,7 +795,7 @@ internal class ovr010
             {
                 gbl.monster_morale = 0;
             }
-            ovr024.CheckAffectsEffect(player, CheckType.Morale);
+            _ovr024.CheckAffectsEffect(player, CheckType.Morale);
 
             if (gbl.monster_morale < (100 - ((player.hit_point_current * 100) / player.hit_point_max)) ||
                 gbl.monster_morale == 0)
@@ -785,26 +803,26 @@ internal class ovr010
                 //byte var_3 = gbl.byte_1D2CC;
                 gbl.monster_morale = gbl.enemyHealthPercentage;
 
-                ovr024.CheckAffectsEffect(player, CheckType.Morale);
+                _ovr024.CheckAffectsEffect(player, CheckType.Morale);
 
                 if (gbl.monster_morale < (100 - gbl.area2_ptr.field_58C) ||
                     gbl.monster_morale == 0 ||
                     player.combat_team == CombatTeam.Ours)
                 {
-                    int var_2 = ovr014.MaxOppositionMoves(player);
+                    int var_2 = _ovr014.MaxOppositionMoves(player);
 
-                    if (var_2 <= (ovr014.CalcMoves(player) / 2))
+                    if (var_2 <= (_ovr014.CalcMoves(player) / 2))
                     {
                         player.actions.moral_failure = true;
-                        ovr024.remove_affect(null, Affects.affect_4a, player);
-                        ovr024.remove_affect(null, Affects.weap_dragon_slayer, player);
+                        _ovr024.remove_affect(null, Affects.affect_4a, player);
+                        _ovr024.remove_affect(null, Affects.weap_dragon_slayer, player);
                     }
                     else if (player.stats2.Int.full > 5)
                     {
-                        ovr024.RemoveFromCombat("Surrenders", Status.unconscious, player);
+                        _ovr024.RemoveFromCombat("Surrenders", Status.unconscious, player);
 
                         var_1 = true;
-                        ovr025.clear_actions(player);
+                        _ovr025.clear_actions(player);
                     }
                 }
             }
@@ -813,8 +831,7 @@ internal class ovr010
         return var_1;
     }
 
-
-    private static int CalcItemPowerRating(Item item, Player player) // sub_36535
+    private int CalcItemPowerRating(Item item, Player player) // sub_36535
     {
         ItemData itemData = gbl.ItemDataTable[item.type];
 
@@ -871,8 +888,7 @@ internal class ovr010
         return rating;
     }
 
-
-    private static void AI_items_selection(Player player)  // sub_36673
+    private void AI_items_selection(Player player)  // sub_36673
     {
         player.weaponsHandsUsed -= player.activeItems.PrimaryWeaponHandCount();
         player.weaponsHandsUsed -= player.activeItems.SecondaryWeaponHandCount();
@@ -935,7 +951,7 @@ internal class ovr010
             }
         }
 
-        bool ranged_melee = ovr025.item_is_ranged_melee(var_4);
+        bool ranged_melee = _ovr025.item_is_ranged_melee(var_4);
         bool var_1F = false;
         Item tmpItem = null;
         var itemFlags = ItemDataFlags.None;
@@ -974,7 +990,7 @@ internal class ovr010
         if (var_4 != null &&
             var_15 > (var_16 >> 1) &&
             var_1F == true &&
-            (ranged_melee == true || ovr025.BuildNearTargets(1, player).Count == 0))
+            (ranged_melee == true || _ovr025.BuildNearTargets(1, player).Count == 0))
         {
             weapon = var_4;
         }
@@ -997,10 +1013,10 @@ internal class ovr010
         {
             if (player.activeItems.primaryWeapon != null)
             {
-                ovr020.ready_Item(player.activeItems.primaryWeapon);
+                _ovr020.ready_Item(player.activeItems.primaryWeapon);
             }
 
-            ovr025.reclac_player_values(player);
+            _ovr025.reclac_player_values(player);
 
             if (player.activeItems.secondaryWeapon != null &&
                 player.activeItems.secondaryWeapon.cursed == false)
@@ -1010,14 +1026,14 @@ internal class ovr010
 
             if (weapon != null)
             {
-                ovr020.ready_Item(weapon);
+                _ovr020.ready_Item(weapon);
             }
 
             itemsChanged = true;
         }
 
-        ovr025.reclac_player_values(player);
-        ovr014.reclac_attacks(player);
+        _ovr025.reclac_player_values(player);
+        _ovr014.reclac_attacks(player);
         replace_weapon = true;
 
         if (player.activeItems.secondaryWeapon != null &&
@@ -1031,12 +1047,12 @@ internal class ovr010
             if (player.activeItems.secondaryWeapon == null ||
                 player.activeItems.secondaryWeapon.cursed == true)
             {
-                ovr020.ready_Item(weapon);
+                _ovr020.ready_Item(weapon);
                 itemsChanged = true;
             }
             else
             {
-                ovr020.ready_Item(player.activeItems.secondaryWeapon);
+                _ovr020.ready_Item(player.activeItems.secondaryWeapon);
                 itemsChanged = true;
             }
         }
@@ -1044,24 +1060,24 @@ internal class ovr010
         {
             if (player.activeItems.secondaryWeapon != null)
             {
-                ovr020.ready_Item(player.activeItems.secondaryWeapon);
+                _ovr020.ready_Item(player.activeItems.secondaryWeapon);
             }
-            ovr025.reclac_player_values(player);
+            _ovr025.reclac_player_values(player);
 
             if (best_weapon != null)
             {
-                ovr020.ready_Item(best_weapon);
+                _ovr020.ready_Item(best_weapon);
             }
 
             itemsChanged = true;
         }
 
 
-        ovr025.reclac_player_values(player);
+        _ovr025.reclac_player_values(player);
 
         if (itemsChanged == true)
         {
-            ovr025.CombatDisplayPlayerSummary(player);
+            _ovr025.CombatDisplayPlayerSummary(player);
         }
     }
 }

@@ -6,7 +6,22 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class TreasureCommand : IGameCommand
 {
-    private readonly DaxFileDecoder _daxFileDecoder = new();
+    private readonly DaxFileDecoder _daxFileDecoder;
+    private readonly MainGameEngine _mainGameEngine;
+    private readonly ovr008 _ovr008;
+    private readonly ovr022 _ovr022;
+    private readonly ovr024 _ovr024;
+    private readonly ovr025 _ovr025;
+
+    public TreasureCommand(DaxFileDecoder daxFileDecoder, MainGameEngine mainGameEngine, ovr008 ovr008, ovr022 ovr022, ovr024 ovr024, ovr025 ovr025)
+    {
+        _daxFileDecoder = daxFileDecoder;
+        _mainGameEngine = mainGameEngine;
+        _ovr008 = ovr008;
+        _ovr022 = ovr022;
+        _ovr024 = ovr024;
+        _ovr025 = ovr025;
+    }
 
     public void Execute()
     {
@@ -14,14 +29,14 @@ public class TreasureCommand : IGameCommand
         short dataSize;
         ItemType item_type = 0;
 
-        ovr008.vm_LoadCmdSets(8);
+        _ovr008.vm_LoadCmdSets(8);
 
         for (var coin = 0; coin < 7; coin++)
         {
-            gbl.pooled_money.SetCoins(coin, ovr008.vm_GetCmdValue(coin + 1));
+            gbl.pooled_money.SetCoins(coin, _ovr008.vm_GetCmdValue(coin + 1));
         }
 
-        var block_id = (byte)ovr008.vm_GetCmdValue(8);
+        var block_id = (byte)_ovr008.vm_GetCmdValue(8);
 
         if (block_id < 0x80)
         {
@@ -31,7 +46,7 @@ public class TreasureCommand : IGameCommand
             if (dataSize == 0)
             {
                 Logger.Log("Unable to find item file: {0}", filename);
-                MainGameEngine.EngineStop();
+                _mainGameEngine.EngineStop();
             }
 
             for (var offset = 0; offset < dataSize; offset += Item.StructSize)
@@ -45,11 +60,11 @@ public class TreasureCommand : IGameCommand
         {
             for (var count = 0; count < block_id - 0x80; count++)
             {
-                int var_63 = ovr024.roll_dice(100, 1);
+                int var_63 = _ovr024.roll_dice(100, 1);
 
                 if (var_63 >= 1 && var_63 <= 60)
                 {
-                    int var_64 = ovr024.roll_dice(100, 1);
+                    int var_64 = _ovr024.roll_dice(100, 1);
 
                     if ((var_64 >= 1 && var_64 <= 47) ||
                         (var_64 >= 50 && var_64 <= 59))
@@ -65,7 +80,7 @@ public class TreasureCommand : IGameCommand
                     }
                     else if (var_64 >= 60 && var_64 <= 90)
                     {
-                        var_64 = ovr024.roll_dice(10, 1);
+                        var_64 = _ovr024.roll_dice(10, 1);
 
                         if (var_64 >= 1 && var_64 <= 4)
                         {
@@ -115,7 +130,7 @@ public class TreasureCommand : IGameCommand
                 }
                 else if (var_63 >= 0x5B && var_63 <= 0x62)
                 {
-                    int var_62 = ovr024.roll_dice(15, 1);
+                    int var_62 = _ovr024.roll_dice(15, 1);
 
                     if (var_62 >= 1 && var_62 <= 9)
                     {
@@ -135,10 +150,10 @@ public class TreasureCommand : IGameCommand
                     item_type = ItemType.Shield;
                 }
 
-                gbl.items_pointer.Add(ovr022.create_item(item_type));
+                gbl.items_pointer.Add(_ovr022.create_item(item_type));
             }
 
-            gbl.items_pointer.ForEach(item => ovr025.ItemDisplayNameBuild(false, false, 0, 0, item));
+            gbl.items_pointer.ForEach(item => _ovr025.ItemDisplayNameBuild(false, false, 0, 0, item));
         }
     }
 }

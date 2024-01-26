@@ -4,14 +4,21 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class AddSubDivMultiCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    public AddSubDivMultiCommand(ovr008 ovr008)
+    {
+        _ovr008 = ovr008;
+    }
+
+
     public void Execute()
     {
         ushort value;
 
-        ovr008.vm_LoadCmdSets(3);
+        _ovr008.vm_LoadCmdSets(3);
 
-        var val_a = ovr008.vm_GetCmdValue(1);
-        var val_b = ovr008.vm_GetCmdValue(2);
+        var val_a = _ovr008.vm_GetCmdValue(1);
+        var val_b = _ovr008.vm_GetCmdValue(2);
 
         var location = gbl.cmd_opps[3].Word;
 
@@ -43,6 +50,6 @@ public class AddSubDivMultiCommand : IGameCommand
         VmLog.WriteLine("CMD_AdSubDivMulti: {0} A: {1} B: {2} Loc: {3} Res: {4}",
             sym[gbl.command], val_a, val_b, new MemLoc(location), value);
 
-        ovr008.vm_SetMemoryValue(value, location);
+        _ovr008.vm_SetMemoryValue(value, location);
     }
 }

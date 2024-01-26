@@ -4,12 +4,18 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class CheckPartyCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    public CheckPartyCommand(ovr008 ovr008)
+    {
+        _ovr008 = ovr008;
+    }
+
     public void Execute()
     {
         int var_4;
         ushort var_2;
 
-        ovr008.vm_LoadCmdSets(6);
+        _ovr008.vm_LoadCmdSets(6);
 
         if (gbl.cmd_opps[1].Code == 1)
         {
@@ -17,10 +23,10 @@ public class CheckPartyCommand : IGameCommand
         }
         else
         {
-            var_2 = ovr008.vm_GetCmdValue(1);
+            var_2 = _ovr008.vm_GetCmdValue(1);
         }
 
-        var affect_id = (Affects)ovr008.vm_GetCmdValue(2);
+        var affect_id = (Affects)_ovr008.vm_GetCmdValue(2);
 
         var loc_a = gbl.cmd_opps[3].Word;
         var loc_b = gbl.cmd_opps[4].Word;
@@ -91,12 +97,12 @@ public class CheckPartyCommand : IGameCommand
         }
     }
 
-    private static void setMemoryFour(bool val_d, byte val_c, byte val_b, byte val_a,
+    private void setMemoryFour(bool val_d, byte val_c, byte val_b, byte val_a,
         ushort loc_a, ushort loc_b, ushort loc_c, ushort loc_d) /* sub_273F6 */
     {
-        ovr008.vm_SetMemoryValue(val_a, loc_a);
-        ovr008.vm_SetMemoryValue(val_b, loc_b);
-        ovr008.vm_SetMemoryValue(val_c, loc_c);
-        ovr008.vm_SetMemoryValue(val_d ? (ushort)1 : (ushort)0, loc_d);
+        _ovr008.vm_SetMemoryValue(val_a, loc_a);
+        _ovr008.vm_SetMemoryValue(val_b, loc_b);
+        _ovr008.vm_SetMemoryValue(val_c, loc_c);
+        _ovr008.vm_SetMemoryValue(val_d ? (ushort)1 : (ushort)0, loc_d);
     }
 }

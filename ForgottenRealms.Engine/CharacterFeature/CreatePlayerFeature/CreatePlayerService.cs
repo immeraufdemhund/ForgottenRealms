@@ -6,9 +6,32 @@ namespace ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
 
 public class CreatePlayerService
 {
-    private readonly IconBuilder _iconBuilder = new ();
-    private readonly Thac0Table _thac0Table = new ();
-    private readonly ConstitutionHitPointsAdjustmentTable _constitutionHitPointsAdjustmentTable = new ();
+    private readonly IconBuilder _iconBuilder;
+    private readonly Thac0Table _thac0Table;
+    private readonly ConstitutionHitPointsAdjustmentTable _constitutionHitPointsAdjustmentTable;
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr017 _ovr017;
+    private readonly ovr018 _ovr018;
+    private readonly ovr020 _ovr020;
+    private readonly ovr024 _ovr024;
+    private readonly ovr026 _ovr026;
+    private readonly ovr027 _ovr027;
+    private readonly seg051 _seg051;
+
+    public CreatePlayerService(IconBuilder iconBuilder, Thac0Table thac0Table, ConstitutionHitPointsAdjustmentTable constitutionHitPointsAdjustmentTable, DisplayDriver displayDriver, ovr017 ovr017, ovr018 ovr018, ovr020 ovr020, ovr024 ovr024, ovr026 ovr026, ovr027 ovr027, seg051 seg051)
+    {
+        _iconBuilder = iconBuilder;
+        _thac0Table = thac0Table;
+        _constitutionHitPointsAdjustmentTable = constitutionHitPointsAdjustmentTable;
+        _displayDriver = displayDriver;
+        _ovr017 = ovr017;
+        _ovr018 = ovr018;
+        _ovr020 = ovr020;
+        _ovr024 = ovr024;
+        _ovr026 = ovr026;
+        _ovr027 = ovr027;
+        _seg051 = seg051;
+    }
 
     internal void createPlayer()
     {
@@ -34,18 +57,18 @@ public class CreatePlayerService
         player.health_status = Status.okey;
         player.in_combat = true;
         player.field_DE = 1;
-        player.mod_id = (byte)seg051.Random(256);
+        player.mod_id = (byte)_seg051.Random(256);
         player.icon_id = 0x0A;
 
         List<MenuItem> var_C = new List<MenuItem>();
         var_C.Add(new MenuItem("Pick Race", true));
 
-        var_C.Add(new MenuItem("  " + ovr020.raceString[1]));
-        var_C.Add(new MenuItem("  " + ovr020.raceString[2]));
-        var_C.Add(new MenuItem("  " + ovr020.raceString[3]));
-        var_C.Add(new MenuItem("  " + ovr020.raceString[4]));
-        var_C.Add(new MenuItem("  " + ovr020.raceString[5]));
-        var_C.Add(new MenuItem("  " + ovr020.raceString[7]));
+        var_C.Add(new MenuItem("  " + _ovr020.raceString[1]));
+        var_C.Add(new MenuItem("  " + _ovr020.raceString[2]));
+        var_C.Add(new MenuItem("  " + _ovr020.raceString[3]));
+        var_C.Add(new MenuItem("  " + _ovr020.raceString[4]));
+        var_C.Add(new MenuItem("  " + _ovr020.raceString[5]));
+        var_C.Add(new MenuItem("  " + _ovr020.raceString[7]));
 
         index = 0;
         menuRedraw = true;
@@ -53,7 +76,7 @@ public class CreatePlayerService
 
         do
         {
-            input_key = ovr027.sl_select_item(out selected, ref index, ref menuRedraw, showExit, var_C,
+            input_key = _ovr027.sl_select_item(out selected, ref index, ref menuRedraw, showExit, var_C,
                 22, 38, 2, 1, gbl.defaultMenuColors, "Select", string.Empty);
 
             if (input_key == '\0')
@@ -74,33 +97,33 @@ public class CreatePlayerService
         {
             case Race.halfling:
                 player.icon_size = 1;
-                ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
                 break;
 
             case Race.dwarf:
                 player.icon_size = 1;
-                ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
-                ovr024.add_affect(false, 0xff, 0, Affects.dwarf_vs_orc, player);
-                ovr024.add_affect(false, 0xff, 0, Affects.dwarf_and_gnome_vs_giants, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.dwarf_vs_orc, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.dwarf_and_gnome_vs_giants, player);
                 break;
 
             case Race.gnome:
                 player.icon_size = 1;
-                ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
-                ovr024.add_affect(false, 0xff, 0, Affects.gnome_vs_man_sized_giant, player);
-                ovr024.add_affect(false, 0xff, 0, Affects.dwarf_and_gnome_vs_giants, player);
-                ovr024.add_affect(false, 0xff, 0, Affects.affect_30, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.con_saving_bonus, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.gnome_vs_man_sized_giant, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.dwarf_and_gnome_vs_giants, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.affect_30, player);
                 break;
 
             case Race.elf:
                 player.icon_size = 2;
-                ovr024.add_affect(false, 0xff, 0, Affects.elf_resist_sleep, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.elf_resist_sleep, player);
 
                 break;
 
             case Race.half_elf:
                 player.icon_size = 2;
-                ovr024.add_affect(false, 0xff, 0, Affects.halfelf_resistance, player);
+                _ovr024.add_affect(false, 0xff, 0, Affects.halfelf_resistance, player);
                 break;
 
             default:
@@ -113,8 +136,8 @@ public class CreatePlayerService
         var_C.Clear();
 
         var_C.Add(new MenuItem("Pick Gender", true));
-        var_C.Add(new MenuItem("  " + ovr020.sexString[0]));
-        var_C.Add(new MenuItem("  " + ovr020.sexString[1]));
+        var_C.Add(new MenuItem("  " + _ovr020.sexString[0]));
+        var_C.Add(new MenuItem("  " + _ovr020.sexString[1]));
 
         index = 1;
         showExit = true;
@@ -122,7 +145,7 @@ public class CreatePlayerService
 
         do
         {
-            input_key = ovr027.sl_select_item(out selected, ref index, ref menuRedraw, showExit, var_C,
+            input_key = _ovr027.sl_select_item(out selected, ref index, ref menuRedraw, showExit, var_C,
                 22, 38, 2, 1, gbl.defaultMenuColors, "Select", string.Empty);
 
             if (input_key == '\0')
@@ -147,7 +170,7 @@ public class CreatePlayerService
 
         foreach (var _class in ClassList)
         {
-            var_C.Add(new MenuItem("  " + ovr020.classString[(int)_class]));
+            var_C.Add(new MenuItem("  " + _ovr020.classString[(int)_class]));
         }
 
         index = 1;
@@ -156,7 +179,7 @@ public class CreatePlayerService
 
         do
         {
-            input_key = ovr027.sl_select_item(out selected, ref index, ref menuRedraw, showExit, var_C,
+            input_key = _ovr027.sl_select_item(out selected, ref index, ref menuRedraw, showExit, var_C,
                 22, 38, 2, 1, gbl.defaultMenuColors, "Select", string.Empty);
 
             if (input_key == '\0')
@@ -183,12 +206,12 @@ public class CreatePlayerService
         {
             player.paladinCuresLeft = 1;
             player.paladin_lvl = 1;
-            ovr024.add_affect(false, 0xff, 0, Affects.protection_from_evil, player);
+            _ovr024.add_affect(false, 0xff, 0, Affects.protection_from_evil, player);
         }
         else if (player._class == ClassId.ranger)
         {
             player.ranger_lvl = 1;
-            ovr024.add_affect(false, 0xff, 0, Affects.ranger_vs_giant, player);
+            _ovr024.add_affect(false, 0xff, 0, Affects.ranger_vs_giant, player);
         }
         else if (player._class == ClassId.mc_c_f)
         {
@@ -207,7 +230,7 @@ public class CreatePlayerService
         {
             player.cleric_lvl = 1;
             player.ranger_lvl = 1;
-            ovr024.add_affect(false, 0xff, 0, Affects.ranger_vs_giant, player);
+            _ovr024.add_affect(false, 0xff, 0, Affects.ranger_vs_giant, player);
             player.exp = 12500;
         }
         else if (player._class == ClassId.mc_c_mu)
@@ -250,7 +273,7 @@ public class CreatePlayerService
 
         if (player.thief_lvl > 0)
         {
-            ovr026.reclac_thief_skills(player);
+            _ovr026.reclac_thief_skills(player);
         }
 
         player.classFlags = 0;
@@ -268,11 +291,11 @@ public class CreatePlayerService
                     player.thac0 = playerThac0;
                 }
 
-                player.classFlags += ovr018.classFlagsTable[class_idx];
+                player.classFlags += _ovr018.classFlagsTable[class_idx];
             }
         }
 
-        ovr026.reclac_saving_throws(player);
+        _ovr026.reclac_saving_throws(player);
         var_C.Clear();
 
         int alignments = gbl.class_alignments[(int)player._class, 0];
@@ -281,7 +304,7 @@ public class CreatePlayerService
 
         for (int i = 1; i <= alignments; i++)
         {
-            var_C.Add(new MenuItem("  " + ovr020.alignmentString[gbl.class_alignments[(int)player._class, i]]));
+            var_C.Add(new MenuItem("  " + _ovr020.alignmentString[gbl.class_alignments[(int)player._class, i]]));
         }
 
         index = 1;
@@ -290,7 +313,7 @@ public class CreatePlayerService
 
         do
         {
-            input_key = ovr027.sl_select_item(out selected, ref index, ref menuRedraw, showExit, var_C,
+            input_key = _ovr027.sl_select_item(out selected, ref index, ref menuRedraw, showExit, var_C,
                 22, 38, 2, 1, gbl.defaultMenuColors, "Select", string.Empty);
 
 
@@ -311,7 +334,7 @@ public class CreatePlayerService
         {
             AgeTable v5 = gbl.race_ages[(int)player.race][player._class];
 
-            player.age = (short)(ovr024.roll_dice(v5.DiceSize, v5.DiceCount) + v5.BaseAge);
+            player.age = (short)(_ovr024.roll_dice(v5.DiceSize, v5.DiceCount) + v5.BaseAge);
         }
         else
         {
@@ -340,7 +363,7 @@ public class CreatePlayerService
 
         Player gblPlayerPtrBkup = gbl.SelectedPlayer;
         gbl.SelectedPlayer = player;
-        ovr020.playerDisplayFull(player);
+        _ovr020.playerDisplayFull(player);
 
         do
         {
@@ -362,12 +385,12 @@ public class CreatePlayerService
 
             for (int i = 0; i < 6; i++)
             {
-                player.stats2.Str.full = Math.Max(player.stats2.Str.full, ovr024.roll_dice(6, 3) + 1);
-                player.stats2.Int.full = Math.Max(player.stats2.Int.full, ovr024.roll_dice(6, 3) + 1);
-                player.stats2.Wis.full = Math.Max(player.stats2.Wis.full, ovr024.roll_dice(6, 3) + 1);
-                player.stats2.Dex.full = Math.Max(player.stats2.Dex.full, ovr024.roll_dice(6, 3) + 1);
-                player.stats2.Con.full = Math.Max(player.stats2.Con.full, ovr024.roll_dice(6, 3) + 1);
-                player.stats2.Cha.full = Math.Max(player.stats2.Cha.full, ovr024.roll_dice(6, 3) + 1);
+                player.stats2.Str.full = Math.Max(player.stats2.Str.full, _ovr024.roll_dice(6, 3) + 1);
+                player.stats2.Int.full = Math.Max(player.stats2.Int.full, _ovr024.roll_dice(6, 3) + 1);
+                player.stats2.Wis.full = Math.Max(player.stats2.Wis.full, _ovr024.roll_dice(6, 3) + 1);
+                player.stats2.Dex.full = Math.Max(player.stats2.Dex.full, _ovr024.roll_dice(6, 3) + 1);
+                player.stats2.Con.full = Math.Max(player.stats2.Con.full, _ovr024.roll_dice(6, 3) + 1);
+                player.stats2.Cha.full = Math.Max(player.stats2.Cha.full, _ovr024.roll_dice(6, 3) + 1);
             }
 
             int race = (int)player.race;
@@ -388,7 +411,7 @@ public class CreatePlayerService
                                 player.ranger_lvl > 0 ||
                                 player.paladin_lvl > 0)
                             {
-                                player.stats2.Str00.Load(seg051.Random(100) + 1);
+                                player.stats2.Str00.Load(_seg051.Random(100) + 1);
                                 player.stats2.Str00.EnforceRaceSexLimits(race, sex);
                             }
                         }
@@ -434,7 +457,7 @@ public class CreatePlayerService
                         break;
                 }
 
-                ovr020.display_stat(false, var_1B);
+                _ovr020.display_stat(false, var_1B);
             }
 
             player.hit_point_current = player.hit_point_max;
@@ -470,7 +493,7 @@ public class CreatePlayerService
 
                     if (class_idx == 0)
                     {
-                        ovr026.calc_cleric_spells(false, player);
+                        _ovr026.calc_cleric_spells(false, player);
 
                         foreach (Spells spell in System.Enum.GetValues(typeof(Spells)))
                         {
@@ -495,7 +518,7 @@ public class CreatePlayerService
             }
 
             player.Money.SetCoins(Money.Platinum, 300);
-            player.hit_point_rolled = ovr018.sub_509E0(0xff, player);
+            player.hit_point_rolled = _ovr018.sub_509E0(0xff, player);
             player.hit_point_max = player.hit_point_rolled;
 
             var_1E = _constitutionHitPointsAdjustmentTable.get_con_hp_adj(player);
@@ -520,7 +543,7 @@ public class CreatePlayerService
             player.hit_point_rolled = (byte)(player.hit_point_rolled / var_20);
             byte trainingClassMaskBackup = gbl.area2_ptr.training_class_mask;
 
-            ovr017.SilentTrainPlayer();
+            _ovr017.SilentTrainPlayer();
 
             gbl.area2_ptr.training_class_mask = trainingClassMaskBackup;
             bool first_lvl = true;
@@ -529,7 +552,7 @@ public class CreatePlayerService
             for (int class_idx = 0; class_idx <= 7; class_idx++)
             {
                 if (player.ClassLevel[class_idx] > 0 ||
-                    (player.ClassLevelsOld[class_idx] < ovr026.HumanCurrentClassLevel_Zero(player) &&
+                    (player.ClassLevelsOld[class_idx] < _ovr026.HumanCurrentClassLevel_Zero(player) &&
                      player.ClassLevelsOld[class_idx] > 0))
                 {
                     if (first_lvl == false)
@@ -546,18 +569,18 @@ public class CreatePlayerService
                 }
             }
 
-            DisplayDriver.displayString(text, 0, 15, 15, 7);
-            ovr020.display_player_stats01();
-            ovr020.displayMoney();
+            _displayDriver.displayString(text, 0, 15, 15, 7);
+            _ovr020.display_player_stats01();
+            _ovr020.displayMoney();
 
-            input_key = ovr027.yes_no(gbl.defaultMenuColors, "Reroll stats? ");
+            input_key = _ovr027.yes_no(gbl.defaultMenuColors, "Reroll stats? ");
         } while (input_key != 'N');
 
-        ovr020.playerDisplayFull(player);
+        _ovr020.playerDisplayFull(player);
 
         do
         {
-            player.name = DisplayDriver.getUserInputString(15, 0, 13, "Character name: ");
+            player.name = _displayDriver.getUserInputString(15, 0, 13, "Character name: ");
         } while (player.name.Length == 0);
 
         _iconBuilder.Show();
@@ -569,11 +592,11 @@ public class CreatePlayerService
 
         player.stats2.Str00.full = player.stats2.Str00.cur;
 
-        input_key = ovr027.yes_no(gbl.defaultMenuColors, "Save " + player.name + "? ");
+        input_key = _ovr027.yes_no(gbl.defaultMenuColors, "Save " + player.name + "? ");
 
         if (input_key == 'Y')
         {
-            ovr017.SavePlayer(string.Empty, player);
+            _ovr017.SavePlayer(string.Empty, player);
         }
 
         gbl.SelectedPlayer = gblPlayerPtrBkup;

@@ -4,24 +4,38 @@ using ForgottenRealms.Engine.Classes.DaxFiles;
 
 namespace ForgottenRealms.Engine;
 
-internal class ovr033
+public class ovr033
 {
     private const int MaxSize = 4;
 
-    private static Point[][] Steps = new Point[][] {
+    private Point[][] Steps = new Point[][] {
         new Point[] { },
         new Point[] { new Point( 0, 0 ) },
         new Point[] { new Point( 0, 0 ), new Point(  0,  1 ) },
         new Point[] { new Point( 0, 0 ), new Point(  1,  0 ) },
         new Point[] { new Point( 0, 0 ), new Point(  1,  0 ), new Point( 0,  1 ), new Point(  1,  1 ) }
     };
+    private readonly DisplayDriver _displayDriver;
+    private readonly KeyboardDriver _keyboardDriver;
+    private readonly ovr034 _ovr034;
+    private readonly seg040 _seg040;
+    private readonly SoundDriver _soundDriver;
 
-    internal static Point[] GetSizeBasedMapDeltas(int size) /*sub_7400F*/
+    public ovr033(DisplayDriver displayDriver, KeyboardDriver keyboardDriver, ovr034 ovr034, seg040 seg040, SoundDriver soundDriver)
+    {
+        _displayDriver = displayDriver;
+        _keyboardDriver = keyboardDriver;
+        _ovr034 = ovr034;
+        _seg040 = seg040;
+        _soundDriver = soundDriver;
+    }
+
+    internal Point[] GetSizeBasedMapDeltas(int size) /*sub_7400F*/
     {
         return Steps[size];
     }
 
-    internal static Point[] BuildSizeMap(int size, Point pos)
+    internal Point[] BuildSizeMap(int size, Point pos)
     {
         var map = new System.Collections.Generic.List<Point>();
         foreach (var delta in Steps[size])
@@ -33,7 +47,7 @@ internal class ovr033
     }
 
 
-    private static void calculatePlayerScreenPositions() /* sub_74077 */
+    private void calculatePlayerScreenPositions() /* sub_74077 */
     {
         for (int i = 1; i <= gbl.CombatantCount; i++)
         {
@@ -42,21 +56,21 @@ internal class ovr033
     }
 
 
-    internal static void Color_0_8_inverse()
+    internal void Color_0_8_inverse()
     {
-        seg040.SetPaletteColor(8, 0);
-        seg040.SetPaletteColor(0, 8);
+        _seg040.SetPaletteColor(8, 0);
+        _seg040.SetPaletteColor(0, 8);
     }
 
 
-    internal static void Color_0_8_normal()
+    internal void Color_0_8_normal()
     {
-        seg040.SetPaletteColor(0, 0);
-        seg040.SetPaletteColor(8, 8);
+        _seg040.SetPaletteColor(0, 0);
+        _seg040.SetPaletteColor(8, 8);
     }
 
 
-    internal static void sub_7416E(Point pos) // sub_7416E
+    internal void sub_7416E(Point pos) // sub_7416E
     {
         var screenPos = pos - gbl.mapToBackGroundTile.mapScreenTopLeft;
 
@@ -68,12 +82,12 @@ internal class ovr033
             {
                 int i = gbl.mapToBackGroundTile[p + pos];
 
-                ovr034.DrawIsoTile(gbl.BackGroundTiles[i].tile_index, (screenPos.y + p.y) * 3, (screenPos.x + p.x) * 3);
+                _ovr034.DrawIsoTile(gbl.BackGroundTiles[i].tile_index, (screenPos.y + p.y) * 3, (screenPos.x + p.x) * 3);
 
                 if (gbl.mapToBackGroundTile.drawTargetCursor == true)
                 {
                     // draws grey focus box
-                    ovr034.draw_combat_icon(0x19, Icon.Normal, 0, screenPos.y + p.y, screenPos.x + p.x);
+                    _ovr034.draw_combat_icon(0x19, Icon.Normal, 0, screenPos.y + p.y, screenPos.x + p.x);
                 }
             }
         }
@@ -83,13 +97,13 @@ internal class ovr033
         DrawPlayerIconIfOnScreen(player_index);
     }
 
-    private static void DrawPlayerIconIfOnScreen(int player_index)
+    private void DrawPlayerIconIfOnScreen(int player_index)
     {
         if (player_index > 0 &&
             PlayerOnScreen(false, player_index) == true)
         {
             // draws the player icon over focus box
-            ovr034.draw_combat_icon(gbl.player_array[player_index].icon_id,
+            _ovr034.draw_combat_icon(gbl.player_array[player_index].icon_id,
                 Icon.Normal,
                 gbl.player_array[player_index].actions.direction,
                 gbl.CombatMap[player_index].screenPos.y,
@@ -98,7 +112,7 @@ internal class ovr033
     }
 
 
-    internal static void RedrawPosition(Point pos) // sub_7431C
+    internal void RedrawPosition(Point pos) // sub_7431C
     {
         int playerIndex = PlayerIndexAtMapXY(pos.y, pos.x);
 
@@ -107,9 +121,9 @@ internal class ovr033
         DrawPlayerIconIfOnScreen(playerIndex);
     }
 
-    private static int[,] mapToPlayerIndex = new int[Point.MapMaxY, Point.MapMaxX];
+    private int[,] mapToPlayerIndex = new int[Point.MapMaxY, Point.MapMaxX];
 
-    internal static void setup_mapToPlayerIndex_and_playerScreen() /* sub_743E7 */
+    internal void setup_mapToPlayerIndex_and_playerScreen() /* sub_743E7 */
     {
         for (int y = 0; y < Point.MapMaxY; y++)
         {
@@ -137,7 +151,7 @@ internal class ovr033
         }
     }
 
-    internal static int PlayerIndexAtMapXY(int posY, int posX) /* sub_74505 */
+    internal int PlayerIndexAtMapXY(int posY, int posX) /* sub_74505 */
     {
         if (posX >= Point.MapMinX && posX < Point.MapMaxX &&
             posY >= Point.MapMinY && posY < Point.MapMaxY)
@@ -150,12 +164,12 @@ internal class ovr033
         }
     }
 
-    internal static void AtMapXY(out int groundTile, out int playerIndex, Point pos)
+    internal void AtMapXY(out int groundTile, out int playerIndex, Point pos)
     {
         AtMapXY(out groundTile, out playerIndex, pos.y, pos.x);
     }
 
-    internal static void AtMapXY(out int groundTile, out int playerIndex, int posY, int posX) /* sub_74505 */
+    internal void AtMapXY(out int groundTile, out int playerIndex, int posY, int posX) /* sub_74505 */
     {
         if (gbl.mapToBackGroundTile != null &&
             posX >= Point.MapMinX && posX < Point.MapMaxX &&
@@ -172,7 +186,7 @@ internal class ovr033
     }
 
 
-    internal static void RedrawPlayerBackground(int player_index, Point map) /* sub_74572 */
+    internal void RedrawPlayerBackground(int player_index, Point map) /* sub_74572 */
     {
         var screen = map - gbl.mapToBackGroundTile.mapScreenTopLeft;
 
@@ -183,11 +197,11 @@ internal class ovr033
         else if (CoordOnScreen(screen) == true)
         {
             var tileIdx = gbl.mapToBackGroundTile[map];
-            ovr034.DrawIsoTile(gbl.BackGroundTiles[tileIdx].tile_index, screen.y * 3, screen.x * 3);
+            _ovr034.DrawIsoTile(gbl.BackGroundTiles[tileIdx].tile_index, screen.y * 3, screen.x * 3);
         }
     }
 
-    internal static void RedrawPlayerBackground(int player_index) /* sub_74572 */
+    internal void RedrawPlayerBackground(int player_index) /* sub_74572 */
     {
         if (player_index != 0)
         {
@@ -204,20 +218,20 @@ internal class ovr033
                 {
                     int tileIdx = gbl.mapToBackGroundTile[map + delta];
                     //THIS DRAWS BACKGROUND MAP.
-                    ovr034.DrawIsoTile(gbl.BackGroundTiles[tileIdx].tile_index, (screen.y + delta.y) * 3, (screen.x + delta.x) * 3);
+                    _ovr034.DrawIsoTile(gbl.BackGroundTiles[tileIdx].tile_index, (screen.y + delta.y) * 3, (screen.x + delta.x) * 3);
                 }
             }
         }
     }
 
 
-    internal static bool CoordOnScreen(Point pos) /* sub_74730 */
+    internal bool CoordOnScreen(Point pos) /* sub_74730 */
     {
         return (pos.x >= 0 && pos.x <= Point.ScreenMaxX && pos.y >= 0 && pos.y <= Point.ScreenMaxY);
     }
 
 
-    internal static bool PlayerOnScreen(bool AllOnScreen, Player player) // sub_74761
+    internal bool PlayerOnScreen(bool AllOnScreen, Player player) // sub_74761
     {
         int player_index = GetPlayerIndex(player);
 
@@ -225,7 +239,7 @@ internal class ovr033
     }
 
 
-    internal static bool PlayerOnScreen(bool AllOnScreen, int player_index) // sub_74761
+    internal bool PlayerOnScreen(bool AllOnScreen, int player_index) // sub_74761
     {
         var combatmap = gbl.CombatMap[player_index];
         if (combatmap.size == 0)
@@ -264,7 +278,7 @@ internal class ovr033
     /// </summary>
     /// <param name="radius">if this is 0xff the re-check is forced</param>
     /// <returns></returns>
-    internal static bool ScreenMapCheck(int radius, Point pos)
+    internal bool ScreenMapCheck(int radius, Point pos)
     {
         Point screenCentre = gbl.mapToBackGroundTile.mapScreenTopLeft + Point.ScreenCenter;
 
@@ -325,7 +339,7 @@ internal class ovr033
 
                 for (int j = 0; j <= 6; j++)
                 {
-                    ovr034.DrawIsoTile(gbl.BackGroundTiles[gbl.mapToBackGroundTile[mapX, mapY]].tile_index, screenRowY, screenColX);
+                    _ovr034.DrawIsoTile(gbl.BackGroundTiles[gbl.mapToBackGroundTile[mapX, mapY]].tile_index, screenRowY, screenColX);
 
                     screenColX += IconColumnSize;
                     mapX++;
@@ -342,7 +356,7 @@ internal class ovr033
     }
 
 
-    internal static void redrawCombatArea(int dir, int radius, Point map) /*sub_749DD*/
+    internal void redrawCombatArea(int dir, int radius, Point map) /*sub_749DD*/
     {
         var newPos = map + gbl.MapDirectionDelta[dir];
 
@@ -357,7 +371,7 @@ internal class ovr033
                     PlayerOnScreen(false, player) == true)
                 {
                     var pos = gbl.CombatMap[index].screenPos;
-                    ovr034.draw_combat_icon(player.icon_id, 0, player.actions.direction, pos.y, pos.x);
+                    _ovr034.draw_combat_icon(player.icon_id, 0, player.actions.direction, pos.y, pos.x);
                 }
             }
         }
@@ -370,11 +384,11 @@ internal class ovr033
         }
 
         sub_7416E(newPos);
-        seg040.DrawOverlay();
+        _seg040.DrawOverlay();
     }
 
 
-    internal static void draw_74B3F(bool arg_0, Icon iconState, int direction, Player player) /* sub_74B3F */
+    internal void draw_74B3F(bool arg_0, Icon iconState, int direction, Player player) /* sub_74B3F */
     {
         int player_index = GetPlayerIndex(player);
 
@@ -401,24 +415,24 @@ internal class ovr033
             gbl.focusCombatAreaOnPlayer == true)
         {
             var pos = gbl.CombatMap[player_index].screenPos;
-            ovr034.draw_combat_icon(player.icon_id, iconState, direction, pos.y, pos.x);
-            seg040.DrawOverlay();
+            _ovr034.draw_combat_icon(player.icon_id, iconState, direction, pos.y, pos.x);
+            _seg040.DrawOverlay();
         }
     }
 
-    internal static Point PlayerMapPos(Player player) /* sub_74C5A */
+    internal Point PlayerMapPos(Player player) /* sub_74C5A */
     {
         return gbl.CombatMap[GetPlayerIndex(player)].pos;
     }
 
 
-    internal static int PlayerMapSize(Player player) /*sub_74C82*/
+    internal int PlayerMapSize(Player player) /*sub_74C82*/
     {
         return gbl.CombatMap[GetPlayerIndex(player)].size;
     }
 
 
-    internal static int GetPlayerIndex(Player player)
+    internal int GetPlayerIndex(Player player)
     {
         int index = System.Array.FindIndex(gbl.player_array, p => p == player);
 
@@ -431,7 +445,7 @@ internal class ovr033
     }
 
 
-    internal static void getGroundInformation(out int groundTile, out int playerIndex, byte direction, Player player) /* sub_74D04 */
+    internal void getGroundInformation(out int groundTile, out int playerIndex, byte direction, Player player) /* sub_74D04 */
     {
         playerIndex = 0;
         groundTile = 0x17;
@@ -476,7 +490,7 @@ internal class ovr033
         }
     }
 
-    internal static void getGroundInformation(out bool isPoisonousCloud, out bool isNoxiousCloud, out int groundTile, out int playerIndex, int direction, Player player) /* sub_74D04 */
+    internal void getGroundInformation(out bool isPoisonousCloud, out bool isNoxiousCloud, out int groundTile, out int playerIndex, int direction, Player player) /* sub_74D04 */
     {
         playerIndex = 0;
         groundTile = 0x17;
@@ -532,12 +546,12 @@ internal class ovr033
     }
 
 
-    internal static void CombatantKilled(Player player) // sub_74E6F
+    internal void CombatantKilled(Player player) // sub_74E6F
     {
         if (gbl.game_state != GameState.Combat)
         {
-            new SoundDriver().PlaySound(Sound.sound_5);
-            DisplayDriver.GameDelay();
+            _soundDriver.PlaySound(Sound.sound_5);
+            _displayDriver.GameDelay();
         }
         else
         {
@@ -546,7 +560,7 @@ internal class ovr033
             if (!downedPlayer)
             {
                 int player_index = GetPlayerIndex(player);
-                var map = ovr033.PlayerMapPos(player);
+                var map = PlayerMapPos(player);
 
                 if (PlayerOnScreen(true, player) == false)
                 {
@@ -554,7 +568,7 @@ internal class ovr033
                 }
 
                 RedrawPlayerBackground(player_index);
-                new SoundDriver().PlaySound(Sound.sound_5);
+                _soundDriver.PlaySound(Sound.sound_5);
 
                 // Draw skull overlay
                 DaxBlock attackIcon = gbl.combat_icons[24].GetIcon(Icon.Attack, 0);
@@ -568,12 +582,12 @@ internal class ovr033
                         {
                             DaxBlock tmp = ((var_3 & 1) == 0) ? attackIcon : normalIcon;
 
-                            seg040.OverlayBounded(tmp, 5, 0, (pos.y) * 3, (pos.x) * 3);
+                            _seg040.OverlayBounded(tmp, 5, 0, (pos.y) * 3, (pos.x) * 3);
                         }
                     }
 
-                    seg040.DrawOverlay();
-                    KeyboardDriver.SysDelay(10);
+                    _seg040.DrawOverlay();
+                    _keyboardDriver.SysDelay(10);
                 }
 
                 // Add downed corpse for team players.
@@ -594,7 +608,7 @@ internal class ovr033
 
 
                 // clean-up combat stuff
-                DisplayDriver.GameDelay();
+                _displayDriver.GameDelay();
                 RedrawPlayerBackground(player_index);
 
                 gbl.CombatMap[GetPlayerIndex(player)].size = 0;
@@ -612,7 +626,7 @@ internal class ovr033
     }
 
 
-    internal static bool sub_7515A(bool arg_0, Point pos, Player player)
+    internal bool sub_7515A(bool arg_0, Point pos, Player player)
     {
         bool ret_val;
 
@@ -669,7 +683,7 @@ internal class ovr033
     }
 
 
-    internal static void RedrawCombatIfFocusOn(bool draw_cursor, byte radius, Player player) // sub_75356
+    internal void RedrawCombatIfFocusOn(bool draw_cursor, byte radius, Player player) // sub_75356
     {
         gbl.mapToBackGroundTile.drawTargetCursor = draw_cursor;
         gbl.mapToBackGroundTile.size = gbl.CombatMap[GetPlayerIndex(player)].size;

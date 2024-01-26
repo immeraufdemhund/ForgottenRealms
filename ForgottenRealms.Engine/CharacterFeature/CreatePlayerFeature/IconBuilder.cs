@@ -7,6 +7,25 @@ public class IconBuilder
 {
     private static Set unk_4FE94 = new Set(0, 69);
 
+    private readonly DisplayDriver _displayDriver;
+    private readonly ovr017 _ovr017;
+    private readonly ovr027 _ovr027;
+    private readonly ovr033 _ovr033;
+    private readonly ovr034 _ovr034;
+    private readonly seg037 _seg037;
+    private readonly seg040 _seg040;
+
+    public IconBuilder(DisplayDriver displayDriver, ovr017 ovr017, ovr027 ovr027, ovr033 ovr033, ovr034 ovr034, seg037 seg037, seg040 seg040)
+    {
+        _displayDriver = displayDriver;
+        _ovr017 = ovr017;
+        _ovr027 = ovr027;
+        _ovr033 = ovr033;
+        _ovr034 = ovr034;
+        _seg037 = seg037;
+        _seg040 = seg040;
+    }
+
     internal void Show()
     {
         Player player_ptr2;
@@ -28,12 +47,12 @@ public class IconBuilder
             " Keep Exit",
             "Next Prev Keep Exit" };
 
-        seg037.DrawFrame_Outer();
-        ovr033.Color_0_8_inverse();
+        _seg037.DrawFrame_Outer();
+        _ovr033.Color_0_8_inverse();
 
         do
         {
-            ovr017.LoadPlayerCombatIcon(false);
+            _ovr017.LoadPlayerCombatIcon(false);
 
             player = gbl.SelectedPlayer;
 
@@ -42,7 +61,7 @@ public class IconBuilder
 
             byte bkup_icon_id = player.icon_id;
             player.icon_id = 0x0C;
-            ovr017.LoadPlayerCombatIcon(false);
+            _ovr017.LoadPlayerCombatIcon(false);
             player.icon_id = bkup_icon_id;
 
             headIcon = player.head_icon;
@@ -52,10 +71,10 @@ public class IconBuilder
             duplicateCombatIcon(true, 12, player.icon_id);
             drawIconEditorIcons(2, 1);
 
-            DisplayDriver.displayString("old", 0, 15, 6, 8);
-            DisplayDriver.displayString("ready   action", 0, 15, 10, 3);
-            DisplayDriver.displayString("new", 0, 15, 12, 8);
-            DisplayDriver.displayString("ready   action", 0, 15, 16, 3);
+            _displayDriver.displayString("old", 0, 15, 6, 8);
+            _displayDriver.displayString("ready   action", 0, 15, 10, 3);
+            _displayDriver.displayString("new", 0, 15, 12, 8);
+            _displayDriver.displayString("ready   action", 0, 15, 16, 3);
 
             do
             {
@@ -80,7 +99,7 @@ public class IconBuilder
 
                 bool specialKey;
 
-                inputKey = ovr027.displayInput(out specialKey, false, 0, gbl.defaultMenuColors, text, string.Empty);
+                inputKey = _ovr027.displayInput(out specialKey, false, 0, gbl.defaultMenuColors, text, string.Empty);
 
                 if (specialKey == false)
                 {
@@ -186,12 +205,12 @@ public class IconBuilder
                             {
                                 case 'L':
                                     player.icon_size = 2;
-                                    ovr017.LoadPlayerCombatIcon(false);
+                                    _ovr017.LoadPlayerCombatIcon(false);
                                     break;
 
                                 case 'S':
                                     player.icon_size = 1;
-                                    ovr017.LoadPlayerCombatIcon(false);
+                                    _ovr017.LoadPlayerCombatIcon(false);
                                     break;
 
                                 case 'K':
@@ -210,7 +229,7 @@ public class IconBuilder
                                     break;
                             }
 
-                            ovr017.LoadPlayerCombatIcon(false);
+                            _ovr017.LoadPlayerCombatIcon(false);
                             break;
 
                         case 5:
@@ -240,7 +259,7 @@ public class IconBuilder
                                         inputKey = ' ';
                                     }
 
-                                    ovr017.LoadPlayerCombatIcon(false);
+                                    _ovr017.LoadPlayerCombatIcon(false);
                                 }
                                 else if (var_1B == 'W')
                                 {
@@ -280,7 +299,7 @@ public class IconBuilder
                                         inputKey = ' ';
                                     }
 
-                                    ovr017.LoadPlayerCombatIcon(false);
+                                    _ovr017.LoadPlayerCombatIcon(false);
                                 }
                             }
                             else if (var_1A == 3)
@@ -344,27 +363,27 @@ public class IconBuilder
             duplicateCombatIcon(true, 12, player.icon_id);
             duplicateCombatIcon(false, player.icon_id, 12);
 
-            ovr027.ClearPromptArea();
-            ovr034.ReleaseCombatIcon(12);
+            _ovr027.ClearPromptArea();
+            _ovr034.ReleaseCombatIcon(12);
 
-            inputKey = ovr027.yes_no(gbl.defaultMenuColors, "Is this icon ok? ");
+            inputKey = _ovr027.yes_no(gbl.defaultMenuColors, "Is this icon ok? ");
 
         } while (inputKey != 'Y');
 
-        ovr033.Color_0_8_normal();
+        _ovr033.Color_0_8_normal();
     }
 
-    private static void drawIconEditorIcons(sbyte titleY, sbyte titleX)
+    private void drawIconEditorIcons(sbyte titleY, sbyte titleX)
     {
-        seg040.DrawColorBlock(0, 24, 12, titleY * 24, titleX * 3);
+        _seg040.DrawColorBlock(0, 24, 12, titleY * 24, titleX * 3);
 
-        ovr034.draw_combat_icon(25, Icon.Normal, 0, titleY, titleX);
-        ovr034.draw_combat_icon(25, Icon.Attack, 0, titleY, titleX + 3);
+        _ovr034.draw_combat_icon(25, Icon.Normal, 0, titleY, titleX);
+        _ovr034.draw_combat_icon(25, Icon.Attack, 0, titleY, titleX + 3);
 
-        ovr034.draw_combat_icon(12, Icon.Normal, 0, titleY, titleX);
-        ovr034.draw_combat_icon(12, Icon.Attack, 0, titleY, titleX + 3);
+        _ovr034.draw_combat_icon(12, Icon.Normal, 0, titleY, titleX);
+        _ovr034.draw_combat_icon(12, Icon.Attack, 0, titleY, titleX + 3);
 
-        seg040.DrawOverlay();
+        _seg040.DrawOverlay();
     }
 
     private static void duplicateCombatIcon(bool recolour, byte destIndex, byte sourceIndex)

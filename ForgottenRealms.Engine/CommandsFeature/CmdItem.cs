@@ -8,12 +8,14 @@ public class CmdItem
     private readonly IGameCommand _command;
     private readonly int _size;
     private readonly string _name;
+    private readonly ovr008 _ovr008;
 
-    public CmdItem(int size, string name, IGameCommand command)
+    public CmdItem(int size, string name, IGameCommand command, ovr008 ovr008)
     {
         _size = size;
         _name = name;
         _command = command;
+        _ovr008 = ovr008;
     }
 
     public void Run() => _command.Execute();
@@ -33,7 +35,7 @@ public class CmdItem
         }
         else
         {
-            ovr008.vm_LoadCmdSets(_size);
+            _ovr008.vm_LoadCmdSets(_size);
         }
     }
 }

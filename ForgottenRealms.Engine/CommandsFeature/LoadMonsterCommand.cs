@@ -5,28 +5,38 @@ namespace ForgottenRealms.Engine.CommandsFeature;
 
 public class LoadMonsterCommand : IGameCommand
 {
+    private readonly ovr008 _ovr008;
+    private readonly ovr017 _ovr017;
+    private readonly ovr034 _ovr034;
+    public LoadMonsterCommand(ovr008 ovr008, ovr017 ovr017, ovr034 ovr034)
+    {
+        _ovr008 = ovr008;
+        _ovr017 = ovr017;
+        _ovr034 = ovr034;
+    }
+
     public void Execute()
     {
         var current_player_bkup = gbl.SelectedPlayer;
-        ovr008.vm_LoadCmdSets(3);
+        _ovr008.vm_LoadCmdSets(3);
 
         if (gbl.numLoadedMonsters < 63)
         {
-            var mod_id = ovr008.vm_GetCmdValue(1) & 0xFF;
+            var mod_id = _ovr008.vm_GetCmdValue(1) & 0xFF;
 
-            var mobMasterCopy = ovr017.load_mob(mod_id);
+            var mobMasterCopy = _ovr017.load_mob(mod_id);
 
             var newMob = mobMasterCopy.ShallowClone();
 
-            var num_copies = ovr008.vm_GetCmdValue(2) & 0xFF;
+            var num_copies = _ovr008.vm_GetCmdValue(2) & 0xFF;
 
             if (num_copies <= 0)
             {
                 num_copies = 1;
             }
 
-            var blockId = ovr008.vm_GetCmdValue(3) & 0xFF;
-            ovr034.chead_cbody_comspr_icon(gbl.monster_icon_id, blockId, "CPIC");
+            var blockId = _ovr008.vm_GetCmdValue(3) & 0xFF;
+            _ovr034.chead_cbody_comspr_icon(gbl.monster_icon_id, blockId, "CPIC");
 
             newMob.icon_id = gbl.monster_icon_id;
 
