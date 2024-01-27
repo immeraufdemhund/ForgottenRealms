@@ -8,7 +8,7 @@ public enum Affects
     sticks_to_snakes = 0x3,
     dispel_evil = 0x4,
     detect_magic = 0x5,
-    affect_06 = 0x6,
+    bonus_vs_monsters_x = 0x6,
     faerie_fire = 0x7,
     protection_from_evil = 0x8,
     protection_from_good = 0x9,

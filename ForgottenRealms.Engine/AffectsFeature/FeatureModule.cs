@@ -13,7 +13,7 @@ public static class FeatureModule
     public static IServiceCollection RegisterAffectsFeature(this IServiceCollection services)
     {
         return services
-            .AddTransient<IAffectAction, Affect06Action>()
+            .AddTransient<IAffectAction, BonusVsMonstersXAction>()
             .AddTransient<IAffectAction, Affect30Action>()
             .AddTransient<IAffectAction, Affect39Action>()
             .AddTransient<IAffectAction, Affect4AAction>()
