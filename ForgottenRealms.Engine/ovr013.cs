@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ForgottenRealms.Engine.AffectsFeature;
 using ForgottenRealms.Engine.Classes;
 
@@ -13,8 +16,9 @@ public class ovr013
     private readonly ovr032 _ovr032;
     private readonly ovr033 _ovr033;
     private readonly DisplayDriver _displayDriver;
+    private readonly Dictionary<Affects, IAffectAction> _table;
 
-    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver)
+    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions)
     {
         _ovr014 = ovr014;
         _ovr020 = ovr020;
@@ -24,13 +28,13 @@ public class ovr013
         _ovr032 = ovr032;
         _ovr033 = ovr033;
         _displayDriver = displayDriver;
+        _table = affectActions.ToDictionary(a => a.ActionForAffect);
     }
 
+    [Obsolete("already setup with dependency injection", true)]
     internal void SetupAffectTables() // setup_spells2
     {
         affect_table = new System.Collections.Generic.Dictionary<Affects, affectDelegate>();
-
-        affect_table.Add(Affects.bless, Bless);
         affect_table.Add(Affects.cursed, Curse);
         affect_table.Add(Affects.sticks_to_snakes, SticksToSnakes);
         affect_table.Add(Affects.dispel_evil, DispelEvil);
@@ -179,17 +183,16 @@ public class ovr013
         affect_table.Add(Affects.do_items_affect, do_items_affect);
     }
 
-    internal void CallAffectTable(Effect add_remove, object parameter, Player player, Affects affect) /* sub_630C7 */
+    internal void CallAffectTable(Effect add_remove, object parameter, Player player, Affects affect)
     {
         if (gbl.applyItemAffect == true)
         {
             affect = Affects.do_items_affect;
         }
 
-        affectDelegate func;
-        if (affect_table.TryGetValue(affect, out func))
+        if (_table.TryGetValue(affect, out var func))
         {
-            func(add_remove, parameter, player);
+            func.Execute(add_remove, parameter, player);
         }
     }
 
@@ -229,14 +232,6 @@ public class ovr013
     {
         _ovr025.clear_actions(player);
     }
-
-
-    private void Bless(Effect add_remove, object param, Player player)
-    {
-        gbl.monster_morale += 5;
-        gbl.attack_roll++;
-    }
-
 
     private void Curse(Effect arg_0, object param, Player player)
     {

@@ -360,7 +360,6 @@ public class MainGameEngine
         gbl.ItemDataTable = new ItemDataTable("ITEMS");
 
         _ovr023.setup_spells();
-        _ovr013.SetupAffectTables();
     }
 
     public void ExitIf8x8DIsNotLoaded(int symbolSet, int blockId)
