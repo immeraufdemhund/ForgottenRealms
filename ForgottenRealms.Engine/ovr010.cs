@@ -25,8 +25,8 @@ public class ovr010
     private readonly DisplayDriver _displayDriver;
     private readonly KeyboardService _keyboardService;
     private readonly KeyboardDriver _keyboardDriver;
-
-    public ovr010(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, KeyboardService keyboardService, KeyboardDriver keyboardDriver)
+    private readonly TargetDirectionMath _targetDirectionMath;
+    public ovr010(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, KeyboardService keyboardService, KeyboardDriver keyboardDriver, TargetDirectionMath targetDirectionMath)
     {
         _ovr014 = ovr014;
         _ovr020 = ovr020;
@@ -39,6 +39,7 @@ public class ovr010
         _displayDriver = displayDriver;
         _keyboardService = keyboardService;
         _keyboardDriver = keyboardDriver;
+        _targetDirectionMath = targetDirectionMath;
     }
 
     internal void PlayerQuickFight(Player player) // sub_3504B
@@ -418,7 +419,7 @@ public class ovr010
                 {
                     if (player.actions.moral_failure == false)
                     {
-                        dir = _ovr014.getTargetDirection(player.actions.target, player);
+                        dir = _targetDirectionMath.getTargetDirection(player.actions.target, player);
                     }
                     else
                     {
@@ -658,7 +659,8 @@ public class ovr010
 
                 if (gbl.byte_1D90E == true)
                 {
-                    _ovr033.redrawCombatArea(_ovr014.getTargetDirection(target, player), 2, _ovr033.PlayerMapPos(player));
+                    var targetDirection = _targetDirectionMath.getTargetDirection(target, player);
+                    _ovr033.redrawCombatArea(targetDirection, 2, _ovr033.PlayerMapPos(player));
                 }
 
                 if (gbl.byte_1D90E == true)
