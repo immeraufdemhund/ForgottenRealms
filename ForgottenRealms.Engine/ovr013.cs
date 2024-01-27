@@ -39,7 +39,6 @@ public class ovr013
 
         affect_table.Add(Affects.affect_4e, sub_3B8D9);
         affect_table.Add(Affects.affect_55, sub_3BA14);
-        affect_table.Add(Affects.affect_57, _ovr014.attack_or_kill);
         affect_table.Add(Affects.affect_5d, half_fire_damage);
         affect_table.Add(Affects.affect_5e, sub_3BDB2);
         affect_table.Add(Affects.affect_5F, sub_3BE06);

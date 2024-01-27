@@ -10,8 +10,9 @@ public class ovr014
     private Set unk_41B05 = new Set(71, 72, 73, 75, 77, 79, 80, 81);
 
     private readonly AttackTargetAction _attackTargetAction;
-    private readonly BackStabMath _backStabMath;
     private readonly DisplayDriver _displayDriver;
+    private readonly CanSeeTargetMath _canSeeTargetMath;
+    private readonly FindTargetMath _findTargetMath;
     private readonly KeyboardService _keyboardService;
     private readonly SoundDriver _soundDriver;
     private readonly TargetDirectionMath _targetDirectionMath;
@@ -25,7 +26,10 @@ public class ovr014
     private readonly ovr033 _ovr033;
     private readonly seg037 _seg037;
 
-    public ovr014(DisplayDriver displayDriver, KeyboardService keyboardService, SoundDriver soundDriver, ovr013 ovr013, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, seg037 seg037, AttackTargetAction attackTargetAction, TargetDirectionMath targetDirectionMath, BackStabMath backStabMath)
+    public ovr014(DisplayDriver displayDriver, KeyboardService keyboardService, SoundDriver soundDriver,
+        ovr013 ovr013, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032,
+        ovr033 ovr033, seg037 seg037, AttackTargetAction attackTargetAction,
+        TargetDirectionMath targetDirectionMath, CanSeeTargetMath canSeeTargetMath, FindTargetMath findTargetMath)
     {
         _displayDriver = displayDriver;
         _keyboardService = keyboardService;
@@ -41,7 +45,8 @@ public class ovr014
         _seg037 = seg037;
         _attackTargetAction = attackTargetAction;
         _targetDirectionMath = targetDirectionMath;
-        _backStabMath = backStabMath;
+        _canSeeTargetMath = canSeeTargetMath;
+        _findTargetMath = findTargetMath;
     }
 
     internal void CalculateInitiative(Player player) // sub_3E000
@@ -258,7 +263,7 @@ public class ovr014
             Player attacker = cpiA.player;
 
             if (attacker.IsHeld() == false &&
-                CanSeeTargetA(player, attacker) == true &&
+                _canSeeTargetMath.CanSeeTargetA(player, attacker) == true &&
                 attacker.HasAffect(Affects.weap_dragon_slayer) == false &&
                 attacker.HasAffect(Affects.affect_4a) == false)
             {
@@ -449,38 +454,6 @@ public class ovr014
                 }
 
                 return true;
-            }
-        }
-
-        return false;
-    }
-
-    internal bool CanSeeTargetA(Player targetA, Player targetB) //sub_3F143
-    {
-        if (targetA != null)
-        {
-            if (targetB == targetA)
-            {
-                return true;
-            }
-            else
-            {
-                gbl.targetInvisible = false;
-
-                _ovr024.CheckAffectsEffect(targetA, CheckType.Visibility);
-
-                if (gbl.targetInvisible == false)
-                {
-                    var old_target = targetB.actions.target;
-
-                    targetB.actions.target = targetA;
-
-                    _ovr024.CheckAffectsEffect(targetB, CheckType.None);
-
-                    targetB.actions.target = old_target;
-                }
-
-                return (gbl.targetInvisible == false);
             }
         }
 
@@ -711,7 +684,7 @@ public class ovr014
             {
                 bool var_3 = true;
 
-                if (find_target(true, 0, _ovr023.SpellRange(spellId), gbl.SelectedPlayer) == true)
+                if (_findTargetMath.find_target(true, 0, _ovr023.SpellRange(spellId), gbl.SelectedPlayer) == true)
                 {
                     Player target = gbl.SelectedPlayer.actions.target;
 
@@ -1287,7 +1260,7 @@ public class ovr014
 
             if (target != null)
             {
-                if (CanSeeTargetA(target, player01) == false ||
+                if (_canSeeTargetMath.CanSeeTargetA(target, player01) == false ||
                     allowTarget == false)
                 {
                     can_target = false;
@@ -1502,7 +1475,7 @@ public class ovr014
 
         while (arg_4 == false && unk_41AE5.MemberOf(input) == false)
         {
-            if (CanSeeTargetA(target, attacker) == false)
+            if (_canSeeTargetMath.CanSeeTargetA(target, attacker) == false)
             {
                 target = step_combat_list(false, next_prev_step, ref list_index, ref attackerPos, sorted_list);
             }
@@ -1575,189 +1548,6 @@ public class ovr014
         return arg_4;
     }
 
-
-    internal bool find_target(bool clear_target, byte arg_2, int max_range, Player player) /* sub_41E44 */
-    {
-        bool target_found = false;
-
-        Player target = player.actions.target;
-
-        if (clear_target == true ||
-            (target != null &&
-             (target.combat_team == player.combat_team ||
-              target.in_combat == false ||
-              CanSeeTargetA(target, player) == false)))
-        {
-            player.actions.target = null;
-        }
-
-        if (player.actions.target != null)
-        {
-            target_found = true;
-        }
-
-        bool secondPass = false;
-        bool var_5 = false;
-        while (target_found == false && var_5 == false)
-        {
-            var_5 = secondPass;
-
-            if (secondPass == true && clear_target == false)
-            {
-                gbl.mapToBackGroundTile.ignoreWalls = true;
-            }
-
-            int tryCount = 20;
-            var nearTargets = _ovr025.BuildNearTargets(max_range, player);
-
-            while (tryCount > 0 && target_found == false && nearTargets.Count > 0)
-            {
-                tryCount--;
-                int roll = _ovr024.roll_dice(nearTargets.Count, 1);
-
-                var epi = nearTargets[roll - 1];
-                target = epi.player;
-
-                if ((arg_2 != 0 && gbl.mapToBackGroundTile.ignoreWalls == true) ||
-                    CanSeeTargetA(target, player) == true)
-                {
-                    target_found = true;
-                    player.actions.target = target;
-                }
-                else
-                {
-                    nearTargets.Remove(epi);
-                }
-            }
-
-            if (secondPass == false)
-            {
-                secondPass = true;
-            }
-        }
-
-        gbl.mapToBackGroundTile.ignoreWalls = false;
-
-        return target_found;
-    }
-
-    internal void LoadMissleIconAndDraw(int icon_id, Player target, Player attacker) //sub_42159
-    {
-        _ovr025.load_missile_icons(icon_id + 13);
-
-        _ovr025.draw_missile_attack(0x1E, 1, _ovr033.PlayerMapPos(target), _ovr033.PlayerMapPos(attacker));
-    }
-
-
-    internal bool sub_421C1(bool clear_target, ref int range, Player player) // sub_421C1
-    {
-        bool var_5 = true;
-
-        if (find_target(clear_target, 0, 0xff, player) == true)
-        {
-            var target = _ovr033.PlayerMapPos(player.actions.target);
-
-            if (_ovr032.canReachTarget(ref range, target, _ovr033.PlayerMapPos(player)) == true)
-            {
-                var_5 = false;
-            }
-        }
-
-        return var_5;
-    }
-
-
-    internal void attack_or_kill(Effect arg_0, object param, Player attacker)
-    {
-        int range = 0xFF; /* simeon */
-
-        byte attacksTired = 0;
-        int attackTiresLeft = 4;
-
-        attacker.actions.target = null;
-        sub_421C1(true, ref range, attacker);
-
-        do
-        {
-            Player target = attacker.actions.target;
-
-            range = _ovr025.getTargetRange(target, attacker);
-            attackTiresLeft--;
-
-            if (target != null)
-            {
-                if (range == 2 && (attacksTired & 1) == 0)
-                {
-                    attacksTired |= 1;
-
-                    _ovr025.DisplayPlayerStatusString(true, 10, "fires a disintegrate ray", attacker);
-                    LoadMissleIconAndDraw(5, target, attacker);
-
-                    if (_ovr024.RollSavingThrow(0, SaveVerseType.BreathWeapon, target) == false)
-                    {
-                        _ovr024.KillPlayer("is disintergrated", Status.gone, target);
-                    }
-
-                    sub_421C1(false, ref range, attacker);
-                }
-                else if (range == 3 && (attacksTired & 2) == 0)
-                {
-                    attacksTired |= 2;
-
-                    _ovr025.DisplayPlayerStatusString(true, 10, "fires a stone to flesh ray", attacker);
-                    LoadMissleIconAndDraw(10, target, attacker);
-
-                    if (_ovr024.RollSavingThrow(0, SaveVerseType.Petrification, target) == false)
-                    {
-                        _ovr024.KillPlayer("is Stoned", Status.stoned, target);
-                    }
-
-                    sub_421C1(false, ref range, attacker);
-                }
-                else if (range == 4 && (attacksTired & 4) == 0)
-                {
-                    attacksTired |= 4;
-
-                    _ovr025.DisplayPlayerStatusString(true, 10, "fires a death ray", attacker);
-                    LoadMissleIconAndDraw(5, target, attacker);
-
-                    if (_ovr024.RollSavingThrow(0, 0, target) == false)
-                    {
-                        _ovr024.KillPlayer("is killed", Status.dead, target);
-                    }
-
-                    sub_421C1(false, ref range, attacker);
-                }
-                else if (range == 5 && (attacksTired & 8) == 0)
-                {
-                    attacksTired |= 8;
-
-                    _ovr025.DisplayPlayerStatusString(true, 10, "wounds you", attacker);
-                    LoadMissleIconAndDraw(5, target, attacker);
-
-                    _ovr024.damage_person(false, 0, _ovr024.roll_dice_save(8, 2) + 1, target);
-                    sub_421C1(false, ref range, attacker);
-                }
-                else if ((attacksTired & 0x10) == 0)
-                {
-                    _ovr023.sub_5D2E1(true, QuickFight.True, 0x54);
-                    attacksTired |= 0x10;
-                }
-                else if ((attacksTired & 0x20) == 0)
-                {
-                    _ovr023.sub_5D2E1(true, QuickFight.True, 0x37);
-                    attacksTired |= 0x20;
-                }
-                else if ((attacksTired & 0x40) == 0)
-                {
-                    _ovr023.sub_5D2E1(true, QuickFight.True, 0x15);
-                    attacksTired |= 0x40;
-                }
-            }
-        } while (attackTiresLeft > 0 && attacker.actions.target != null);
-    }
-
-
     internal void sub_425C6(Effect add_remove, object param, Player player)
     {
         Affect affect = (Affect)param;
@@ -1797,7 +1587,6 @@ public class ovr014
             }
         }
     }
-
 
     internal void AffectOwlbearHugAttackCheck(Effect arg_0, object param, Player player) // hugs
     {

@@ -59,6 +59,11 @@ public static class FeatureModule
             .AddTransient<seg037>()
             .AddTransient<seg040>()
             .AddTransient<seg042>()
-            .AddTransient<seg051>();
+            .AddTransient<seg051>()
+            .AddTransient<BackStabMath>()
+            .AddTransient<CanSeeTargetMath>()
+            .AddTransient<FindTargetMath>()
+            .AddTransient<TargetDirectionMath>()
+            ;
     }
 }

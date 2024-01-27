@@ -22,11 +22,13 @@ public class ovr010
     private readonly ovr027 _ovr027;
     private readonly ovr032 _ovr032;
     private readonly ovr033 _ovr033;
+    private readonly CanSeeTargetMath _canSeeTargetMath;
+    private readonly FindTargetMath _findTargetMath;
     private readonly DisplayDriver _displayDriver;
     private readonly KeyboardService _keyboardService;
     private readonly KeyboardDriver _keyboardDriver;
     private readonly TargetDirectionMath _targetDirectionMath;
-    public ovr010(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, KeyboardService keyboardService, KeyboardDriver keyboardDriver, TargetDirectionMath targetDirectionMath)
+    public ovr010(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, KeyboardService keyboardService, KeyboardDriver keyboardDriver, TargetDirectionMath targetDirectionMath, CanSeeTargetMath canSeeTargetMath, FindTargetMath findTargetMath)
     {
         _ovr014 = ovr014;
         _ovr020 = ovr020;
@@ -40,6 +42,8 @@ public class ovr010
         _keyboardService = keyboardService;
         _keyboardDriver = keyboardDriver;
         _targetDirectionMath = targetDirectionMath;
+        _canSeeTargetMath = canSeeTargetMath;
+        _findTargetMath = findTargetMath;
     }
 
     internal void PlayerQuickFight(Player player) // sub_3504B
@@ -118,7 +122,7 @@ public class ovr010
 
         while (var_2 == false)
         {
-            if (_ovr014.find_target(false, 1, 0xff, player) == true &&
+            if (_findTargetMath.find_target(false, 1, 0xff, player) == true &&
                 player.actions.delay > 0 &&
                 player.in_combat == true)
             {
@@ -477,7 +481,7 @@ public class ovr010
                                     player.actions.move = 0;
                                     var_5 = true;
                                 }
-                                else if (_ovr014.find_target(false, 1, 0xFF, player) == false)
+                                else if (_findTargetMath.find_target(false, 1, 0xFF, player) == false)
                                 {
                                     var_5 = true;
                                     TryGuarding(player);
@@ -604,7 +608,7 @@ public class ovr010
                 }
 
                 if (target != null &&
-                    _ovr014.CanSeeTargetA(target, player) == true)
+                    _canSeeTargetMath.CanSeeTargetA(target, player) == true)
                 {
                     var targetPos = _ovr033.PlayerMapPos(target);
                     var attackPos = _ovr033.PlayerMapPos(player);
@@ -626,7 +630,7 @@ public class ovr010
 
                     if (nearTargets.Count == 0)
                     {
-                        if (_ovr014.find_target(false, 0, 0xff, player) == true)
+                        if (_findTargetMath.find_target(false, 0, 0xff, player) == true)
                         {
                             moralFailureEscape(player);
                         }
@@ -650,7 +654,7 @@ public class ovr010
                             stop = true;
                         }
                         else if (_ovr025.getTargetRange(target, player) == 1 ||
-                                 _ovr014.CanSeeTargetA(target, player) == true)
+                                 _canSeeTargetMath.CanSeeTargetA(target, player) == true)
                         {
                             gbl.byte_1D90E = true;
                         }
