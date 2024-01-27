@@ -35,8 +35,6 @@ public class ovr013
     internal void SetupAffectTables() // setup_spells2
     {
         affect_table = new System.Collections.Generic.Dictionary<Affects, affectDelegate>();
-        affect_table.Add(Affects.cursed, Curse);
-        affect_table.Add(Affects.sticks_to_snakes, SticksToSnakes);
         affect_table.Add(Affects.dispel_evil, DispelEvil);
         affect_table.Add(Affects.detect_magic, empty);
         affect_table.Add(Affects.affect_06, BonusVsMonstersX);
@@ -233,44 +231,7 @@ public class ovr013
         _ovr025.clear_actions(player);
     }
 
-    private void Curse(Effect arg_0, object param, Player player)
-    {
-        if (gbl.monster_morale < 5)
-        {
-            gbl.monster_morale = 0;
-        }
-        else
-        {
-            gbl.monster_morale -= 5;
-        }
-
-        gbl.attack_roll--;
-    }
-
-
-    private void SticksToSnakes(Effect arg_0, object param, Player player)
-    {
-        Affect affect = (Affect)param;
-
-        byte var_1 = (byte)(player.attack2_AttacksLeft + player.attack1_AttacksLeft);
-
-        if (affect.affect_data > var_1)
-        {
-            affect.affect_data -= var_1;
-        }
-        else
-        {
-            _ovr024.remove_affect(null, Affects.sticks_to_snakes, player);
-        }
-
-        _ovr025.MagicAttackDisplay("is fighting with snakes", true, player);
-        _ovr025.ClearPlayerTextArea();
-
-        _ovr025.clear_actions(player);
-    }
-
-
-    private void DispelEvil(Effect arg_0, object param, Player player)
+ private void DispelEvil(Effect arg_0, object param, Player player)
     {
         if ((gbl.SelectedPlayer.field_14B & 1) != 0)
         {
