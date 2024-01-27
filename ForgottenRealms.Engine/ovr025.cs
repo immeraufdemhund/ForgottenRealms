@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ForgottenRealms.Engine.AffectsFeature;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.Combat;
 using ForgottenRealms.Engine.Classes.DaxFiles;

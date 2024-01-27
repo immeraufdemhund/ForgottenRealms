@@ -1,4 +1,5 @@
 using System;
+using ForgottenRealms.Engine.AffectsFeature;
 
 namespace ForgottenRealms.Engine.Classes;
 

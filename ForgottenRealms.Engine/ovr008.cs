@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ForgottenRealms.Engine.AffectsFeature;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.DaxFiles;
 using ForgottenRealms.Engine.Logging;

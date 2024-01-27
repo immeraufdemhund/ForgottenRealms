@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ForgottenRealms.Engine.AffectsFeature;
 
 namespace ForgottenRealms.Engine.Classes;
 

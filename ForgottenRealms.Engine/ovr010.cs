@@ -1,3 +1,4 @@
+using ForgottenRealms.Engine.AffectsFeature;
 using ForgottenRealms.Engine.Classes;
 using ForgottenRealms.Engine.Classes.Combat;
 

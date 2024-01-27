@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ForgottenRealms.Engine.AffectsFeature;
 using ForgottenRealms.Engine.CharacterFeature.CreatePlayerFeature;
 using ForgottenRealms.Engine.CharacterFeature.DropCharacterFeature;
 using ForgottenRealms.Engine.Classes;

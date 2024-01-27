@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using ForgottenRealms.Engine.AffectsFeature;
 using ForgottenRealms.Engine.CharacterFeature;
 using ForgottenRealms.Engine.CharacterFeature.TrainCharacterFeature;
 using ForgottenRealms.Engine.Classes;

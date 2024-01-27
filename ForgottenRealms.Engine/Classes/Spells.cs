@@ -1,4 +1,6 @@
-﻿namespace ForgottenRealms.Engine.Classes;
+﻿using ForgottenRealms.Engine.AffectsFeature;
+
+namespace ForgottenRealms.Engine.Classes;
 
 public enum SaveVerseType
 {
