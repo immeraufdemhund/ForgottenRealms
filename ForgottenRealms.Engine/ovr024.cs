@@ -203,7 +203,7 @@ public class ovr024
                 calc_affect_effect(Affects.prot_from_normal_missiles, player);
                 calc_affect_effect(Affects.thri_kreen_dodge_missile, player);
                 calc_affect_effect(Affects.affect_78, player);
-                calc_affect_effect(Affects.troll_regen, player);
+                calc_affect_effect(Affects.troll_regenerate, player);
                 calc_affect_effect(Affects.affect_73, player);
                 calc_affect_effect(Affects.affect_74, player);
                 calc_affect_effect(Affects.affect_77, player);
@@ -229,7 +229,7 @@ public class ovr024
                 calc_affect_effect(Affects.affect_76, player);
                 calc_affect_effect(Affects.shield, player);
                 calc_affect_effect(Affects.affect_5d, player);
-                calc_affect_effect(Affects.troll_regen, player);
+                calc_affect_effect(Affects.troll_regenerate, player);
                 calc_affect_effect(Affects.mirror_image, player);
                 calc_affect_effect(Affects.immune_to_cold, player);
                 calc_affect_effect(Affects.prot_drag_breath, player);

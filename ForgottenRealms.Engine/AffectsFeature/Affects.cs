@@ -103,7 +103,7 @@ public enum Affects
     regen_3_hp = 0x62,
     affect_63 = 0x63,
     troll_fire_or_acid = 0x64,
-    troll_regen = 0x65,
+    troll_regenerate = 0x65,
     TrollRegen = 0x66,
     salamander_heat_damage = 0x67,
     thri_kreen_dodge_missile = 0x68,

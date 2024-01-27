@@ -130,7 +130,7 @@ public class ovr013
         affect_table.Add(Affects.regen_3_hp, AffectRegen3Hp);
         affect_table.Add(Affects.affect_63, sub_3BEE8);
         affect_table.Add(Affects.troll_fire_or_acid, AffectTrollFireOrAcid);
-        affect_table.Add(Affects.troll_regen, AffectTrollRegenerate);
+        affect_table.Add(Affects.troll_regenerate, AffectTrollRegenerate);
         affect_table.Add(Affects.TrollRegen, AffectTrollRegen);
         affect_table.Add(Affects.salamander_heat_damage, AffectSalamanderHeatDamage);
         affect_table.Add(Affects.thri_kreen_dodge_missile, sub_3C0DA);
