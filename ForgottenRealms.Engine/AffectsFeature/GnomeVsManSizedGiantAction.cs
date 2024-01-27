@@ -5,7 +5,7 @@ namespace ForgottenRealms.Engine.AffectsFeature;
 public class GnomeVsManSizedGiantAction : IAffectAction
 {
     public Affects ActionForAffect => Affects.gnome_vs_man_sized_giant;
-    public void Execute(Effect effect, object affect, Player player)
+    public void Execute(Effect effect, object param, Player player)
     {
     }
 }

@@ -5,7 +5,7 @@ namespace ForgottenRealms.Engine.AffectsFeature;
 public class PoisonedAction : IAffectAction
 {
     public Affects ActionForAffect => Affects.poisoned;
-    public void Execute(Effect effect, object affect, Player player)
+    public void Execute(Effect effect, object param, Player player)
     {
     }
 }

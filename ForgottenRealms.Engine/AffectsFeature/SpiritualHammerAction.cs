@@ -5,7 +5,7 @@ namespace ForgottenRealms.Engine.AffectsFeature;
 public class SpiritualHammerAction : IAffectAction
 {
     public Affects ActionForAffect => Affects.spiritual_hammer;
-    public void Execute(Effect effect, object affect, Player player)
+    public void Execute(Effect effect, object param, Player player)
     {
     }
 }

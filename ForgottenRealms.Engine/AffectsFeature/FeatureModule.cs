@@ -6,7 +6,7 @@ namespace ForgottenRealms.Engine.AffectsFeature;
 public interface IAffectAction
 {
     Affects ActionForAffect { get; }
-    void Execute(Effect effect,object affect, Player player);
+    void Execute(Effect effect,object param, Player player);
 }
 public static class FeatureModule
 {

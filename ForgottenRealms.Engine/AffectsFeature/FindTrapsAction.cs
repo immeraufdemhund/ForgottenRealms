@@ -5,7 +5,7 @@ namespace ForgottenRealms.Engine.AffectsFeature;
 public class FindTrapsAction : IAffectAction
 {
     public Affects ActionForAffect => Affects.find_traps;
-    public void Execute(Effect effect, object affect, Player player)
+    public void Execute(Effect effect, object param, Player player)
     {
     }
 }

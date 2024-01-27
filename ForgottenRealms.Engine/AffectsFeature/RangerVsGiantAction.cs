@@ -5,7 +5,7 @@ namespace ForgottenRealms.Engine.AffectsFeature;
 public class RangerVsGiantAction : IAffectAction
 {
     public Affects ActionForAffect => Affects.ranger_vs_giant;
-    public void Execute(Effect effect, object affect, Player player)
+    public void Execute(Effect effect, object param, Player player)
     {
     }
 }
