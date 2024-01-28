@@ -61,7 +61,6 @@ public class ovr013
         affect_table.Add(Affects.affect_85, AffectDracolichA);
         affect_table.Add(Affects.affect_89, sub_3C7E0);
         affect_table.Add(Affects.affect_8a, add_affect_19);
-        affect_table.Add(Affects.affect_8b, _ovr014.sub_425C6);
         affect_table.Add(Affects.affect_8f, sub_3C975);
         affect_table.Add(Affects.affect_in_cloud_kill, CloudKillAffect);
         affect_table.Add(Affects.affect_in_stinking_cloud, StinkingCloudAffect);
