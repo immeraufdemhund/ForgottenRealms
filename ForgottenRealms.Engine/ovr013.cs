@@ -37,7 +37,6 @@ public class ovr013
     {
         affect_table = new System.Collections.Generic.Dictionary<Affects, affectDelegate>();
 
-        affect_table.Add(Affects.affect_4e, sub_3B8D9);
         affect_table.Add(Affects.affect_55, sub_3BA14);
         affect_table.Add(Affects.affect_5d, half_fire_damage);
         affect_table.Add(Affects.affect_5e, sub_3BDB2);
@@ -1098,18 +1097,6 @@ public class ovr013
             player.combat_team = CombatTeam.Ours;
         }
     }
-
-
-    private void sub_3B8D9(Effect arg_0, object param, Player player)
-    {
-        Affect affect = (Affect)param;
-
-        if (_ovr024.combat_heal(player.hit_point_current, player) == false)
-        {
-            addAffect(1, affect.affect_data, Affects.affect_4e, player);
-        }
-    }
-
 
     private void MagicFireAttack_2d10(Effect arg_0, object param, Player player) // sub_3B919
     {
