@@ -142,7 +142,7 @@ public class ovr014
 
                     RecalcAttacksReceived(target, attacker);
 
-                    AttackTarget(null, 0, target, attacker);
+                    _attackTargetAction.AttackTarget(null, 0, target, attacker);
                 }
             }
         }
@@ -302,7 +302,7 @@ public class ovr014
 
                             Player backupTarget = attacker.actions.target;
 
-                            AttackTarget(null, 1, player, attacker);
+                            _attackTargetAction.AttackTarget(null, 1, player, attacker);
                             found = true;
 
                             attacker.actions.target = backupTarget;
@@ -450,7 +450,7 @@ public class ovr014
 
                     attacker.attack1_AttacksLeft = 1;
 
-                    AttackTarget(null, 0, sweeptarget, attacker);
+                    _attackTargetAction.AttackTarget(null, 0, sweeptarget, attacker);
                 }
 
                 return true;
@@ -593,12 +593,6 @@ public class ovr014
         }
 
         target.actions.directionChanges = (target.actions.directionChanges + dirDiff) % 8;
-    }
-
-
-    internal bool AttackTarget(Item rangedWeapon, int attackType, Player target, Player attacker)
-    {
-        return _attackTargetAction.AttackTarget(rangedWeapon, attackType, target, attacker);
     }
 
     internal bool find_healing_target(out Player target, Player healer) /* sub_3FDFE */
@@ -1160,7 +1154,7 @@ public class ovr014
                         rangedWeapon = null;
                     }
 
-                    arg_4 = AttackTarget(rangedWeapon, 0, target, attacker);
+                    arg_4 = _attackTargetAction.AttackTarget(rangedWeapon, 0, target, attacker);
                 }
             }
         }

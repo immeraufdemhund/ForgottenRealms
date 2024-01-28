@@ -8,6 +8,7 @@ public class ovr009
     private readonly Set unk_33748 = new Set(16, 19, 45, 50, 71, 72, 73, 75, 77, 79, 80, 81);
     private readonly Set unk_33768 = new Set(16, 19, 32, 45, 50, 65, 67, 68, 71, 72, 73, 75, 77, 79, 80, 81, 84, 85, 86);
 
+    private readonly AttackTargetAction _attackTargetAction;
     private readonly KeyboardService _keyboardService;
     private readonly KeyboardDriver _keyboardDriver;
     private readonly ovr010 _ovr010;
@@ -22,7 +23,7 @@ public class ovr009
     private readonly ovr033 _ovr033;
     private readonly seg037 _seg037;
 
-    public ovr009(KeyboardService keyboardService, ovr010 ovr010, ovr011 ovr011, ovr014 ovr014, ovr020 ovr020, ovr021 ovr021, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr033 ovr033, seg037 seg037, KeyboardDriver keyboardDriver)
+    public ovr009(KeyboardService keyboardService, ovr010 ovr010, ovr011 ovr011, ovr014 ovr014, ovr020 ovr020, ovr021 ovr021, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr033 ovr033, seg037 seg037, KeyboardDriver keyboardDriver, AttackTargetAction attackTargetAction)
     {
         _keyboardService = keyboardService;
         _ovr010 = ovr010;
@@ -37,6 +38,7 @@ public class ovr009
         _ovr033 = ovr033;
         _seg037 = seg037;
         _keyboardDriver = keyboardDriver;
+        _attackTargetAction = attackTargetAction;
     }
 
     internal void MainCombatLoop() //sub_33100
@@ -629,7 +631,7 @@ public class ovr009
             {
                 _ovr014.RecalcAttacksReceived(target, player);
 
-                arg_0 = _ovr014.AttackTarget(null, 0, target, player);
+                arg_0 = _attackTargetAction.AttackTarget(null, 0, target, player);
             }
         }
     }

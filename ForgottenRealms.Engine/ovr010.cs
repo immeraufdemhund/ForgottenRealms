@@ -22,13 +22,14 @@ public class ovr010
     private readonly ovr027 _ovr027;
     private readonly ovr032 _ovr032;
     private readonly ovr033 _ovr033;
+    private readonly AttackTargetAction _attackTargetAction;
     private readonly CanSeeTargetMath _canSeeTargetMath;
     private readonly FindTargetMath _findTargetMath;
     private readonly DisplayDriver _displayDriver;
     private readonly KeyboardService _keyboardService;
     private readonly KeyboardDriver _keyboardDriver;
     private readonly TargetDirectionMath _targetDirectionMath;
-    public ovr010(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, KeyboardService keyboardService, KeyboardDriver keyboardDriver, TargetDirectionMath targetDirectionMath, CanSeeTargetMath canSeeTargetMath, FindTargetMath findTargetMath)
+    public ovr010(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, KeyboardService keyboardService, KeyboardDriver keyboardDriver, TargetDirectionMath targetDirectionMath, CanSeeTargetMath canSeeTargetMath, FindTargetMath findTargetMath, AttackTargetAction attackTargetAction)
     {
         _ovr014 = ovr014;
         _ovr020 = ovr020;
@@ -44,6 +45,7 @@ public class ovr010
         _targetDirectionMath = targetDirectionMath;
         _canSeeTargetMath = canSeeTargetMath;
         _findTargetMath = findTargetMath;
+        _attackTargetAction = attackTargetAction;
     }
 
     internal void PlayerQuickFight(Player player) // sub_3504B
@@ -691,7 +693,7 @@ public class ovr010
                             }
                         }
 
-                        stop = _ovr014.AttackTarget(item, 0, target, player);
+                        stop = _attackTargetAction.AttackTarget(item, 0, target, player);
 
                         if (stop == true)
                         {
