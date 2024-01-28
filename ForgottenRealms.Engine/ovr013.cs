@@ -55,8 +55,6 @@ public class ovr013
         affect_table.Add(Affects.affect_79, sub_3C3F6);
         affect_table.Add(Affects.affect_7b, sub_3C59D);
         affect_table.Add(Affects.affect_7d, sub_3C5F4);
-        affect_table.Add(Affects.affect_7e, _ovr023.cast_gaze_paralyze);
-        affect_table.Add(Affects.affect_80, _ovr023.DragonBreathFire);
         affect_table.Add(Affects.affect_82, sub_3C643);
         affect_table.Add(Affects.affect_85, AffectDracolichA);
         affect_table.Add(Affects.affect_89, sub_3C7E0);

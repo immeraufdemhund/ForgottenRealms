@@ -129,6 +129,8 @@ public class ovr023
         "9th Level"
     };
 
+    private readonly ExperienceTable _experienceTable;
+    private readonly AreaDamageTargetsBuilder _areaDamageTargetsBuilder;
     private readonly DisplayDriver _displayDriver;
     private readonly SoundDriver _soundDriver;
     private readonly ovr013 _ovr013;
@@ -140,7 +142,7 @@ public class ovr023
     private readonly ovr033 _ovr033;
     private readonly seg037 _seg037;
 
-    public ovr023(DisplayDriver displayDriver, SoundDriver soundDriver, ovr013 ovr013, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, seg037 seg037)
+    public ovr023(DisplayDriver displayDriver, SoundDriver soundDriver, ovr013 ovr013, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, seg037 seg037, ExperienceTable experienceTable, AreaDamageTargetsBuilder areaDamageTargetsBuilder)
     {
         _displayDriver = displayDriver;
         _soundDriver = soundDriver;
@@ -152,6 +154,8 @@ public class ovr023
         _ovr032 = ovr032;
         _ovr033 = ovr033;
         _seg037 = seg037;
+        _experienceTable = experienceTable;
+        _areaDamageTargetsBuilder = areaDamageTargetsBuilder;
     }
 
     internal bool can_learn_spell(int spell_id, Player player) /* sub_5C01E */
@@ -853,141 +857,9 @@ public class ovr023
     }
 
 
-    internal void localSteppingPathInit(Point target, Point caster, SteppingPath path) /* sub_5D676 */
+    private void BuildAreaDamageTargets(int max_range, int playerSize, Point targetPos, Point casterPos)
     {
-        path.attacker = caster;
-        path.target = target;
-
-        path.CalculateDeltas();
-    }
-
-
-    private int find_players_on_path(SteppingPath path, List<int> player_list) /* sub_5D702 */
-    {
-        int dir = 0;
-        while (path.Step())
-        {
-            int playerIndex = _ovr033.PlayerIndexAtMapXY(path.current.y, path.current.x);
-
-            if (playerIndex > 0)
-            {
-                if (player_list.Contains(playerIndex) == false)
-                {
-                    player_list.Add(playerIndex);
-                }
-            }
-
-            dir = path.direction;
-        }
-
-        return dir;
-    }
-
-    private Point[] unk_16D22 = { new Point(-1, 0), new Point(0, -1), new Point(0, -1), new Point(1, 0), new Point(1, 0), new Point(0, 1), new Point(0, 1), new Point(-1, 0) };
-    private Point[] unk_16D32 = { new Point(1, 0), new Point(1, 0), new Point(0, 1), new Point(0, 1), new Point(-1, 0), new Point(-1, 0), new Point(0, -1), new Point(0, -1) };
-    private readonly ExperienceTable ExperienceTable = new();
-
-
-    private void BuildAreaDamageTargets(int max_range, int playerSize, Point targetPos, Point casterPos) // sub_5D7CF
-    {
-        List<int> players_on_path = new List<int>();
-
-        bool finished;
-        SteppingPath path = new SteppingPath();
-
-        localSteppingPathInit(targetPos, casterPos, path);
-
-        byte[] directions = new byte[0x32];
-        int index = 0;
-        while (!path.Step())
-        {
-            directions[index] = path.direction;
-            index++;
-        }
-
-        int count = index - 1;
-
-        index = 0;
-        max_range *= 2;
-        int tmp_range = path.steps;
-        finished = false;
-
-        var tmpPos = new Point(targetPos);
-
-        while (tmp_range < max_range && finished == false)
-        {
-            if (tmpPos.x < 0x31 && tmpPos.x > 0 && tmpPos.y < 0x18 && tmpPos.y > 0)
-            {
-                switch (directions[index])
-                {
-                    case 0:
-                    case 2:
-                    case 4:
-                    case 6:
-                        tmp_range += 2;
-                        break;
-
-                    case 1:
-                    case 3:
-                    case 5:
-                    case 7:
-                        tmp_range += 3;
-                        break;
-                }
-
-                tmpPos += gbl.MapDirectionDelta[directions[index]];
-
-                if (index == count)
-                {
-                    index = 0;
-                }
-                else
-                {
-                    index++;
-                }
-            }
-            else
-            {
-                finished = true;
-            }
-        }
-
-        targetPos.MapBoundaryTrunc();
-
-        _ovr032.canReachTarget(ref targetPos, casterPos);
-
-        localSteppingPathInit(targetPos, casterPos, path);
-        int var_76 = find_players_on_path(path, players_on_path);
-
-        if (playerSize > 1)
-        {
-            Point map_b = targetPos + unk_16D32[var_76];
-            map_b.MapBoundaryTrunc();
-
-            localSteppingPathInit(map_b, casterPos, path);
-            find_players_on_path(path, players_on_path);
-
-            if (playerSize > 2)
-            {
-                Point map_a = targetPos + unk_16D22[var_76];
-
-                map_a.MapBoundaryTrunc();
-
-                localSteppingPathInit(map_a, casterPos, path);
-                find_players_on_path(path, players_on_path);
-            }
-        }
-
-        gbl.spellTargets.Clear();
-
-        foreach (var idx in players_on_path)
-        {
-            var player = gbl.player_array[idx];
-            if (player != gbl.SelectedPlayer)
-            {
-                gbl.spellTargets.Add(player);
-            }
-        }
+        _areaDamageTargetsBuilder.BuildAreaDamageTargets(max_range, playerSize, targetPos, casterPos);
     }
 
 
@@ -2184,8 +2056,8 @@ public class ovr023
                 if (lvl > 0 &&
                     lvl <= max_lvl)
                 {
-                    var currentMinimumExperience = ExperienceTable.GetMinimumExperience((ClassId)skill, lvl);
-                    if (ExperienceTable.IsTrainingAllowed((ClassId)skill, lvl) &&
+                    var currentMinimumExperience = _experienceTable.GetMinimumExperience((ClassId)skill, lvl);
+                    if (_experienceTable.IsTrainingAllowed((ClassId)skill, lvl) &&
                         currentMinimumExperience < max_exp &&
                         Limits.RaceStatLevelRestricted((ClassId)skill, player) == false)
                     {
@@ -3018,49 +2890,6 @@ public class ovr023
         }
     }
 
-
-    internal void DragonBreathFire(Effect arg_0, object param, Player attacker) // spell_breathes_fire
-    {
-        Affect affect = (Affect)param;
-
-        if (gbl.combat_round == 0)
-        {
-            affect.affect_data = 3;
-        }
-
-        if (affect.affect_data > 0)
-        {
-            gbl.damage_flags = DamageType.DragonBreath | DamageType.Fire;
-            var attackPos = _ovr033.PlayerMapPos(attacker);
-
-            gbl.byte_1DA70 = gbl.SpellCastFunction(QuickFight.True, (int)Spells.spell_3d);
-
-            if (gbl.byte_1DA70 == true)
-            {
-                BuildAreaDamageTargets(9, 3, gbl.targetPos, attackPos);
-
-                if (gbl.spellTargets.Count > 0)
-                {
-                    _ovr025.DisplayPlayerStatusString(true, 10, "breathes fire", attacker);
-                    _ovr025.load_missile_icons(0x12);
-
-                    _ovr025.draw_missile_attack(0x1E, 1, _ovr033.PlayerMapPos(gbl.spellTargets[0]), _ovr033.PlayerMapPos(attacker));
-
-                    foreach (var target in gbl.spellTargets)
-                    {
-                        bool saves = _ovr024.RollSavingThrow(0, SaveVerseType.BreathWeapon, target);
-
-                        _ovr024.damage_person(saves, DamageOnSave.Half, attacker.hit_point_max, target);
-                    }
-
-                    affect.affect_data -= 1;
-                    _ovr025.clear_actions(attacker);
-                }
-            }
-        }
-    }
-
-
     internal void cast_breath_fire(Effect arg_0, object param, Player arg_6)
     {
         gbl.byte_1DA70 = gbl.SpellCastFunction(QuickFight.True, (int)Spells.spell_41);
@@ -3103,31 +2932,6 @@ public class ovr023
             sub_5FA44(0, 0, _ovr024.roll_dice_save(6, 16), 10);
             var_1 = true;
             _ovr025.clear_actions(caster);
-        }
-    }
-
-
-    internal void cast_gaze_paralyze(Effect arg_0, object param, Player arg_6)
-    {
-        arg_6.actions.target = null;
-
-        gbl.byte_1DA70 = gbl.SpellCastFunction(QuickFight.True, (int)Spells.animate_dead);
-
-        gbl.spell_target = arg_6.actions.target;
-
-        if (gbl.spell_target != null)
-        {
-            _ovr025.DisplayPlayerStatusString(false, 10, "gazes...", arg_6);
-
-            _ovr025.load_missile_icons(0x12);
-
-            _ovr025.draw_missile_attack(0x2d, 4, _ovr033.PlayerMapPos(gbl.spell_target), _ovr033.PlayerMapPos(arg_6));
-
-            if (_ovr024.RollSavingThrow(0, SaveVerseType.Petrification, gbl.spell_target) == false)
-            {
-                _ovr024.add_affect(false, 0xff, 0x3c, Affects.paralyze, gbl.spell_target);
-                _ovr025.DisplayPlayerStatusString(false, 10, "is paralyzed", gbl.spell_target);
-            }
         }
     }
 
