@@ -17,10 +17,11 @@ public class ovr013
     private readonly ovr033 _ovr033;
     private readonly DisplayDriver _displayDriver;
     private readonly PlayerPrimaryWeapon _playerPrimaryWeapon;
+    private readonly AffectsProtectedAction _affectsProtectedAction;
     private readonly Dictionary<Affects, IAffectAction> _table;
     private Dictionary<Affects, affectDelegate> affect_table;
 
-    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon)
+    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon, AffectsProtectedAction affectsProtectedAction)
     {
         _ovr014 = ovr014;
         _ovr020 = ovr020;
@@ -31,6 +32,7 @@ public class ovr013
         _ovr033 = ovr033;
         _displayDriver = displayDriver;
         _playerPrimaryWeapon = playerPrimaryWeapon;
+        _affectsProtectedAction = affectsProtectedAction;
         _table = affectActions.ToDictionary(a => a.ActionForAffect);
     }
 
@@ -39,11 +41,6 @@ public class ovr013
     {
         affect_table = new System.Collections.Generic.Dictionary<Affects, affectDelegate>();
 
-        affect_table.Add(Affects.affect_5d, half_fire_damage);
-        affect_table.Add(Affects.affect_5e, sub_3BDB2);
-        affect_table.Add(Affects.affect_5F, sub_3BE06);
-        affect_table.Add(Affects.affect_63, sub_3BEE8);
-        affect_table.Add(Affects.affect_6f, sub_3C1C9);
         affect_table.Add(Affects.affect_71, sub_3C201);
         affect_table.Add(Affects.affect_72, AffectProtectionFromElectricity);
         affect_table.Add(Affects.affect_73, sub_3C260);
@@ -178,24 +175,6 @@ public class ovr013
             func.Execute(add_remove, parameter, player);
         }
     }
-
-    /// <summary>
-    /// If same as current affect damage set to zero, or if affect is zero
-    /// </summary>
-    private void ProtectedIf(Affects affect) /* sub_3A019 */
-    {
-        if (gbl.current_affect == affect)
-        {
-            Protected();
-        }
-    }
-
-    private void Protected()
-    {
-        gbl.damage = 0;
-        gbl.current_affect = 0;
-    }
-
 
     private bool addAffect(ushort time, int data, Affects affect_type, Player player)
     {
@@ -464,7 +443,7 @@ public class ovr013
             gbl.spell_id > 0 &&
             gbl.byte_1D2C7 == false)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
 
             _ovr025.DisplayPlayerStatusString(true, 10, "lost an image", player);
 
@@ -872,7 +851,7 @@ public class ovr013
 
             if ((gbl.damage_flags & DamageType.Magic) == 0)
             {
-                Protected();
+                _affectsProtectedAction.Protected();
             }
         }
     }
@@ -895,7 +874,7 @@ public class ovr013
         if (gbl.spell_id > 0 &&
             gbl.spellCastingTable[gbl.spell_id].spellLevel < 4)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
         }
     }
 
@@ -1001,7 +980,7 @@ public class ovr013
     {
         if ((gbl.damage_flags & DamageType.DragonBreath) > 0)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
             _ovr025.DisplayPlayerStatusString(true, 10, "is unaffected", player);
         }
     }
@@ -1127,7 +1106,7 @@ public class ovr013
 
         if ((gbl.damage_flags & DamageType.Electricity) != 0)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
             //byte var_1 = ovr024.roll_dice(8, 1);
 
             player.ac += 8;
@@ -1200,40 +1179,6 @@ public class ovr013
         }
     }
 
-
-    private void half_fire_damage(Effect arg_0, object param, Player arg_6) // sub_3BD98
-    {
-        if ((gbl.damage_flags & DamageType.Fire) != 0)
-        {
-            gbl.damage /= 2;
-        }
-    }
-
-
-    private void sub_3BDB2(Effect arg_0, object param, Player arg_6)
-    {
-        Item item = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
-
-        if (item != null &&
-            (gbl.ItemDataTable[item.type].field_7 & 0x81) != 0)
-        {
-            gbl.damage /= 2;
-        }
-    }
-
-
-    private void sub_3BE06(Effect arg_0, object param, Player player)
-    {
-        Affect affect = (Affect)param;
-        affect.callAffectTable = false;
-
-        if (player.in_combat == true)
-        {
-            _ovr024.KillPlayer("Falls dead", Status.dead, player);
-        }
-    }
-
-
     private void con_saving_bonus(Effect arg_0, object param, Player player) /* sub_3BE42 */
     {
         if (gbl.saveVerseType == SaveVerseType.Spell ||
@@ -1278,31 +1223,6 @@ public class ovr013
     }
 
 
-    private void sub_3BEE8(Effect arg_0, object param, Player player)
-    {
-        Affect arg_2 = (Affect)param;
-
-        byte heal_amount = 0;
-
-        if (player.health_status == Status.dying &&
-            player.actions.bleeding < 6)
-        {
-            heal_amount = (byte)(6 - player.actions.bleeding);
-        }
-
-        if (player.health_status == Status.unconscious)
-        {
-            heal_amount = 6;
-        }
-
-        if (heal_amount > 0 &&
-            _ovr024.combat_heal(heal_amount, player) == true)
-        {
-            _ovr024.add_affect(true, 0xff, (ushort)(_ovr024.roll_dice(4, 1) + 1), Affects.affect_5F, player);
-            arg_2.callAffectTable = false;
-            _ovr024.remove_affect(arg_2, Affects.affect_63, player);
-        }
-    }
 
 
     private void AffectTrollFireOrAcid(Effect arg_0, object param, Player player)
@@ -1364,7 +1284,7 @@ public class ovr013
         {
             if (_ovr024.roll_dice(100, 1) <= rollNeeded)
             {
-                Protected();
+                _affectsProtectedAction.Protected();
             }
         }
     }
@@ -1386,22 +1306,22 @@ public class ovr013
     {
         if (_ovr024.roll_dice(100, 1) <= 90)
         {
-            ProtectedIf(Affects.sleep);
-            ProtectedIf(Affects.charm_person);
+            _affectsProtectedAction.ProtectedIf(Affects.sleep);
+            _affectsProtectedAction.ProtectedIf(Affects.charm_person);
         }
     }
 
 
     private void AffectProtCharmSleep(Effect arg_0, object param, Player arg_6) // sub_3C18F
     {
-        ProtectedIf(Affects.charm_person);
-        ProtectedIf(Affects.sleep);
+        _affectsProtectedAction.ProtectedIf(Affects.charm_person);
+        _affectsProtectedAction.ProtectedIf(Affects.sleep);
     }
 
 
     private void ResistParalyze(Effect arg_0, object param, Player arg_6) // sub_3C1A4
     {
-        ProtectedIf(Affects.paralyze);
+        _affectsProtectedAction.ProtectedIf(Affects.paralyze);
     }
 
 
@@ -1409,28 +1329,15 @@ public class ovr013
     {
         if ((gbl.damage_flags & DamageType.Cold) != 0)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
         }
     }
-
-
-    private void sub_3C1C9(Effect arg_0, object param, Player arg_6)
-    {
-        ProtectedIf(Affects.poisoned);
-        ProtectedIf(Affects.paralyze);
-
-        if (gbl.saveVerseType == SaveVerseType.Poison)
-        {
-            gbl.savingThrowRoll = 100;
-        }
-    }
-
 
     private void AffectImmuneToFire(Effect arg_0, object param, Player arg_6) // sub_3C1EA
     {
         if ((gbl.damage_flags & DamageType.Fire) != 0)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
         }
     }
 
@@ -1589,18 +1496,18 @@ public class ovr013
     {
         if (_ovr024.roll_dice(100, 1) <= 30)
         {
-            ProtectedIf(Affects.charm_person);
-            ProtectedIf(Affects.sleep);
+            _affectsProtectedAction.ProtectedIf(Affects.charm_person);
+            _affectsProtectedAction.ProtectedIf(Affects.sleep);
         }
     }
 
 
     private void sub_3C5F4(Effect arg_0, object param, Player player)
     {
-        ProtectedIf(Affects.charm_person);
-        ProtectedIf(Affects.sleep);
-        ProtectedIf(Affects.paralyze);
-        ProtectedIf(Affects.poisoned);
+        _affectsProtectedAction.ProtectedIf(Affects.charm_person);
+        _affectsProtectedAction.ProtectedIf(Affects.sleep);
+        _affectsProtectedAction.ProtectedIf(Affects.paralyze);
+        _affectsProtectedAction.ProtectedIf(Affects.poisoned);
 
         if (gbl.saveVerseType != SaveVerseType.Poison)
         {
@@ -1614,7 +1521,7 @@ public class ovr013
         if (gbl.current_affect != 0 ||
             (gbl.damage_flags & DamageType.Magic) != 0)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
         }
     }
 
@@ -1666,13 +1573,13 @@ public class ovr013
 
     private void AffectDracolichA(Effect arg_0, object param, Player player) //sub_3C750
     {
-        ProtectedIf(Affects.fear);
-        ProtectedIf(Affects.ray_of_enfeeblement);
-        ProtectedIf(Affects.feeblemind);
+        _affectsProtectedAction.ProtectedIf(Affects.fear);
+        _affectsProtectedAction.ProtectedIf(Affects.ray_of_enfeeblement);
+        _affectsProtectedAction.ProtectedIf(Affects.feeblemind);
 
         if ((gbl.damage_flags & DamageType.Electricity) != 0)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
         }
     }
 
@@ -1692,7 +1599,7 @@ public class ovr013
     {
         if ((gbl.damage_flags & DamageType.Electricity) != 0)
         {
-            Protected();
+            _affectsProtectedAction.Protected();
         }
     }
 
@@ -1787,7 +1694,6 @@ public class ovr013
             gbl.damage_flags = bkup_damage_flags;
         }
     }
-
 
     private void sp_dispel_evil(Effect arg_0, object param, Player player)
     {
