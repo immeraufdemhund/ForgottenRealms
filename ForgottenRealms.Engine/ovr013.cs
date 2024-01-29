@@ -16,10 +16,11 @@ public class ovr013
     private readonly ovr032 _ovr032;
     private readonly ovr033 _ovr033;
     private readonly DisplayDriver _displayDriver;
+    private readonly PlayerPrimaryWeapon _playerPrimaryWeapon;
     private readonly Dictionary<Affects, IAffectAction> _table;
     private Dictionary<Affects, affectDelegate> affect_table;
 
-    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions)
+    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon)
     {
         _ovr014 = ovr014;
         _ovr020 = ovr020;
@@ -29,6 +30,7 @@ public class ovr013
         _ovr032 = ovr032;
         _ovr033 = ovr033;
         _displayDriver = displayDriver;
+        _playerPrimaryWeapon = playerPrimaryWeapon;
         _table = affectActions.ToDictionary(a => a.ActionForAffect);
     }
 
@@ -37,7 +39,6 @@ public class ovr013
     {
         affect_table = new System.Collections.Generic.Dictionary<Affects, affectDelegate>();
 
-        affect_table.Add(Affects.affect_55, sub_3BA14);
         affect_table.Add(Affects.affect_5d, half_fire_damage);
         affect_table.Add(Affects.affect_5e, sub_3BDB2);
         affect_table.Add(Affects.affect_5F, sub_3BE06);
@@ -694,28 +695,9 @@ public class ovr013
         }
     }
 
-
-    private Item get_primary_weapon(Player player) /* sub_3AF77 */
-    {
-        Item item = null;
-
-        if (player.activeItems.primaryWeapon != null)
-        {
-            bool item_found = _ovr025.GetCurrentAttackItem(out item, player);
-
-            if (item_found == false || item == null)
-            {
-                item = player.activeItems.primaryWeapon;
-            }
-        }
-
-        return item;
-    }
-
-
     private void AffectProtNormalMissles(Effect arg_0, object param, Player player) // sub_3AFE0
     {
-        Item item = get_primary_weapon(gbl.SelectedPlayer);
+        Item item = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
 
         if (item != null && item.plus == 0)
         {
@@ -858,7 +840,7 @@ public class ovr013
 
     private void AffectResistWeapons(Effect arg_0, object param, Player player) // sub_3B2D8
     {
-        Item weapon = get_primary_weapon(gbl.SelectedPlayer);
+        Item weapon = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
 
         if (weapon == null ||
             weapon.plus == 0)
@@ -1152,19 +1134,6 @@ public class ovr013
         }
     }
 
-
-    private void sub_3BA14(Effect arg_0, object param, Player player)
-    {
-        Item item = get_primary_weapon(gbl.SelectedPlayer);
-
-        if (item != null &&
-            gbl.ItemDataTable[item.type].field_7 == 1)
-        {
-            gbl.damage = 1;
-        }
-    }
-
-
     private void AffectDisplace(Effect arg_0, object param, Player player) /*sub_3BA55*/
     {
         Affect affect = (Affect)param;
@@ -1243,7 +1212,7 @@ public class ovr013
 
     private void sub_3BDB2(Effect arg_0, object param, Player arg_6)
     {
-        Item item = get_primary_weapon(gbl.SelectedPlayer);
+        Item item = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
 
         if (item != null &&
             (gbl.ItemDataTable[item.type].field_7 & 0x81) != 0)
@@ -1494,7 +1463,7 @@ public class ovr013
 
     private void sub_3C260(Effect arg_0, object param, Player player)
     {
-        Item weapon = get_primary_weapon(gbl.SelectedPlayer);
+        Item weapon = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
 
         if (weapon != null)
         {
@@ -1509,7 +1478,7 @@ public class ovr013
 
     private void half_damage_if_weap_magic(Effect arg_0, object param, Player player) /* sub_3C2BF */
     {
-        Item weapon = get_primary_weapon(gbl.SelectedPlayer);
+        Item weapon = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
 
         if (weapon != null &&
             weapon.plus > 0)
@@ -1541,7 +1510,7 @@ public class ovr013
 
     private void AffectProtNonMagicWeapons(Effect arg_0, object param, Player player) // sub_3C356
     {
-        Item weapon = get_primary_weapon(gbl.SelectedPlayer);
+        Item weapon = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
 
         if ((weapon == null || weapon.plus == 0) &&
             (gbl.SelectedPlayer.race > 0 || gbl.SelectedPlayer.HitDice < 4))

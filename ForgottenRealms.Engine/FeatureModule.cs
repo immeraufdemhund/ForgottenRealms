@@ -65,6 +65,7 @@ public static class FeatureModule
             .AddTransient<FindTargetMath>()
             .AddTransient<TargetDirectionMath>()
             .AddTransient<AreaDamageTargetsBuilder>()
+            .AddTransient<PlayerPrimaryWeapon>()
             ;
     }
 }
