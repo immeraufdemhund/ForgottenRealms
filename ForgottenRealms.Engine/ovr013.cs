@@ -14,7 +14,6 @@ public class ovr013
     private readonly ovr024 _ovr024;
     private readonly ovr025 _ovr025;
     private readonly ovr032 _ovr032;
-    private readonly ovr033 _ovr033;
     private readonly DisplayDriver _displayDriver;
     private readonly PlayerPrimaryWeapon _playerPrimaryWeapon;
     private readonly AffectsProtectedAction _affectsProtectedAction;
@@ -22,7 +21,8 @@ public class ovr013
     private readonly Dictionary<Affects, IAffectAction> _table;
     private Dictionary<Affects, affectDelegate> affect_table;
 
-    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon, AffectsProtectedAction affectsProtectedAction, AvoidMissleAttackAction avoidMissleAttackAction)
+    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon,
+        AffectsProtectedAction affectsProtectedAction, AvoidMissleAttackAction avoidMissleAttackAction)
     {
         _ovr014 = ovr014;
         _ovr020 = ovr020;
@@ -30,7 +30,6 @@ public class ovr013
         _ovr024 = ovr024;
         _ovr025 = ovr025;
         _ovr032 = ovr032;
-        _ovr033 = ovr033;
         _displayDriver = displayDriver;
         _playerPrimaryWeapon = playerPrimaryWeapon;
         _affectsProtectedAction = affectsProtectedAction;
@@ -43,14 +42,6 @@ public class ovr013
     {
         affect_table = new System.Collections.Generic.Dictionary<Affects, affectDelegate>();
 
-        affect_table.Add(Affects.affect_79, sub_3C3F6);
-        affect_table.Add(Affects.affect_7b, sub_3C59D);
-        affect_table.Add(Affects.affect_7d, sub_3C5F4);
-        affect_table.Add(Affects.affect_82, sub_3C643);
-        affect_table.Add(Affects.affect_85, AffectDracolichA);
-        affect_table.Add(Affects.affect_89, sub_3C7E0);
-        affect_table.Add(Affects.affect_8a, add_affect_19);
-        affect_table.Add(Affects.affect_8f, sub_3C975);
         affect_table.Add(Affects.affect_in_cloud_kill, CloudKillAffect);
         affect_table.Add(Affects.affect_in_stinking_cloud, StinkingCloudAffect);
         affect_table.Add(Affects.animate_dead, sub_3A89E);
@@ -95,7 +86,6 @@ public class ovr013
         affect_table.Add(Affects.highConRegen, AffectHighConRegen);
         affect_table.Add(Affects.half_damage, half_damage);
         affect_table.Add(Affects.halfelf_resistance, AffectHalfElfResistance);
-
         affect_table.Add(Affects.invisibility, sub_3A6C6);
         affect_table.Add(Affects.mirror_image, MirrorImage);
         affect_table.Add(Affects.poison_damage, AffectPoisonDamage);
@@ -183,7 +173,6 @@ public class ovr013
         }
     }
 
-
     private void sub_3A071(Effect arg_0, object param, Player player)
     {
         _ovr025.clear_actions(player);
@@ -210,7 +199,6 @@ public class ovr013
         }
     }
 
-
     private void affect_protect_evil(Effect arg_0, object param, Player player) /* sub_3A224 */
     {
         if (gbl.SelectedPlayer.alignment == 2 ||
@@ -221,7 +209,6 @@ public class ovr013
             gbl.attack_roll -= 2;
         }
     }
-
 
     private void affect_protect_good(Effect arg_0, object param, Player player) /* sub_3A259 */
     {
@@ -234,7 +221,6 @@ public class ovr013
         }
     }
 
-
     private void affect_resist_cold(Effect arg_0, object param, Player player) /* sub_3A28E */
     {
         if ((gbl.damage_flags & DamageType.Cold) != 0)
@@ -243,7 +229,6 @@ public class ovr013
             gbl.savingThrowRoll += 3;
         }
     }
-
 
     private void affect_charm_person(Effect arg_0, object param, Player player) /* sub_3A2AD */
     {
@@ -280,7 +265,6 @@ public class ovr013
         }
     }
 
-
     private void Suffocates(Effect arg_0, object param, Player player)
     {
         Affect affect = (Affect)param;
@@ -294,7 +278,6 @@ public class ovr013
             affect.affect_data--;
         }
     }
-
 
     private void AffectPoisonDamage(Effect arg_0, object param, Player player) // sub_3A3BC
     {
@@ -314,7 +297,6 @@ public class ovr013
         }
     }
 
-
     private void AffectShield(Effect arg_0, object param, Player player) /* sub_3A41F */
     {
         if (player.ac < 0x39) // AC 3
@@ -330,7 +312,6 @@ public class ovr013
         }
     }
 
-
     private void AffectGnomeVsManSizedGiant(Effect arg_0, object param, Player player) // sub_3A44A
     {
         if (player.actions != null &&
@@ -342,7 +323,6 @@ public class ovr013
         }
     }
 
-
     private void AffectResistFire(Effect add_remove, object param, Player player) /* sub_3A480 */
     {
         if (add_remove == Effect.Add &&
@@ -352,7 +332,6 @@ public class ovr013
             gbl.savingThrowRoll += 3;
         }
     }
-
 
     private void is_silenced1(Effect arg_0, object param, Player player)
     {
@@ -364,7 +343,6 @@ public class ovr013
         player.actions.can_use = false;
         player.actions.can_cast = false;
     }
-
 
     private void AffectSlowPoison(Effect arg_0, object param, Player player) // sub_3A517
     {
@@ -379,7 +357,6 @@ public class ovr013
 
         gbl.cureSpell = false;
     }
-
 
     private void affect_spiritual_hammer(Effect add_remove, object param, Player player) /* sub_3A583 */
     {
@@ -406,7 +383,6 @@ public class ovr013
         _ovr025.reclac_player_values(player);
     }
 
-
     private void sub_3A6C6(Effect arg_0, object param, Player player)
     {
         if (player.name.Length == 0 &&
@@ -417,7 +393,6 @@ public class ovr013
         }
     }
 
-
     private void AffectDwarfVsOrc(Effect arg_0, object param, Player player) // sub_3A7E8
     {
         gbl.spell_target = player.actions.target;
@@ -427,7 +402,6 @@ public class ovr013
             gbl.attack_roll++;
         }
     }
-
 
     private void MirrorImage(Effect arg_0, object param, Player player)
     {
@@ -450,12 +424,10 @@ public class ovr013
         }
     }
 
-
     private void three_quarters_damage(Effect arg_0, object param, Player player)
     {
         gbl.damage -= gbl.damage / 4;
     }
-
 
     private void StinkingCloud(Effect arg_0, object param, Player player)
     {
@@ -486,7 +458,6 @@ public class ovr013
         }
     }
 
-
     private void sub_3A89E(Effect arg_0, object param, Player player)
     {
         Affect affect = (Affect)param;
@@ -513,7 +484,6 @@ public class ovr013
         player.monsterType = 0;
     }
 
-
     private void AffectBlinded(Effect arg_0, object param, Player player) // sub_3A951
     {
         gbl.attack_roll -= 4;
@@ -524,13 +494,11 @@ public class ovr013
         gbl.savingThrowRoll -= 4;
     }
 
-
     private void AffectCauseDisease(Effect add_remove, object param, Player player) // sub_3A974
     {
         CallAffectTable(add_remove, param, player, Affects.weaken);
         CallAffectTable(add_remove, param, player, Affects.cause_disease_2);
     }
-
 
     private void AffectConfuse(Effect arg_0, object arg_2, Player player) // sub_3A9D9
     {
@@ -574,13 +542,11 @@ public class ovr013
         }
     }
 
-
     private void affect_curse(Effect arg_0, object param, Player player) /* sub_3AB6F */
     {
         gbl.attack_roll -= 4;
         gbl.savingThrowRoll -= 4;
     }
-
 
     private void AffectBlink(Effect arg_0, object param, Player player) // has_action_timedout
     {
@@ -590,7 +556,6 @@ public class ovr013
             gbl.attack_roll = -1;
         }
     }
-
 
     private void AffectHaste(Effect arg_0, object param, Player player) // spl_age
     {
@@ -606,7 +571,6 @@ public class ovr013
 
         gbl.halfActionsLeft *= 2;
     }
-
 
     private void StinkingCloudAffect(Effect arg_0, object param, Player player) // sub_3AC1D
     {
@@ -664,12 +628,10 @@ public class ovr013
         }
     }
 
-
     private void AffectSlow(Effect arg_0, object param, Player player) //sub_3B01B
     {
         gbl.halfActionsLeft /= 2;
     }
-
 
     private void weaken(Effect arg_0, object param, Player player)
     {
@@ -688,7 +650,6 @@ public class ovr013
             }
         }
     }
-
 
     private void sub_3B0C2(Effect arg_0, object param, Player player)
     {
@@ -713,7 +674,6 @@ public class ovr013
             }
         }
     }
-
 
     private void AffectDwarfGnomeVsGiants(Effect arg_0, object param, Player player)
     {
@@ -747,7 +707,6 @@ public class ovr013
         }
     }
 
-
     private void HotFireShield(Effect arg_0, object param, Player player) // sub_3B212
     {
         if ((gbl.damage_flags & DamageType.Cold) != 0)
@@ -759,7 +718,6 @@ public class ovr013
             gbl.damage *= 2;
         }
     }
-
 
     private void ColdFireShield(Effect arg_0, object param, Player player) // sub_3B243
     {
@@ -773,12 +731,10 @@ public class ovr013
         }
     }
 
-
     private void sub_3B27B(Effect arg_0, object param, Player player) // sub_3B27B
     {
         _ovr024.add_affect(false, 12, 1, Affects.invisibility, player);
     }
-
 
     private void AffectClearMovement(Effect arg_0, object param, Player player) //sub_3B29A
     {
@@ -790,12 +746,10 @@ public class ovr013
         }
     }
 
-
     private void AffectRegenration(Effect arg_0, object param, Player player)
     {
         _ovr024.add_affect(false, 0xff, 0, Affects.regen_3_hp, player);
     }
-
 
     private void AffectResistWeapons(Effect arg_0, object param, Player player) // sub_3B2D8
     {
@@ -811,7 +765,6 @@ public class ovr013
             gbl.damage /= 2;
         }
     }
-
 
     private void AffectFireResist(Effect arg_0, object param, Player player)
     {
@@ -836,7 +789,6 @@ public class ovr013
         }
     }
 
-
     private void AffectHighConRegen(Effect arg_0, object param, Player player) /* sub_3B386 */
     {
         Affect affect = (Affect)param;
@@ -848,7 +800,6 @@ public class ovr013
         }
     }
 
-
     private void AffectMinorGlobeOfInvulnerability(Effect arg_0, object param, Player player) /* sub_3B3CA */
     {
         if (gbl.spell_id > 0 &&
@@ -857,7 +808,6 @@ public class ovr013
             _affectsProtectedAction.Protected();
         }
     }
-
 
     private void PoisonAttack(int save_bonus, Player player)
     {
@@ -873,24 +823,20 @@ public class ovr013
         }
     }
 
-
     private void AffectPoisonPlus0(Effect arg_0, object param, Player player) // sub_3B520
     {
         PoisonAttack(0, player);
     }
-
 
     private void AffectPoisonPlus4(Effect arg_0, object param, Player player) // sub_3B534
     {
         PoisonAttack(4, player);
     }
 
-
     private void AffectPoisonPlus2(Effect arg_0, object param, Player player) // sub_3B548
     {
         PoisonAttack(2, player);
     }
-
 
     private void ThriKreenParalyze(Effect arg_0, object param, Player player) // sub_3B55C
     {
@@ -905,7 +851,6 @@ public class ovr013
         }
     }
 
-
     private void AffectFeebleMind(Effect arg_0, object param, Player player) // spell_stupid
     {
         player.stats2.Int.full = 7;
@@ -918,7 +863,6 @@ public class ovr013
             _ovr024.TryLooseSpell(player);
         }
     }
-
 
     private void AffectInvisToAnimals(Effect arg_0, object param, Player player) // sub_3B636
     {
@@ -933,19 +877,16 @@ public class ovr013
         }
     }
 
-
     private void AffectPoisonNeg2(Effect arg_0, object param, Player player) // sub_3B671
     {
         PoisonAttack(-2, player);
     }
-
 
     private void AffectInvisible(Effect arg_0, object param, Player player) // sub_3B685
     {
         gbl.targetInvisible = true;
         gbl.attack_roll -= 4;
     }
-
 
     private void AffectCamouflage(Effect arg_0, object param, Player player) // sub_3B696
     {
@@ -955,7 +896,6 @@ public class ovr013
         }
     }
 
-
     private void ProtDragonsBreath(Effect arg_0, object param, Player player)
     {
         if ((gbl.damage_flags & DamageType.DragonBreath) > 0)
@@ -964,7 +904,6 @@ public class ovr013
             _ovr025.DisplayPlayerStatusString(true, 10, "is unaffected", player);
         }
     }
-
 
     private void AffectDragonSlayer(Effect arg_0, object param, Player player) // sub_3B71A
     {
@@ -981,7 +920,6 @@ public class ovr013
         }
     }
 
-
     private void AffectFrostBrand(Effect arg_0, object param, Player player) // sub_3B772
     {
         if (player.actions != null)
@@ -996,7 +934,6 @@ public class ovr013
             }
         }
     }
-
 
     private void AffectBerzerk(Effect arg_0, object param, Player player)
     {
@@ -1046,7 +983,6 @@ public class ovr013
         _ovr024.damage_person(false, 0, _ovr024.roll_dice_save(10, 2), player.actions.target);
     }
 
-
     private void AnkhegAcidAttack(Effect arg_0, object param, Player player) // sub_3B94C
     {
         gbl.damage_flags = DamageType.Acid;
@@ -1054,12 +990,10 @@ public class ovr013
         _ovr024.damage_person(false, 0, _ovr024.roll_dice_save(4, 1), player.actions.target);
     }
 
-
     private void half_damage(Effect arg_0, object param, Player player) /* sub_3B97F */
     {
         gbl.damage /= 2;
     }
-
 
     private void AffectResistFireAndCold(Effect arg_0, object param, Player player) // sub_3B990
     {
@@ -1078,7 +1012,6 @@ public class ovr013
             }
         }
     }
-
 
     private void AffectShamblerAbsorbLightning(Effect arg_0, object param, Player player) // sub_3B9E1
     {
@@ -1110,7 +1043,6 @@ public class ovr013
             }
         }
     }
-
 
     private void CloudKillAffect(Effect arg_0, object param, Player player) // sub_3BAB9
     {
@@ -1191,7 +1123,6 @@ public class ovr013
         }
     }
 
-
     private void AffectRegen3Hp(Effect arg_0, object param, Player player) // sub_3BEB8
     {
         player.hit_point_current += 3;
@@ -1211,7 +1142,6 @@ public class ovr013
         }
     }
 
-
     private void AffectTrollRegenerate(Effect arg_0, object param, Player player) // sp_regenerate
     {
         if (player.HasAffect(Affects.regen_3_hp) == false &&
@@ -1220,7 +1150,6 @@ public class ovr013
             _ovr024.add_affect(true, 0xff, 3, Affects.regenerate, player);
         }
     }
-
 
     private void AffectTrollRegen(Effect arg_0, object param, Player player) // sub_3C01E
     {
@@ -1231,7 +1160,6 @@ public class ovr013
             addAffect(1, affect.affect_data, Affects.TrollRegen, player);
         }
     }
-
 
     private void AffectSalamanderHeatDamage(Effect arg_0, object param, Player player) // sub_3C05D
     {
@@ -1245,12 +1173,10 @@ public class ovr013
         }
     }
 
-
     private void sub_3C0DA(Effect arg_0, object param, Player player)
     {
         _avoidMissleAttackAction.AvoidMissleAttack(60, player);
     }
-
 
     private void ResistMagicPercent(int rollBase) // sub_3C0EE
     {
@@ -1266,18 +1192,15 @@ public class ovr013
         }
     }
 
-
     private void ResistMagic50Percent(Effect arg_0, object param, Player arg_6) // sub_3C14F
     {
         ResistMagicPercent(50);
     }
 
-
     private void ResistMagic15Percent(Effect arg_0, object param, Player arg_6) // sub_3C15D
     {
         ResistMagicPercent(15);
     }
-
 
     private void AffectElfRisistSleep(Effect arg_0, object param, Player arg_6) // sub_3C16B
     {
@@ -1288,19 +1211,16 @@ public class ovr013
         }
     }
 
-
     private void AffectProtCharmSleep(Effect arg_0, object param, Player arg_6) // sub_3C18F
     {
         _affectsProtectedAction.ProtectedIf(Affects.charm_person);
         _affectsProtectedAction.ProtectedIf(Affects.sleep);
     }
 
-
     private void ResistParalyze(Effect arg_0, object param, Player arg_6) // sub_3C1A4
     {
         _affectsProtectedAction.ProtectedIf(Affects.paralyze);
     }
-
 
     private void AffectImmuneToCold(Effect arg_0, object param, Player arg_6) // sub_3C1B2
     {
@@ -1318,36 +1238,6 @@ public class ovr013
         }
     }
 
-    private void sub_3C3F6(Effect arg_0, object param, Player player)
-    {
-        Affect affect = (Affect)param;
-
-        gbl.spell_target = player.actions.target;
-
-        if (_ovr024.roll_dice(100, 1) <= 25)
-        {
-            if (_ovr025.getTargetRange(gbl.spell_target, player) < 4)
-            {
-                _ovr025.clear_actions(player);
-
-                _ovr025.DisplayPlayerStatusString(true, 10, "Spits Acid", player);
-
-                _ovr025.load_missile_icons(0x17);
-
-                _ovr025.draw_missile_attack(0x1e, 1, _ovr033.PlayerMapPos(gbl.spell_target), _ovr033.PlayerMapPos(player));
-
-                int damage = _ovr024.roll_dice_save(4, 8);
-                bool saved = _ovr024.RollSavingThrow(0, SaveVerseType.BreathWeapon, gbl.spell_target);
-
-                _ovr024.damage_person(saved, DamageOnSave.Half, damage, gbl.spell_target);
-
-                _ovr024.remove_affect(affect, Affects.affect_79, player);
-                _ovr024.remove_affect(null, Affects.ankheg_acid_attack, player);
-            }
-        }
-    }
-
-
     private void AffectDracolichParalysis(Effect arg_0, object param, Player player) // spl_paralyze
     {
         gbl.spell_target = player.actions.target;
@@ -1360,15 +1250,6 @@ public class ovr013
         }
     }
 
-
-    private void sub_3C59D(Effect arg_0, object param, Player player)
-    {
-        gbl.damage_flags = DamageType.Acid;
-
-        _ovr024.damage_person(false, 0, _ovr024.roll_dice_save(8, 2), player.actions.target);
-    }
-
-
     private void AffectHalfElfResistance(Effect arg_0, object param, Player player) // sub_3C5D0
     {
         if (_ovr024.roll_dice(100, 1) <= 30)
@@ -1378,21 +1259,6 @@ public class ovr013
         }
     }
 
-
-    private void sub_3C5F4(Effect arg_0, object param, Player player)
-    {
-        _affectsProtectedAction.ProtectedIf(Affects.charm_person);
-        _affectsProtectedAction.ProtectedIf(Affects.sleep);
-        _affectsProtectedAction.ProtectedIf(Affects.paralyze);
-        _affectsProtectedAction.ProtectedIf(Affects.poisoned);
-
-        if (gbl.saveVerseType != SaveVerseType.Poison)
-        {
-            gbl.savingThrowRoll = 100;
-        }
-    }
-
-
     private void AffectProtMagic(Effect arg_0, object param, Player player) // sub_3C623
     {
         if (gbl.current_affect != 0 ||
@@ -1401,30 +1267,6 @@ public class ovr013
             _affectsProtectedAction.Protected();
         }
     }
-
-
-    private void sub_3C643(Effect arg_0, object arg_2, Player player)
-    {
-        Item item;
-
-        if (_ovr025.GetCurrentAttackItem(out item, gbl.SelectedPlayer) == true &&
-            item != null &&
-            item.type == ItemType.Quarrel &&
-            item.namenum3 == 0x87)
-        {
-            player.health_status = Status.gone;
-            player.in_combat = false;
-            player.hit_point_current = 0;
-            _ovr024.RemoveCombatAffects(player);
-            _ovr024.CheckAffectsEffect(player, CheckType.Death);
-
-            if (player.in_combat == true)
-            {
-                _ovr033.CombatantKilled(player);
-            }
-        }
-    }
-
 
     private void do_items_affect(Effect remove_affect, object param, Player player) /* sub_3C6D3 */
     {
@@ -1447,20 +1289,6 @@ public class ovr013
         }
     }
 
-
-    private void AffectDracolichA(Effect arg_0, object param, Player player) //sub_3C750
-    {
-        _affectsProtectedAction.ProtectedIf(Affects.fear);
-        _affectsProtectedAction.ProtectedIf(Affects.ray_of_enfeeblement);
-        _affectsProtectedAction.ProtectedIf(Affects.feeblemind);
-
-        if ((gbl.damage_flags & DamageType.Electricity) != 0)
-        {
-            _affectsProtectedAction.Protected();
-        }
-    }
-
-
     private void AffectRangerVsGiant(Effect arg_0, object param, Player player) // sub_3C77C
     {
         gbl.spell_target = player.actions.target;
@@ -1471,7 +1299,6 @@ public class ovr013
         }
     }
 
-
     private void AffectProtElec(Effect arg_0, object param, Player player) //sub_3C7B5
     {
         if ((gbl.damage_flags & DamageType.Electricity) != 0)
@@ -1480,55 +1307,10 @@ public class ovr013
         }
     }
 
-
     private void AffectEntangle(Effect arg_0, object param, Player player) // sub_3C7CC
     {
         player.actions.move = 0;
     }
-
-
-    private void sub_3C7E0(Effect arg_0, object param, Player player) // sub_3C7E0
-    {
-        Affect affect = (Affect)param;
-
-        if (arg_0 == Effect.Add)
-        {
-            player.quick_fight = QuickFight.True;
-
-            if (player.control_morale < Control.NPC_Base ||
-                player.control_morale == Control.PC_Berzerk)
-            {
-                player.control_morale = Control.PC_Berzerk;
-            }
-            else
-            {
-                player.control_morale = Control.NPC_Berzerk;
-            }
-
-            player.actions.target = null;
-
-            var scl = _ovr032.Rebuild_SortedCombatantList(player, 0xff, p => true);
-
-            player.actions.target = scl[0].player;
-            player.combat_team = player.actions.target.OppositeTeam();
-        }
-        else
-        {
-            if (player.control_morale == Control.PC_Berzerk)
-            {
-                player.control_morale = 0;
-            }
-
-            player.combat_team = (CombatTeam)affect.affect_data;
-        }
-    }
-
-
-    private void add_affect_19(Effect arg_0, object param, Player player)
-    {
-        _ovr024.add_affect(false, 0xff, 0xff, Affects.invisibility, player);
-    }
-
 
     private void PaladinCastCureRefresh(Effect add_remove, object param, Player player) // sub_3C8EF
     {
@@ -1537,7 +1319,6 @@ public class ovr013
             player.paladinCuresLeft = (byte)(((player.SkillLevel(SkillType.Paladin) - 1) / 5) + 1);
         }
     }
-
 
     private void AffectFear(Effect add_remove, object param, Player player) /* sub_3C932 */
     {
@@ -1550,25 +1331,6 @@ public class ovr013
             }
 
             player.actions.fleeing = false;
-        }
-    }
-
-
-    private void sub_3C975(Effect arg_0, object arg_2, Player target)
-    {
-        if (_ovr025.getTargetRange(target, gbl.SelectedPlayer) < 2)
-        {
-            int bkup_damage = gbl.damage;
-            DamageType bkup_damage_flags = gbl.damage_flags;
-
-            gbl.damage *= 2;
-            gbl.damage_flags = DamageType.Magic;
-
-            _ovr025.DisplayPlayerStatusString(true, 10, "resists dispel evil", gbl.SelectedPlayer);
-
-            _ovr024.damage_person(false, 0, gbl.damage, gbl.SelectedPlayer);
-            gbl.damage = bkup_damage;
-            gbl.damage_flags = bkup_damage_flags;
         }
     }
 
