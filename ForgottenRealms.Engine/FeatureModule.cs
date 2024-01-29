@@ -67,6 +67,7 @@ public static class FeatureModule
             .AddTransient<AreaDamageTargetsBuilder>()
             .AddTransient<PlayerPrimaryWeapon>()
             .AddTransient<AffectsProtectedAction>()
+            .AddTransient<AvoidMissleAttackAction>()
             ;
     }
 }

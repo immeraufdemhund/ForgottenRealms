@@ -18,10 +18,11 @@ public class ovr013
     private readonly DisplayDriver _displayDriver;
     private readonly PlayerPrimaryWeapon _playerPrimaryWeapon;
     private readonly AffectsProtectedAction _affectsProtectedAction;
+    private readonly AvoidMissleAttackAction _avoidMissleAttackAction;
     private readonly Dictionary<Affects, IAffectAction> _table;
     private Dictionary<Affects, affectDelegate> affect_table;
 
-    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon, AffectsProtectedAction affectsProtectedAction)
+    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon, AffectsProtectedAction affectsProtectedAction, AvoidMissleAttackAction avoidMissleAttackAction)
     {
         _ovr014 = ovr014;
         _ovr020 = ovr020;
@@ -33,6 +34,7 @@ public class ovr013
         _displayDriver = displayDriver;
         _playerPrimaryWeapon = playerPrimaryWeapon;
         _affectsProtectedAction = affectsProtectedAction;
+        _avoidMissleAttackAction = avoidMissleAttackAction;
         _table = affectActions.ToDictionary(a => a.ActionForAffect);
     }
 
@@ -41,14 +43,6 @@ public class ovr013
     {
         affect_table = new System.Collections.Generic.Dictionary<Affects, affectDelegate>();
 
-        affect_table.Add(Affects.affect_71, sub_3C201);
-        affect_table.Add(Affects.affect_72, AffectProtectionFromElectricity);
-        affect_table.Add(Affects.affect_73, sub_3C260);
-        affect_table.Add(Affects.affect_74, half_damage_if_weap_magic);
-        affect_table.Add(Affects.affect_75, sub_3C2F9);
-        affect_table.Add(Affects.affect_76, AffectProtCold);
-        affect_table.Add(Affects.affect_77, AffectProtNonMagicWeapons);
-        affect_table.Add(Affects.affect_78, sub_3C3A2);
         affect_table.Add(Affects.affect_79, sub_3C3F6);
         affect_table.Add(Affects.affect_7b, sub_3C59D);
         affect_table.Add(Affects.affect_7d, sub_3C5F4);
@@ -660,27 +654,13 @@ public class ovr013
         }
     }
 
-
-    private void AvoidMissleAttack(int percentage, Player player) // sub_3AF06
-    {
-        if (gbl.SelectedPlayer.activeItems.primaryWeapon != null &&
-            _ovr025.getTargetRange(player, gbl.SelectedPlayer) == 0 &&
-            _ovr024.roll_dice(100, 1) <= percentage)
-        {
-            _ovr025.DisplayPlayerStatusString(true, 10, "Avoids it", player);
-            gbl.damage = 0;
-            gbl.attack_roll = -1;
-            gbl.bytes_1D2C9[1] -= 1;
-        }
-    }
-
     private void AffectProtNormalMissles(Effect arg_0, object param, Player player) // sub_3AFE0
     {
         Item item = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
 
         if (item != null && item.plus == 0)
         {
-            AvoidMissleAttack(100, player);
+            _avoidMissleAttackAction.AvoidMissleAttack(100, player);
         }
     }
 
@@ -1222,9 +1202,6 @@ public class ovr013
         }
     }
 
-
-
-
     private void AffectTrollFireOrAcid(Effect arg_0, object param, Player player)
     {
         if ((gbl.damage_flags & DamageType.Fire) == 0 &&
@@ -1271,7 +1248,7 @@ public class ovr013
 
     private void sub_3C0DA(Effect arg_0, object param, Player player)
     {
-        AvoidMissleAttack(60, player);
+        _avoidMissleAttackAction.AvoidMissleAttack(60, player);
     }
 
 
@@ -1340,106 +1317,6 @@ public class ovr013
             _affectsProtectedAction.Protected();
         }
     }
-
-
-    private void sub_3C201(Effect arg_0, object param, Player arg_6)
-    {
-        if ((gbl.damage_flags & DamageType.Fire) != 0)
-        {
-            for (int i = 1; i <= gbl.dice_count; i++)
-            {
-                gbl.damage--;
-
-                if (gbl.damage < gbl.dice_count)
-                {
-                    gbl.damage = gbl.dice_count;
-                }
-            }
-        }
-    }
-
-
-    private void AffectProtectionFromElectricity(Effect arg_0, object param, Player player) // sub_3C246
-    {
-        if ((gbl.damage_flags & DamageType.Electricity) != 0)
-        {
-            gbl.damage /= 2;
-        }
-    }
-
-
-    private void sub_3C260(Effect arg_0, object param, Player player)
-    {
-        Item weapon = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
-
-        if (weapon != null)
-        {
-            if (gbl.ItemDataTable[weapon.type].field_7 == 0 ||
-                (gbl.ItemDataTable[weapon.type].field_7 & 1) != 0)
-            {
-                gbl.damage /= 2;
-            }
-        }
-    }
-
-
-    private void half_damage_if_weap_magic(Effect arg_0, object param, Player player) /* sub_3C2BF */
-    {
-        Item weapon = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
-
-        if (weapon != null &&
-            weapon.plus > 0)
-        {
-            gbl.damage /= 2;
-        }
-    }
-
-
-    private void sub_3C2F9(Effect arg_0, object param, Player player) // sub_3C2F9
-    {
-        Item item = gbl.SelectedPlayer.activeItems.primaryWeapon;
-
-        if (item != null && item.type == ItemType.Type_85)
-        {
-            gbl.damage = _ovr024.roll_dice_save(6, 1) + 1;
-        }
-    }
-
-
-    private void AffectProtCold(Effect arg_0, object param, Player player) // sub_3C33C
-    {
-        if ((gbl.damage_flags & DamageType.Cold) != 0)
-        {
-            gbl.damage /= 2;
-        }
-    }
-
-
-    private void AffectProtNonMagicWeapons(Effect arg_0, object param, Player player) // sub_3C356
-    {
-        Item weapon = _playerPrimaryWeapon.get_primary_weapon(gbl.SelectedPlayer);
-
-        if ((weapon == null || weapon.plus == 0) &&
-            (gbl.SelectedPlayer.race > 0 || gbl.SelectedPlayer.HitDice < 4))
-        {
-            gbl.damage = 0;
-        }
-    }
-
-
-    private void sub_3C3A2(Effect arg_0, object param, Player player)
-    {
-        Item field_151 = player.activeItems.primaryWeapon;
-
-        if (field_151 != null)
-        {
-            if (field_151.type == ItemType.Type_87 || field_151.type == ItemType.Type_88)
-            {
-                AvoidMissleAttack(50, player);
-            }
-        }
-    }
-
 
     private void sub_3C3F6(Effect arg_0, object param, Player player)
     {
