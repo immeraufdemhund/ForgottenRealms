@@ -70,6 +70,7 @@ public static class FeatureModule
             .AddTransient<AvoidMissleAttackAction>()
             .AddTransient<ElectricalDamageMath>()
             .AddTransient<Subroutine5FA44>()
+            .AddTransient<ApplyAffectTable>()
             ;
     }
 }

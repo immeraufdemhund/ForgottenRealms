@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ForgottenRealms.Engine.AffectsFeature;
 using ForgottenRealms.Engine.Classes;
 
@@ -15,11 +14,11 @@ public class ovr013
     private readonly PlayerPrimaryWeapon _playerPrimaryWeapon;
     private readonly AffectsProtectedAction _affectsProtectedAction;
     private readonly AvoidMissleAttackAction _avoidMissleAttackAction;
-    private readonly Dictionary<Affects, IAffectAction> _table;
+    private readonly ApplyAffectTable _applyAffectTable;
     private Dictionary<Affects, affectDelegate> affect_table;
 
-    public ovr013(ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon,
-        AffectsProtectedAction affectsProtectedAction, AvoidMissleAttackAction avoidMissleAttackAction)
+    public ovr013(ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, DisplayDriver displayDriver, PlayerPrimaryWeapon playerPrimaryWeapon,
+        AffectsProtectedAction affectsProtectedAction, AvoidMissleAttackAction avoidMissleAttackAction, ApplyAffectTable applyAffectTable)
     {
         _ovr024 = ovr024;
         _ovr025 = ovr025;
@@ -28,7 +27,7 @@ public class ovr013
         _playerPrimaryWeapon = playerPrimaryWeapon;
         _affectsProtectedAction = affectsProtectedAction;
         _avoidMissleAttackAction = avoidMissleAttackAction;
-        _table = affectActions.ToDictionary(a => a.ActionForAffect);
+        _applyAffectTable = applyAffectTable;
     }
 
     [Obsolete("already setup with dependency injection", true)]
@@ -127,19 +126,6 @@ public class ovr013
         affect_table.Add(Affects.protect_elec, AffectProtElec);
         affect_table.Add(Affects.paladinDailyCureRefresh, PaladinCastCureRefresh);
         affect_table.Add(Affects.sp_dispel_evil, sp_dispel_evil);
-    }
-
-    internal void CallAffectTable(Effect add_remove, object parameter, Player player, Affects affect)
-    {
-        if (gbl.applyItemAffect == true)
-        {
-            affect = Affects.do_items_affect;
-        }
-
-        if (_table.TryGetValue(affect, out var func))
-        {
-            func.Execute(add_remove, parameter, player);
-        }
     }
 
     private bool addAffect(ushort time, int data, Affects affect_type, Player player)
@@ -427,8 +413,8 @@ public class ovr013
 
     private void AffectCauseDisease(Effect add_remove, object param, Player player) // sub_3A974
     {
-        CallAffectTable(add_remove, param, player, Affects.weaken);
-        CallAffectTable(add_remove, param, player, Affects.cause_disease_2);
+        _applyAffectTable.CallAffectTable(add_remove, param, player, Affects.weaken);
+        _applyAffectTable.CallAffectTable(add_remove, param, player, Affects.cause_disease_2);
     }
 
     private void AffectConfuse(Effect arg_0, object arg_2, Player player) // sub_3A9D9
@@ -459,7 +445,7 @@ public class ovr013
         else if (var_1 >= 61 && var_1 <= 80)
         {
             _ovr024.ApplyAttackSpellAffect("goes berserk", false, DamageOnSave.Zero, true, (byte)player.combat_team, 1, Affects.affect_89, player);
-            CallAffectTable(Effect.Add, null, player, Affects.affect_89);
+            _applyAffectTable.CallAffectTable(Effect.Add, null, player, Affects.affect_89);
         }
         else if (var_1 >= 81 && var_1 <= 100)
         {
@@ -1115,7 +1101,7 @@ public class ovr013
 
             if (gbl.game_state != GameState.Combat)
             {
-                CallAffectTable(Effect.Add, null, player, item.affect_2);
+                _applyAffectTable.CallAffectTable(Effect.Add, null, player, item.affect_2);
             }
         }
     }

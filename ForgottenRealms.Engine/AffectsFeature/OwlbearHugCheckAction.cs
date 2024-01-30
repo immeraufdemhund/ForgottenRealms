@@ -6,11 +6,11 @@ public class OwlbearHugCheckAction : IAffectAction
 {
     public Affects ActionForAffect => Affects.owlbear_hug_check;
 
-    private readonly ovr013 _ovr013;
+    private readonly ApplyAffectTable _ovr013;
     private readonly ovr024 _ovr024;
     private readonly ovr025 _ovr025;
     private readonly ovr033 _ovr033;
-    public OwlbearHugCheckAction(ovr013 ovr013, ovr024 ovr024, ovr025 ovr025, ovr033 ovr033)
+    public OwlbearHugCheckAction(ApplyAffectTable ovr013, ovr024 ovr024, ovr025 ovr025, ovr033 ovr033)
     {
         _ovr013 = ovr013;
         _ovr024 = ovr024;

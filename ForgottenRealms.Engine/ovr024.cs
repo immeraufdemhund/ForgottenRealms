@@ -35,22 +35,22 @@ internal enum CheckType
 public class ovr024
 {
     private readonly DisplayDriver _displayDriver;
-    private readonly ovr013 _ovr013;
+    private readonly ApplyAffectTable _applyAffectTable;
     private readonly ovr025 _ovr025;
     private readonly ovr032 _ovr032;
     private readonly ovr033 _ovr033;
     private readonly seg040 _seg040;
     private readonly seg051 _seg051;
 
-    public ovr024(DisplayDriver displayDriver, ovr013 ovr013, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, seg040 seg040, seg051 seg051)
+    public ovr024(DisplayDriver displayDriver, ovr025 ovr025, ovr032 ovr032, ovr033 ovr033, seg040 seg040, seg051 seg051, ApplyAffectTable applyAffectTable)
     {
         _displayDriver = displayDriver;
-        _ovr013 = ovr013;
         _ovr025 = ovr025;
         _ovr032 = ovr032;
         _ovr033 = ovr033;
         _seg040 = seg040;
         _seg051 = seg051;
+        _applyAffectTable = applyAffectTable;
     }
 
     internal void KillPlayer(string text, Status new_health_status, Player player) // sub_63014
@@ -95,7 +95,7 @@ public class ovr024
         {
             if (affect.callAffectTable == true)
             {
-                _ovr013.CallAffectTable(Effect.Remove, affect, player, affect_id);
+                _applyAffectTable.CallAffectTable(Effect.Remove, affect, player, affect_id);
             }
 
             player.affects.Remove(affect);
@@ -151,7 +151,7 @@ public class ovr024
 
         if (found == true)
         {
-            _ovr013.CallAffectTable(Effect.Add, affect, player, affect_type);
+            _applyAffectTable.CallAffectTable(Effect.Add, affect, player, affect_type);
         }
     }
 
@@ -447,7 +447,7 @@ public class ovr024
 
                     if (player.HasAffect(Affects.stinking_cloud) == true)
                     {
-                        _ovr013.CallAffectTable(Effect.Add, affect, player, Affects.stinking_cloud);
+                        _applyAffectTable.CallAffectTable(Effect.Add, affect, player, Affects.stinking_cloud);
                     }
 
                     gbl.SelectedPlayer = tmp_player_ptr;
@@ -462,7 +462,7 @@ public class ovr024
 
                     if (_ovr025.FindAffect(out affect, Affects.helpless, player) == true)
                     {
-                        _ovr013.CallAffectTable(Effect.Add, affect, player, Affects.helpless);
+                        _applyAffectTable.CallAffectTable(Effect.Add, affect, player, Affects.helpless);
                     }
 
                     gbl.SelectedPlayer = tmp_player_ptr;
@@ -1378,7 +1378,7 @@ public class ovr024
                     if (player.health_status == Status.unconscious &&
                         gbl.game_state != GameState.Combat)
                     {
-                        _ovr013.CallAffectTable(Effect.Remove, null, player, Affects.affect_4e);
+                        _applyAffectTable.CallAffectTable(Effect.Remove, null, player, Affects.affect_4e);
                     }
                 }
 

@@ -44,7 +44,7 @@ public class ovr020
     private string[] moneyString = { "Copper", "Silver", "Electrum", "Gold", "Platinum",
         "Gems", "Jewelry" };
 
-    private readonly ovr013 _ovr013;
+    private readonly ApplyAffectTable _ovr013;
     private readonly ovr022 _ovr022;
     private readonly ovr023 _ovr023;
     private readonly ovr024 _ovr024;
@@ -56,7 +56,7 @@ public class ovr020
     private readonly seg051 _seg051;
     private readonly DisplayDriver _displayDriver;
 
-    public ovr020(ovr013 ovr013, ovr022 ovr022, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr033 ovr033, seg037 seg037, seg051 seg051, DisplayDriver displayDriver)
+    public ovr020(ApplyAffectTable ovr013, ovr022 ovr022, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr033 ovr033, seg037 seg037, seg051 seg051, DisplayDriver displayDriver)
     {
         _ovr013 = ovr013;
         _ovr022 = ovr022;

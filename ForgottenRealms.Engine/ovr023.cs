@@ -135,7 +135,7 @@ public class ovr023
     private readonly SoundDriver _soundDriver;
     private readonly ElectricalDamageMath _electricalDamageMath;
     private readonly Subroutine5FA44 _subroutine5FA44;
-    private readonly ovr013 _ovr013;
+    private readonly ApplyAffectTable _ovr013;
     private readonly ovr024 _ovr024;
     private readonly ovr025 _ovr025;
     private readonly ovr026 _ovr026;
@@ -144,7 +144,7 @@ public class ovr023
     private readonly ovr033 _ovr033;
     private readonly seg037 _seg037;
 
-    public ovr023(DisplayDriver displayDriver, SoundDriver soundDriver, ovr013 ovr013, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, seg037 seg037, ExperienceTable experienceTable, AreaDamageTargetsBuilder areaDamageTargetsBuilder, ElectricalDamageMath electricalDamageMath, Subroutine5FA44 subroutine5Fa44)
+    public ovr023(DisplayDriver displayDriver, SoundDriver soundDriver, ApplyAffectTable ovr013, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, seg037 seg037, ExperienceTable experienceTable, AreaDamageTargetsBuilder areaDamageTargetsBuilder, ElectricalDamageMath electricalDamageMath, Subroutine5FA44 subroutine5Fa44)
     {
         _displayDriver = displayDriver;
         _soundDriver = soundDriver;
