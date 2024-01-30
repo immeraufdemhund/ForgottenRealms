@@ -8,7 +8,6 @@ namespace ForgottenRealms.Engine;
 
 public class ovr013
 {
-    private readonly ovr023 _ovr023;
     private readonly ovr024 _ovr024;
     private readonly ovr025 _ovr025;
     private readonly ovr032 _ovr032;
@@ -19,10 +18,9 @@ public class ovr013
     private readonly Dictionary<Affects, IAffectAction> _table;
     private Dictionary<Affects, affectDelegate> affect_table;
 
-    public ovr013(ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon,
+    public ovr013(ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon,
         AffectsProtectedAction affectsProtectedAction, AvoidMissleAttackAction avoidMissleAttackAction)
     {
-        _ovr023 = ovr023;
         _ovr024 = ovr024;
         _ovr025 = ovr025;
         _ovr032 = ovr032;
@@ -43,8 +41,6 @@ public class ovr013
         affect_table.Add(Affects.blinded, AffectBlinded);
         affect_table.Add(Affects.blink, AffectBlink);
         affect_table.Add(Affects.camouflage, AffectCamouflage);
-        affect_table.Add(Affects.cast_breath_fire, _ovr023.cast_breath_fire);
-        affect_table.Add(Affects.cast_throw_lightening, _ovr023.cast_throw_lightening);
         affect_table.Add(Affects.cause_disease_1, AffectCauseDisease);
         affect_table.Add(Affects.cause_disease_2, sub_3B0C2);
         affect_table.Add(Affects.charm_person, affect_charm_person);
@@ -113,9 +109,7 @@ public class ovr013
         affect_table.Add(Affects.weap_dragon_slayer, AffectDragonSlayer);
         affect_table.Add(Affects.weap_frost_brand, AffectFrostBrand);
         affect_table.Add(Affects.resist_fire_and_cold, AffectResistFireAndCold);
-        affect_table.Add(Affects.paralizing_gaze, _ovr023.AffectParalizingGaze);
         affect_table.Add(Affects.shambling_absorb_lightning, AffectShamblerAbsorbLightning);
-        affect_table.Add(Affects.spit_acid, _ovr023.AffectSpitAcid);
         affect_table.Add(Affects.regen_3_hp, AffectRegen3Hp);
         affect_table.Add(Affects.troll_fire_or_acid, AffectTrollFireOrAcid);
         affect_table.Add(Affects.troll_regenerate, AffectTrollRegenerate);
