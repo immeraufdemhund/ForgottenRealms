@@ -17,6 +17,9 @@ internal enum SpellLoc
 
 public class ovr020
 {
+    private Set asc_54B50 = new Set(73, 83, 84 );
+    private Set unk_54B03 = new Set(0, 69 );
+
     internal string[] sexString = { "Male", "Female" };
     internal string[] raceString = { "Monster", "Dwarf", "Elf", "Gnome",
         "Half-Elf", "Halfling", "Half-Orc", "Human" };
@@ -256,9 +259,6 @@ public class ovr020
             _displayDriver.displayString("(" + text + ")", 0, color, 7, 7);
         }
     }
-
-    private Set asc_54B50 = new Set(73, 83, 84 );
-    private Set unk_54B03 = new Set(0, 69 );
 
     internal bool viewPlayer()
     {

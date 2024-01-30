@@ -16,7 +16,6 @@ public class ovr014
     private readonly KeyboardService _keyboardService;
     private readonly SoundDriver _soundDriver;
     private readonly TargetDirectionMath _targetDirectionMath;
-    private readonly ovr013 _ovr013;
     private readonly ovr020 _ovr020;
     private readonly ovr023 _ovr023;
     private readonly ovr024 _ovr024;
@@ -27,14 +26,13 @@ public class ovr014
     private readonly seg037 _seg037;
 
     public ovr014(DisplayDriver displayDriver, KeyboardService keyboardService, SoundDriver soundDriver,
-        ovr013 ovr013, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032,
+        ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr027 ovr027, ovr032 ovr032,
         ovr033 ovr033, seg037 seg037, AttackTargetAction attackTargetAction,
         TargetDirectionMath targetDirectionMath, CanSeeTargetMath canSeeTargetMath, FindTargetMath findTargetMath)
     {
         _displayDriver = displayDriver;
         _keyboardService = keyboardService;
         _soundDriver = soundDriver;
-        _ovr013 = ovr013;
         _ovr020 = ovr020;
         _ovr023 = ovr023;
         _ovr024 = ovr024;
@@ -1542,19 +1540,6 @@ public class ovr014
         return arg_4;
     }
 
-    internal void AffectOwlbearHugAttackCheck(Effect arg_0, object param, Player player) // hugs
-    {
-        if (gbl.attack_roll >= 18)
-        {
-            gbl.spell_target = player.actions.target;
-            _ovr025.DisplayPlayerStatusString(true, 12, "hugs " + gbl.spell_target.name, player);
-
-            _ovr024.add_affect(false, _ovr033.GetPlayerIndex(gbl.spell_target), 0, Affects.clear_movement, gbl.spell_target);
-            _ovr013.CallAffectTable(Effect.Add, null, gbl.spell_target, Affects.clear_movement);
-
-            _ovr024.add_affect(true, _ovr033.GetPlayerIndex(gbl.spell_target), 0, Affects.owlbear_hug_round_attack, player);
-        }
-    }
 
 
     internal bool god_intervene()

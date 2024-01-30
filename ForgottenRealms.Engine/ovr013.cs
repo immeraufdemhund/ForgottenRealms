@@ -8,8 +8,6 @@ namespace ForgottenRealms.Engine;
 
 public class ovr013
 {
-    private readonly ovr014 _ovr014;
-    private readonly ovr020 _ovr020;
     private readonly ovr023 _ovr023;
     private readonly ovr024 _ovr024;
     private readonly ovr025 _ovr025;
@@ -21,11 +19,9 @@ public class ovr013
     private readonly Dictionary<Affects, IAffectAction> _table;
     private Dictionary<Affects, affectDelegate> affect_table;
 
-    public ovr013(ovr014 ovr014, ovr020 ovr020, ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon,
+    public ovr013(ovr023 ovr023, ovr024 ovr024, ovr025 ovr025, ovr032 ovr032, DisplayDriver displayDriver, IEnumerable<IAffectAction> affectActions, PlayerPrimaryWeapon playerPrimaryWeapon,
         AffectsProtectedAction affectsProtectedAction, AvoidMissleAttackAction avoidMissleAttackAction)
     {
-        _ovr014 = ovr014;
-        _ovr020 = ovr020;
         _ovr023 = ovr023;
         _ovr024 = ovr024;
         _ovr025 = ovr025;
@@ -42,16 +38,10 @@ public class ovr013
     {
         affect_table = new System.Collections.Generic.Dictionary<Affects, affectDelegate>();
 
-        affect_table.Add(Affects.affect_in_cloud_kill, CloudKillAffect);
-        affect_table.Add(Affects.affect_in_stinking_cloud, StinkingCloudAffect);
-        affect_table.Add(Affects.animate_dead, sub_3A89E);
-        affect_table.Add(Affects.ankheg_acid_attack, AnkhegAcidAttack);
         affect_table.Add(Affects.berserk, AffectBerzerk);
         affect_table.Add(Affects.bestow_curse, affect_curse);
         affect_table.Add(Affects.blinded, AffectBlinded);
         affect_table.Add(Affects.blink, AffectBlink);
-        affect_table.Add(Affects.breath_acid, _ovr023.DragonBreathAcid);
-        affect_table.Add(Affects.breath_elec, _ovr023.DragonBreathElec);
         affect_table.Add(Affects.camouflage, AffectCamouflage);
         affect_table.Add(Affects.cast_breath_fire, _ovr023.cast_breath_fire);
         affect_table.Add(Affects.cast_throw_lightening, _ovr023.cast_throw_lightening);
@@ -98,7 +88,6 @@ public class ovr013
         affect_table.Add(Affects.shield, AffectShield);
         affect_table.Add(Affects.silence_15_radius, is_silenced1);
         affect_table.Add(Affects.slow_poison, AffectSlowPoison);
-        affect_table.Add(Affects.spiritual_hammer, affect_spiritual_hammer);
         affect_table.Add(Affects.stinking_cloud, StinkingCloud);
         affect_table.Add(Affects.prot_from_normal_missiles, AffectProtNormalMissles);
         affect_table.Add(Affects.slow, AffectSlow);
@@ -127,7 +116,6 @@ public class ovr013
         affect_table.Add(Affects.paralizing_gaze, _ovr023.AffectParalizingGaze);
         affect_table.Add(Affects.shambling_absorb_lightning, AffectShamblerAbsorbLightning);
         affect_table.Add(Affects.spit_acid, _ovr023.AffectSpitAcid);
-        affect_table.Add(Affects.owlbear_hug_check, _ovr014.AffectOwlbearHugAttackCheck);
         affect_table.Add(Affects.regen_3_hp, AffectRegen3Hp);
         affect_table.Add(Affects.troll_fire_or_acid, AffectTrollFireOrAcid);
         affect_table.Add(Affects.troll_regenerate, AffectTrollRegenerate);
@@ -358,31 +346,6 @@ public class ovr013
         gbl.cureSpell = false;
     }
 
-    private void affect_spiritual_hammer(Effect add_remove, object param, Player player) /* sub_3A583 */
-    {
-        Item item = player.items.Find(i => i.type == ItemType.Hammer && i.namenum3 == 0xf3);
-        bool item_found = item != null;
-
-        if (add_remove == Effect.Remove && item != null)
-        {
-            _ovr025.lose_item(item, player);
-        }
-
-        if (add_remove == Effect.Add &&
-            item_found == false &&
-            player.items.Count < Player.MaxItems)
-        {
-            item = new Item(Affects.affect_78, Affects.spiritual_hammer, 0, 0, 0, 0, false, 0, false, 0, 1, 243, 20, 0, ItemType.Hammer, true);
-
-            player.items.Add(item);
-            _ovr020.ready_Item(item);
-
-            _ovr025.DisplayPlayerStatusString(true, 10, "Gains an item", player);
-        }
-
-        _ovr025.reclac_player_values(player);
-    }
-
     private void sub_3A6C6(Effect arg_0, object param, Player player)
     {
         if (player.name.Length == 0 &&
@@ -456,32 +419,6 @@ public class ovr013
         {
             _ovr025.CombatDisplayPlayerSummary(player);
         }
-    }
-
-    private void sub_3A89E(Effect arg_0, object param, Player player)
-    {
-        Affect affect = (Affect)param;
-
-        affect.callAffectTable = false;
-
-        if (gbl.cureSpell == false)
-        {
-            _ovr024.KillPlayer("collapses", Status.dead, player);
-        }
-
-        player.combat_team = (CombatTeam)(affect.affect_data >> 4);
-        player.quick_fight = QuickFight.True;
-        player.field_E9 = 0;
-
-        player.attackLevel = (byte)player.SkillLevel(SkillType.Fighter);
-        player.base_movement = 0x0C;
-
-        if (player.control_morale == Control.PC_Berzerk)
-        {
-            player.control_morale = Control.PC_Base;
-        }
-
-        player.monsterType = 0;
     }
 
     private void AffectBlinded(Effect arg_0, object param, Player player) // sub_3A951
@@ -570,52 +507,6 @@ public class ovr013
         }
 
         gbl.halfActionsLeft *= 2;
-    }
-
-    private void StinkingCloudAffect(Effect arg_0, object param, Player player) // sub_3AC1D
-    {
-        Affect affect = (Affect)param;
-
-        var var_8 = gbl.StinkingCloud.Find(cell => cell.player == player && cell.field_1C == (affect.affect_data >> 4));
-
-        if (var_8 != null)
-        {
-            _ovr025.string_print01("The air clears a little...");
-
-            for (int var_B = 0; var_B < 4; var_B++)
-            {
-                if (var_8.present[var_B] == true)
-                {
-                    var tmp = var_8.targetPos + gbl.MapDirectionDelta[gbl.SmallCloudDirections[var_B]];
-
-                    bool var_9 = gbl.downedPlayers.Exists(cell => cell.target != null && cell.map == tmp);
-
-                    if (var_9 == true)
-                    {
-                        gbl.mapToBackGroundTile[tmp] = gbl.Tile_DownPlayer;
-                    }
-                    else
-                    {
-                        gbl.mapToBackGroundTile[tmp] = var_8.groundTile[var_B];
-                    }
-                }
-            }
-
-            gbl.StinkingCloud.Remove(var_8);
-
-            foreach (var var_4 in gbl.StinkingCloud)
-            {
-                for (int var_B = 0; var_B < 4; var_B++)
-                {
-                    if (var_4.present[var_B] == true)
-                    {
-                        var tmp = gbl.MapDirectionDelta[gbl.SmallCloudDirections[var_B]] + var_4.targetPos;
-
-                        gbl.mapToBackGroundTile[tmp] = gbl.Tile_StinkingCloud;
-                    }
-                }
-            }
-        }
     }
 
     private void AffectProtNormalMissles(Effect arg_0, object param, Player player) // sub_3AFE0
@@ -983,13 +874,6 @@ public class ovr013
         _ovr024.damage_person(false, 0, _ovr024.roll_dice_save(10, 2), player.actions.target);
     }
 
-    private void AnkhegAcidAttack(Effect arg_0, object param, Player player) // sub_3B94C
-    {
-        gbl.damage_flags = DamageType.Acid;
-
-        _ovr024.damage_person(false, 0, _ovr024.roll_dice_save(4, 1), player.actions.target);
-    }
-
     private void half_damage(Effect arg_0, object param, Player player) /* sub_3B97F */
     {
         gbl.damage /= 2;
@@ -1040,53 +924,6 @@ public class ovr013
             {
                 gbl.attack_roll = -1;
                 affect.affect_data |= 0x10;
-            }
-        }
-    }
-
-    private void CloudKillAffect(Effect arg_0, object param, Player player) // sub_3BAB9
-    {
-        Affect affect = (Affect)param;
-
-        GasCloud cell = gbl.CloudKillCloud.Find(c => c.player == player && c.field_1C == (affect.affect_data >> 4));
-
-        if (cell != null)
-        {
-            _ovr025.string_print01("The air clears a little...");
-
-            for (int var_B = 0; var_B < 9; var_B++)
-            {
-                if (cell.present[var_B] == true)
-                {
-                    var tmp = cell.targetPos + gbl.MapDirectionDelta[gbl.CloudDirections[var_B]];
-
-                    bool var_E = gbl.downedPlayers.Exists(c => c.target != null && c.map == tmp);
-
-                    if (var_E == true)
-                    {
-                        gbl.mapToBackGroundTile[tmp] = gbl.Tile_DownPlayer;
-                    }
-                    else
-                    {
-                        gbl.mapToBackGroundTile[tmp] = cell.groundTile[var_B];
-                    }
-                }
-            }
-
-
-            gbl.CloudKillCloud.Remove(cell);
-
-            foreach (var var_4 in gbl.CloudKillCloud)
-            {
-                for (int var_B = 0; var_B < 9; var_B++)
-                {
-                    if (var_4.present[var_B] == true)
-                    {
-                        var tmp = var_4.targetPos + gbl.MapDirectionDelta[gbl.CloudDirections[var_B]];
-
-                        gbl.mapToBackGroundTile[tmp] = gbl.Tile_CloudKill;
-                    }
-                }
             }
         }
     }

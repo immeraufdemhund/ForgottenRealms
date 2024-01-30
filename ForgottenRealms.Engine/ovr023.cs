@@ -133,6 +133,8 @@ public class ovr023
     private readonly AreaDamageTargetsBuilder _areaDamageTargetsBuilder;
     private readonly DisplayDriver _displayDriver;
     private readonly SoundDriver _soundDriver;
+    private readonly ElectricalDamageMath _electricalDamageMath;
+    private readonly Subroutine5FA44 _subroutine5FA44;
     private readonly ovr013 _ovr013;
     private readonly ovr024 _ovr024;
     private readonly ovr025 _ovr025;
@@ -142,7 +144,7 @@ public class ovr023
     private readonly ovr033 _ovr033;
     private readonly seg037 _seg037;
 
-    public ovr023(DisplayDriver displayDriver, SoundDriver soundDriver, ovr013 ovr013, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, seg037 seg037, ExperienceTable experienceTable, AreaDamageTargetsBuilder areaDamageTargetsBuilder)
+    public ovr023(DisplayDriver displayDriver, SoundDriver soundDriver, ovr013 ovr013, ovr024 ovr024, ovr025 ovr025, ovr026 ovr026, ovr027 ovr027, ovr032 ovr032, ovr033 ovr033, seg037 seg037, ExperienceTable experienceTable, AreaDamageTargetsBuilder areaDamageTargetsBuilder, ElectricalDamageMath electricalDamageMath, Subroutine5FA44 subroutine5Fa44)
     {
         _displayDriver = displayDriver;
         _soundDriver = soundDriver;
@@ -156,6 +158,8 @@ public class ovr023
         _seg037 = seg037;
         _experienceTable = experienceTable;
         _areaDamageTargetsBuilder = areaDamageTargetsBuilder;
+        _electricalDamageMath = electricalDamageMath;
+        _subroutine5FA44 = subroutine5Fa44;
     }
 
     internal bool can_learn_spell(int spell_id, Player player) /* sub_5C01E */
@@ -854,12 +858,6 @@ public class ovr023
         {
             _seg037.draw8x8_clear_area(0x17, 0x27, 0x17, 0);
         }
-    }
-
-
-    private void BuildAreaDamageTargets(int max_range, int playerSize, Point targetPos, Point casterPos)
-    {
-        _areaDamageTargetsBuilder.BuildAreaDamageTargets(max_range, playerSize, targetPos, casterPos);
     }
 
 
@@ -1856,171 +1854,12 @@ public class ovr023
         RemoveComplimentSpellFirst("is Hasted", gbl.SelectedPlayer.combat_team, Affects.slow);
     }
 
-
-    private void DoElecDamage(int player_index, SaveVerseType bonusType, int damage, Point pos)
-    {
-        int playerIndex = _ovr033.PlayerIndexAtMapXY(pos.y, pos.x);
-
-        DoActualElecDamage(player_index, bonusType, damage, playerIndex);
-    }
-
-    private void DoActualElecDamage(int player_index, SaveVerseType bonusType, int damage, int playerIndex)
-    {
-        if (playerIndex > 0 &&
-            playerIndex != player_index)
-        {
-            Player player = gbl.player_array[playerIndex];
-            gbl.damage_flags = DamageType.Magic | DamageType.Electricity;
-
-            _ovr024.damage_person(_ovr024.RollSavingThrow(0, bonusType, player), DamageOnSave.Half, damage, player);
-            _ovr025.load_missile_icons(0x13);
-            gbl.damage_flags = 0;
-        }
-    }
-
-
-    private bool DoElecDamage(bool arg_0, int player_index, SaveVerseType bonusType, int damage, Point pos) // sub_5F986
-    {
-        int groundTile;
-        int playerIndex;
-
-        _ovr033.AtMapXY(out groundTile, out playerIndex, pos);
-
-        if (groundTile > 0 &&
-            gbl.BackGroundTiles[groundTile].move_cost == 0xff &&
-            gbl.area_ptr.inDungeon == 1 &&
-            arg_0 == false)
-        {
-            arg_0 = true;
-        }
-        else
-        {
-            arg_0 = false;
-        }
-
-        DoActualElecDamage(player_index, bonusType, damage, playerIndex);
-
-        return arg_0;
-    }
-
-
-    internal void sub_5FA44(byte arg_0, SaveVerseType bonusType, int damage, byte arg_6)
-    {
-        int var_3A = 0; /* Simeon */
-        bool var_36 = false;
-        _ovr025.load_missile_icons(0x13);
-
-        int var_39;
-        int groundTile;
-
-        _ovr033.AtMapXY(out groundTile, out var_39, gbl.targetPos);
-        int var_3D = 0;
-        int var_35 = 1;
-
-        var playerPos = _ovr033.PlayerMapPos(gbl.SelectedPlayer);
-        byte var_38 = arg_0;
-
-        if (playerPos != gbl.targetPos)
-        {
-            int var_3C = arg_6 * 2;
-            gbl.byte_1D2C7 = true;
-
-            while (var_3C > 0)
-            {
-                var path_a = new SteppingPath();
-
-                path_a.attacker = gbl.targetPos;
-                path_a.target = gbl.targetPos + ((gbl.targetPos - playerPos) * var_35 * var_3C);
-
-                path_a.CalculateDeltas();
-
-                do
-                {
-                    var tmppos = path_a.current;
-
-                    if (path_a.attacker != path_a.target)
-                    {
-                        bool stepping;
-
-                        do
-                        {
-                            stepping = path_a.Step();
-
-                            _ovr033.AtMapXY(out groundTile, out var_3A, path_a.current);
-
-                            if (gbl.BackGroundTiles[groundTile].move_cost == 1)
-                            {
-                                var_36 = false;
-                            }
-                        } while (stepping == true &&
-                                 (var_3A <= 0 || var_3A == var_39) &&
-                                 groundTile != 0 &&
-                                 gbl.BackGroundTiles[groundTile].move_cost <= 1 &&
-                                 path_a.steps < var_3C);
-                    }
-
-                    if (groundTile == 0)
-                    {
-                        var_3C = 0;
-                    }
-
-                    _ovr025.draw_missile_attack(0x32, 4, path_a.current, tmppos);
-
-                    var_36 = DoElecDamage(var_36, var_39, bonusType, damage, path_a.current);
-                    var_39 = var_3A;
-
-                    if (var_36 == true)
-                    {
-                        gbl.targetPos = path_a.current;
-
-                        var path_b = new SteppingPath();
-
-                        path_b.attacker = gbl.targetPos;
-                        path_b.target = playerPos;
-
-                        path_b.CalculateDeltas();
-
-                        while (path_b.Step() == true)
-                        {
-                            /* empty */
-                        }
-
-                        if (var_38 != 0 && path_b.steps <= 8)
-                        {
-                            path_a.steps += 8;
-                        }
-
-                        var_35 = -var_35;
-                        var_38 = 0;
-                        var_39 = 0;
-                    }
-
-                    var_3D = (byte)(path_a.steps - var_3D);
-
-                    if (var_3D < var_3C)
-                    {
-                        var_3C -= var_3D;
-                    }
-                    else
-                    {
-                        var_3C = 0;
-                    }
-
-                    var_3D = path_a.steps;
-                } while (var_36 == false && var_3C != 0);
-            }
-
-            gbl.byte_1D2C7 = false;
-        }
-    }
-
-
     internal void SpellLightningBolt() // sub_5FCD9
     {
         int damage = _ovr024.roll_dice(6, _ovr025.spellMaxTargetCount(gbl.spell_id));
 
-        DoElecDamage(0, SaveVerseType.Spell, damage, gbl.targetPos);
-        sub_5FA44(1, SaveVerseType.Spell, damage, 7);
+        _electricalDamageMath.DoElecDamage(0, SaveVerseType.Spell, damage, gbl.targetPos);
+        _subroutine5FA44.sub_5FA44(1, SaveVerseType.Spell, damage, 7);
     }
 
 
@@ -2117,10 +1956,9 @@ public class ovr023
 
     internal void sub_6003C()
     {
-        DoElecDamage(0, SaveVerseType.Spell, _ovr024.roll_dice(6, 1) + 20, gbl.targetPos);
-        sub_5FA44(0, SaveVerseType.Spell, 20, 3);
+        _electricalDamageMath.DoElecDamage(0, SaveVerseType.Spell, _ovr024.roll_dice(6, 1) + 20, gbl.targetPos);
+        _subroutine5FA44.sub_5FA44(0, SaveVerseType.Spell, 20, 3);
     }
-
 
     internal void cast_paralyzed()
     {
@@ -2406,7 +2244,8 @@ public class ovr023
     {
         Player caster = gbl.SelectedPlayer;
 
-        BuildAreaDamageTargets(6, 3, gbl.targetPos, _ovr033.PlayerMapPos(caster));
+        Point casterPos = _ovr033.PlayerMapPos(caster);
+        _areaDamageTargetsBuilder.BuildAreaDamageTargets(6, 3, gbl.targetPos, casterPos);
 
         foreach (var target in gbl.spellTargets)
         {
@@ -2656,7 +2495,8 @@ public class ovr023
             max_range = 1;
         }
 
-        BuildAreaDamageTargets(max_range, 2, gbl.targetPos, _ovr033.PlayerMapPos(player));
+        Point casterPos = _ovr033.PlayerMapPos(player);
+        _areaDamageTargetsBuilder.BuildAreaDamageTargets(max_range, 2, gbl.targetPos, casterPos);
 
         DoSpellCastingWork("", DamageType.Acid, target_count + _ovr024.roll_dice_save(4, target_count), false, 0, gbl.spell_id);
     }
@@ -2706,7 +2546,8 @@ public class ovr023
     {
         Player attacker = gbl.SelectedPlayer;
 
-        BuildAreaDamageTargets(3, 1, gbl.targetPos, _ovr033.PlayerMapPos(attacker));
+        Point casterPos = _ovr033.PlayerMapPos(attacker);
+        _areaDamageTargetsBuilder.BuildAreaDamageTargets(3, 1, gbl.targetPos, casterPos);
 
         foreach (var target in gbl.spellTargets)
         {
@@ -2761,57 +2602,6 @@ public class ovr023
         }
     }
 
-
-    internal void DragonBreathElec(Effect arg_0, object param, Player player) // cast_breath
-    {
-        Affect affect = (Affect)param;
-        bool var_1 = false; /* Simeon */
-
-        if (gbl.combat_round == 0 ||
-            _ovr024.roll_dice(100, 1) > 50)
-        {
-            gbl.damage_flags = DamageType.DragonBreath | DamageType.Electricity;
-            var var_2 = _ovr033.PlayerMapPos(player);
-
-            _ovr025.DisplayPlayerStatusString(true, 10, "Breathes!", player);
-
-            gbl.byte_1DA70 = gbl.SpellCastFunction(QuickFight.True, (int)Spells.lightning_bolt);
-
-            gbl.targetPos.x = var_2.x + Math.Sign(gbl.targetPos.x - var_2.x);
-            gbl.targetPos.y = var_2.y + Math.Sign(gbl.targetPos.y - var_2.y);
-
-            if (gbl.targetPos.x == (var_2.x + 1))
-            {
-                gbl.targetPos.x++;
-            }
-
-            if (gbl.targetPos.y == (var_2.y + 1))
-            {
-                gbl.targetPos.y++;
-            }
-
-            _ovr024.remove_invisibility(player);
-            _ovr025.load_missile_icons(0x13);
-
-            _ovr025.draw_missile_attack(0x32, 4, gbl.targetPos, var_2);
-            var_1 = DoElecDamage(var_1, 0, SaveVerseType.BreathWeapon, player.hit_point_max, gbl.targetPos);
-            sub_5FA44(0, SaveVerseType.BreathWeapon, player.hit_point_max, 10);
-
-            if (affect.affect_data > 0xFD)
-            {
-                affect.affect_data -= 1;
-            }
-            else
-            {
-                _ovr024.remove_affect(affect, Affects.breath_elec, player);
-            }
-
-            var_1 = true;
-            _ovr025.clear_actions(player);
-        }
-    }
-
-
     internal void AffectSpitAcid(Effect arg_0, object param, Player player) // spell_spit_acid
     {
         gbl.byte_1DA70 = gbl.SpellCastFunction(QuickFight.True, (int)Spells.spell_41);
@@ -2835,57 +2625,6 @@ public class ovr023
             else
             {
                 _ovr025.DisplayPlayerStatusString(true, 10, "Spits Acid and Misses", player);
-            }
-        }
-    }
-
-
-    internal void DragonBreathAcid(Effect arg_0, object param, Player attacker) // spell_breathes_acid
-    {
-        Affect affect = (Affect)param;
-
-        gbl.byte_1DA70 = false;
-
-        if (gbl.combat_round == 0)
-        {
-            affect.affect_data = 3;
-        }
-
-        if (affect.affect_data > 0)
-        {
-            gbl.damage_flags = DamageType.DragonBreath | DamageType.Acid;
-
-            var attackerPos = _ovr033.PlayerMapPos(attacker);
-
-            gbl.byte_1DA70 = gbl.SpellCastFunction(QuickFight.True, (int)Spells.spell_3d);
-
-            if (gbl.byte_1DA70 == true)
-            {
-                BuildAreaDamageTargets(6, 1, gbl.targetPos, attackerPos);
-            }
-
-            if (gbl.spellTargets.Exists(target => attacker.OppositeTeam() == target.combat_team))
-            {
-                gbl.byte_1DA70 = false;
-            }
-
-            if (gbl.byte_1DA70 == true &&
-                gbl.spellTargets.Count > 0)
-            {
-                _ovr025.DisplayPlayerStatusString(true, 10, "breathes acid", attacker);
-                _ovr025.load_missile_icons(0x12);
-
-                _ovr025.draw_missile_attack(0x1E, 1, _ovr033.PlayerMapPos(gbl.spellTargets[0]), _ovr033.PlayerMapPos(attacker));
-
-                foreach (var target in gbl.spellTargets)
-                {
-                    bool save_made = _ovr024.RollSavingThrow(0, SaveVerseType.BreathWeapon, target);
-                    _ovr024.damage_person(save_made, DamageOnSave.Half, attacker.hit_point_max, target);
-                }
-
-                affect.affect_data--;
-
-                _ovr025.clear_actions(attacker);
             }
         }
     }
@@ -2928,8 +2667,8 @@ public class ovr023
             _ovr025.load_missile_icons(0x13);
             _ovr025.draw_missile_attack(0x32, 4, gbl.targetPos, pos);
 
-            var_1 = DoElecDamage(var_1, 0, SaveVerseType.Spell, _ovr024.roll_dice_save(6, 16), gbl.targetPos);
-            sub_5FA44(0, 0, _ovr024.roll_dice_save(6, 16), 10);
+            var_1 = _electricalDamageMath.DoElecDamage(var_1, 0, SaveVerseType.Spell, _ovr024.roll_dice_save(6, 16), gbl.targetPos);
+            _subroutine5FA44.sub_5FA44(0, 0, _ovr024.roll_dice_save(6, 16), 10);
             var_1 = true;
             _ovr025.clear_actions(caster);
         }

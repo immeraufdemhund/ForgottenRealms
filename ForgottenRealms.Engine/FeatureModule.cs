@@ -68,6 +68,8 @@ public static class FeatureModule
             .AddTransient<PlayerPrimaryWeapon>()
             .AddTransient<AffectsProtectedAction>()
             .AddTransient<AvoidMissleAttackAction>()
+            .AddTransient<ElectricalDamageMath>()
+            .AddTransient<Subroutine5FA44>()
             ;
     }
 }
