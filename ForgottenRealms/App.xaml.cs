@@ -7,7 +7,9 @@ using System.Windows.Threading;
 using ForgottenRealms.Engine;
 using ForgottenRealms.Engine.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace ForgottenRealms;
 
@@ -19,38 +21,52 @@ public partial class App : Application
     private void App_OnStartup(object sender, StartupEventArgs e)
     {
         ConfigureDependencyInjection();
-        _logger = _provider.GetRequiredService<ILogger<App>>();
+        _logger = _provider.Services.GetRequiredService<ILogger<App>>();
         _logger.LogDebug("Setting up Config");
-        var config = _provider.GetRequiredService<Config>();
+        var config = _provider.Services.GetRequiredService<Config>();
         config.Setup();
         Logger.Setup(Config.GetLogPath());
         _logger.LogDebug("Starting DnD Engine");
-        _mainGameEngine = _provider.GetRequiredService<MainGameEngine>();
-        cancellationTokenSource = _provider.GetRequiredService<CancellationTokenSource>();
+        _mainGameEngine = _provider.Services.GetRequiredService<MainGameEngine>();
+        cancellationTokenSource = _provider.Services.GetRequiredService<CancellationTokenSource>();
         StartEngine();
-        var mainWindow = _provider.GetRequiredService<MainWindow>();
+        var mainWindow = _provider.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
     }
 
     private void ConfigureDependencyInjection()
     {
-        var serviceCollection = new ServiceCollection();
-        _provider = serviceCollection.AddLogging(logging =>
+        var settings = new HostApplicationBuilderSettings
+        {
+            ApplicationName = "ForgottenRealms",
+            ContentRootPath = Directory.GetCurrentDirectory(),
+            #if DEBUG
+            EnvironmentName = "Development",
+            #else
+            EnvironmentName = "Production",
+            #endif
+        };
+        var builder = Host.CreateEmptyApplicationBuilder(settings);
+        builder.Logging
+            .AddSimpleConsole(o =>
             {
-                logging.AddSimpleConsole();
-                logging.AddApplicationInsights();
-                logging.AddFilter("*", LogLevel.Trace);
+                o.ColorBehavior = LoggerColorBehavior.Enabled;
             })
+            .AddApplicationInsights()
+            .AddFilter("*", LogLevel.Trace);
+
+        builder.Services
             .AddTransient<MainWindow>()
             .AddTransient<System.Media.SoundPlayer>()
             .AddSingleton<ISoundDevice, WpfSoundDevice>()
             .AddSingleton<CancellationTokenSource>()
             .RegisterEngineFeature()
             .BuildServiceProvider();
+        _provider = builder.Build();
     }
 
     private CancellationTokenSource? cancellationTokenSource;
-    private ServiceProvider? _provider;
+    private IHost _provider;
     private ILogger? _logger;
     private MainGameEngine? _mainGameEngine;
 
