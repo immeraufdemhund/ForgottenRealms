@@ -373,8 +373,6 @@ public class gbl
 
     public static CombatIcon[] combat_icons;
 
-    public static DaxBlock[] symbol_8x8_set; // seg600:65D0 - seg600:65E3 DaxBlock[5]
-
     public static List<Item> items_pointer;
 
     public static MoneySet pooled_money = new();

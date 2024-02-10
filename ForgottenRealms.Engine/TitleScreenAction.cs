@@ -13,8 +13,9 @@ public class TitleScreenAction
     private readonly KeyboardDriver _keyboardDriver;
     private readonly KeyboardService _keyboardService;
     private readonly seg037 _seg037;
+    private readonly ovr038 _ovr038;
 
-    public TitleScreenAction(DrawPictureAction drawPictureAction, DaxBlockReader daxBlockReader, SoundDriver soundDriver, DisplayDriver displayDriver, KeyboardDriver keyboardDriver, KeyboardService keyboardService, seg037 seg037)
+    public TitleScreenAction(DrawPictureAction drawPictureAction, DaxBlockReader daxBlockReader, SoundDriver soundDriver, DisplayDriver displayDriver, KeyboardDriver keyboardDriver, KeyboardService keyboardService, seg037 seg037, ovr038 ovr038)
     {
         _drawPictureAction = drawPictureAction;
         _daxBlockReader = daxBlockReader;
@@ -23,13 +24,14 @@ public class TitleScreenAction
         _keyboardDriver = keyboardDriver;
         _keyboardService = keyboardService;
         _seg037 = seg037;
+        _ovr038 = ovr038;
     }
 
     public void ShowTitleScreen()
     {
-        DaxBlock dax_ptr;
+        _ovr038.LoadTitleScreenSymbols();
 
-        dax_ptr = _daxBlockReader.LoadDax(0, 0, 1, "Title");
+        var dax_ptr = _daxBlockReader.LoadDax(0, 0, 1, "Title");
         _drawPictureAction.DrawPicture(dax_ptr, 0, 0, 0);
 
         delay_or_key(5);

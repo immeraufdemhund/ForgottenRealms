@@ -683,17 +683,7 @@ public class ovr031
 
                     gbl.wallDef.BlockOffset(idx, var_A);
 
-                    if (blockCount > 1)
-                    {
-                        var blockId = (block_id * 10) + block + 1;
-                        _ovr038.Load8x8D(idx, blockId);
-                        _mainGameEngine.ExitIf8x8DIsNotLoaded(idx, blockId);
-                    }
-                    else
-                    {
-                        _ovr038.Load8x8D(idx, block_id);
-                        _mainGameEngine.ExitIf8x8DIsNotLoaded(idx, block_id);
-                    }
+                    _ovr038.LoadWallDefinitionTiles(block_id, blockCount, block, idx);
                 }
             }
 
@@ -701,7 +691,6 @@ public class ovr031
             gbl.setBlocks[symbolSet - 1].setId = symbolSet;
         }
     }
-
 
     internal void Load3DMap(int blockId)
     {

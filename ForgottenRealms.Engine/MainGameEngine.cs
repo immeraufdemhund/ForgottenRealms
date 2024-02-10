@@ -236,13 +236,6 @@ public class MainGameEngine
 
         _seg051.FillChar(0xf, gbl.cursor.bpp, gbl.cursor.data);
 
-        gbl.symbol_8x8_set = new DaxBlock[5];
-        gbl.symbol_8x8_set[0] = null;
-        gbl.symbol_8x8_set[1] = null;
-        gbl.symbol_8x8_set[2] = null;
-        gbl.symbol_8x8_set[3] = null;
-        gbl.symbol_8x8_set[4] = null;
-
         gbl.dax24x24Set = null;
         gbl.dword_1C8FC = null;
 
@@ -341,11 +334,6 @@ public class MainGameEngine
         _ovr027.ClearPromptArea();
         _displayDriver.displayString("Loading...Please Wait", 0, 10, 0x18, 0);
 
-        _ovr038.Load8x8D(4, 0xca);
-        ExitIf8x8DIsNotLoaded(4, 0xca);
-        _ovr038.Load8x8D(0, 0xcb);
-        ExitIf8x8DIsNotLoaded(0, 0xcb);
-
         for (gbl.byte_1AD44 = 0; gbl.byte_1AD44 <= 0x0b; gbl.byte_1AD44++)
         {
             _ovr034.chead_cbody_comspr_icon((byte)(gbl.byte_1AD44 + 0x0D), gbl.byte_1AD44, "COMSPR");
@@ -361,17 +349,6 @@ public class MainGameEngine
 
         _ovr023.setup_spells();
     }
-
-    public void ExitIf8x8DIsNotLoaded(int symbolSet, int blockId)
-    {
-        if (gbl.symbol_8x8_set[symbolSet] == null)
-        {
-            _logger.LogCritical("Unable to load {SymbolSet} from 8x8D{BlockId}", blockId, gbl.game_area);
-            Logger.Log("Unable to load {0} from 8x8D{1}", blockId, gbl.game_area);
-            EngineStop();
-        }
-    }
-
 
     private void InitAgain() /* sub_396E5 */
     {
